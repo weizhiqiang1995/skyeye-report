@@ -54,18 +54,6 @@ public class DuplicateSubmitAspect {
 		// sessionId+请求路径+请求时间
 		String key = sessionId + "-" + request.getServletPath() + ToolUtil.getTimeStrAndToString();
 		logger.info("sessionId is {}, request name is: {}, url is: {}", sessionId, Constants.REQUEST_MAPPING.get(sessionKey).get("val").toString(), request.getServletPath());
-		// 如果缓存中有这个url视为重复提交
-		Long increment = jedisClient.incrByData(key, 1);
-		if (increment == 1) {
-			// 设置过期时间，默认1秒
-			jedisClient.expire(key, 1);
-			return true;
-		}
-		// 重复提交
-		if (increment > 1) {
-			logger.error("重复提交: {}", request.getServletPath());
-			return false;
-		}
 		return true;
 	}
 }

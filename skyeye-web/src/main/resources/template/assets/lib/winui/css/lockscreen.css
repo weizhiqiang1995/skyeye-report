@@ -30,6 +30,8 @@
 #login_div {
     margin-top: 20vh;
     text-align: center;
+    position: fixed;
+    left: calc(50% - 163px);
 }
 
     #login_div > img {
