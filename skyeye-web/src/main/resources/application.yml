@@ -1,0 +1,43 @@
+server:
+    port: ${server.port}
+    tomcat:
+        uri-encoding: utf-8
+    context-path: /
+#数据源
+spring:
+    datasource:
+        basedata:
+            connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+            driver-class-name: ${jdbc.database.driverClassName}
+            initialSize: ${jdbc.initialSize}
+            jdbc-url: ${jdbc.database.path}
+            username: ${jdbc.database.username}
+            password: ${jdbc.database.password}
+            maxActive: ${jdbc.maxActive}
+            maxPoolPreparedStatementPerConnectionSize: ${jdbc.maxPoolPreparedStatementPerConnectionSize}
+            maxWait: ${jdbc.maxWait}
+            minEvictableIdleTimeMillis: 30000
+            minIdle: ${jdbc.minIdle}
+            platform: mysql
+            poolPreparedStatements: ${jdbc.poolPreparedStatements}
+            testOnBorrow: false
+            testOnReturn: false
+            testWhileIdle: true
+            timeBetweenEvictionRunsMillis: 60000
+            type: com.alibaba.druid.pool.DruidDataSource
+            validationQuery: select 'x'
+    transaction:
+        rollback-on-commit-failure: true
+    # 热部署
+    devtools:
+        freemarker:
+            cache: false
+        restart:
+            additional-paths: src/main/java
+            enabled: true
+            exclude: template/**
+            log-condition-evaluation-delta: false
+mvc:
+    #出现错误时, 直接抛出异常
+    throw-exception-if-no-handler-found: true
+
