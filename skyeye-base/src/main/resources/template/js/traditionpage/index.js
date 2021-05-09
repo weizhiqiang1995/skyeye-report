@@ -12,8 +12,8 @@ layui.config({
     	form = layui.form,
     	element = layui.element;
     
-    $(document).attr("title", 'skyeye云系列');
-    $(".tradition-left-top").find("span").html('skyeye云系列');
+    $(document).attr("title", 'skyeye云系列-报表');
+    $(".tradition-left-top").find("span").html('skyeye云系列-报表');
     
     //顶部桌面模板
 	var desktopTemplate = $("#desktopTemplate").html();
