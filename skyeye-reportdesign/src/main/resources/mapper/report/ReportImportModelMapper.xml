@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.skyeye.dao.ReportImportModelDao">
+
+    <select id="getReportImportModelList" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT
+            a.id,
+            a.file_name fileName,
+            a.model_id modelId,
+            b.user_name createName,
+            CONVERT(a.create_time, char) createTime,
+            c.user_name lastUpdateName,
+            CONVERT(a.last_update_time, char) lastUpdateTime
+        FROM
+            report_import_model a
+            LEFT JOIN sys_eve_user_staff b ON a.create_id = b.user_id
+            LEFT JOIN sys_eve_user_staff c ON a.last_update_id = c.user_id
+        WHERE 1 = 1
+        <if test="fileName != '' and fileName != null">
+            AND a.file_name LIKE '%${fileName}%'
+        </if>
+        <if test="modelId != '' and modelId != null">
+            AND a.model_id LIKE '%${modelId}%'
+        </if>
+    </select>
+
+
+</mapper>

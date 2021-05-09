@@ -12,6 +12,7 @@
         <module>skyeye-common</module>
         <module>skyeye-common</module>
         <module>skyeye-base</module>
+        <module>skyeye-reportdesign</module>
     </modules>
     <packaging>pom</packaging>
 
