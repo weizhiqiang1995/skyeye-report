@@ -1,0 +1,486 @@
+body {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	margin: 0px;
+}
+
+.skyeyeScaleBox {
+	position: fixed;
+	left: 0;
+	top: 60px;
+	_position: absolute;
+	overflow: hidden;
+	–webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+}
+
+.report-content {
+	position: fixed;
+	left: 18px;
+	top: 78px;
+	_position: absolute;
+	z-index: 990;
+	width: calc(100% - 20px);
+	height: calc(100% - 80px);
+	–webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+	overflow-y: hidden;
+}
+
+.skyeyeScaleRuler_h,
+.skyeyeScaleRuler_v,
+.skyeyeRefLine_v,
+.skyeyeRefLine_h,
+.skyeyeRefDot_h,
+.skyeyeRefDot_v {
+	position: absolute;
+	left: 0;
+	top: 0;
+	overflow: hidden;
+	z-index: 999;
+}
+
+.skyeyeScaleRuler_h {
+	width: 100%;
+	height: 18px;
+	background-blend-mode: lighten;
+}
+
+.skyeyeScaleRuler_v {
+	width: 18px;
+	height: 100%;
+	background-blend-mode: lighten;
+}
+
+.skyeyeScaleRuler_v .n,
+.skyeyeScaleRuler_h .n {
+	position: absolute;
+	font: 10px/1 Arial, sans-serif;
+	color: #333;
+	cursor: default;
+}
+
+.skyeyeScaleRuler_v .n {
+	width: 8px;
+	left: 3px;
+	word-wrap: break-word;
+}
+
+.skyeyeScaleRuler_h .n {
+	top: 1px;
+}
+
+.skyeyeRefLine_v,
+.skyeyeRefLine_h,
+.skyeyeRefDot_h,
+.skyeyeRefDot_v {
+	z-index: 998;
+}
+
+.skyeyeRefLine_h {
+	width: 100%;
+	height: 3px;
+	background-color: coral;
+	cursor: url(../images/cur_move_h.cur), move;
+}
+
+.skyeyeRefLine_v {
+	width: 3px;
+	height: 100%;
+	_height: 9999px;
+	background-color: coral;
+	cursor: url(../images/cur_move_v.cur), move;
+}
+
+.skyeyeRefDot_h {
+	width: 100%;
+	height: 3px;
+	background: url(../images/line_dot.png) repeat-x left 1px;
+	cursor: url(../images/cur_move_h.cur), move;
+	top: -10px;
+}
+
+.skyeyeRefDot_v {
+	width: 3px;
+	height: 100%;
+	_height: 9999px;
+	background: url(../images/line_dot.png) repeat-y 1px top;
+	cursor: url(../images/cur_move_v.cur), move;
+	left: -10px;
+}
+
+.skyeyeRefCrtBg {
+	width: 228px;
+	height: 146px;
+	background: url(../images/line_create_bg.png) no-repeat;
+	position: absolute;
+	z-index: 1000;
+}
+
+.skyeyeRefCrtTit {
+	height: 30px;
+}
+
+.skyeyeRefCrtClose {
+	width: 21px;
+	height: 21px;
+	margin: 5px 5px 0 0;
+	background: url(../images/line_close.png) no-repeat;
+	float: right;
+}
+
+.skyeyeRefCrtClose:hover {
+	background-position: 0 -21px;
+}
+
+.skyeyeRefCrtX {
+	padding: 18px 15px 0 20px;
+	font-size: 12px;
+	overflow: hidden;
+	_zoom: 1;
+}
+
+.skyeyeRefCrtLeft {
+	width: 100px;
+	padding-top: 10px;
+	float: left;
+}
+
+.skyeyeRefCrtRight {
+	float: right;
+}
+
+.skyeyeRefCrtDir {
+	height: 18px;
+	font-family: simsun;
+	overflow: hidden;
+}
+
+.skyeyeRefCrtRadio {
+	vertical-align: -2px;
+}
+
+.skyeyeRefCrtPlace {
+	padding-top: 16px;
+	font-family: arial;
+}
+
+.skyeyeRefCrtInput {
+	width: 32px;
+	height: 14px;
+	margin-right: 4px;
+	font-size: 12px;
+	padding: 1px;
+	vertical-align: middle;
+}
+
+.skyeyeRefCrtBtn {
+	display: block;
+	width: 80px;
+	height: 20px;
+	margin-bottom: 8px;
+	font-size: 12px;
+}
+
+.hd-main {
+	height: 60px;
+	background: #fff;
+	z-index: 15;
+	border-bottom: #b3b3b3 1px solid;
+	box-shadow: 0 0 5px #333
+}
+
+.hd-main {
+	padding: 0 5px;
+	height: 60px;
+	min-width: 800px;
+	background: #252525;
+	border-bottom: 0
+}
+
+.hd-main .pulldown {
+	position: absolute;
+	cursor: default;
+	display: none;
+	top: 60px;
+	z-index: 9999;
+}
+
+.hd-main .pulldown .child-menu {
+	background: #F6F6F9;
+	color: #333;
+	text-align: left;
+	border-radius: 3px;
+	border: rgb(175, 175, 175) 1px solid;
+	border-width: 0 1px 1px 1px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, .2);
+	position: relative;
+	z-index: 1
+}
+
+.hd-main .navs {
+	padding: 0 0 0px 25px;
+	height: 100%;
+	float: left;
+}
+
+.hd-main .navs a:hover,
+.hd-main .navs a:active {
+	text-decoration: none;
+}
+
+.hd-main .navs .def-nav,
+.hd-main .navs .pulldown-nav,
+.hd-main .navs .separate {
+	display: block;
+	float: left;
+	height: 100%;
+	color: white;
+	text-align: center;
+	width: 90px;
+	font-size: 14px;
+}
+
+.hd-main .navs .separate {
+	width: 2px;
+}
+
+.hd-main .navs .app-url .child-menu {
+	height: 70px
+}
+
+.hd-main .navs .app-url .child-menu a,
+.hd-main .navs .app-url .child-menu a:hover {
+	color: #333
+}
+
+.hd-main .navs .app-url .li {
+	cursor: pointer;
+	padding-top: 4px;
+	width: 66px;
+	height: 66px;
+	border-radius: 3px;
+	display: block;
+	float: left;
+	text-align: center
+}
+
+.hd-main .navs .app-url .li:hover {
+	background-color: #e0e1e5
+}
+
+.hd-main .navs .def-nav .icon,
+.hd-main .navs .app-url .li .icon {
+	margin: 0 auto;
+	width: 35px;
+	height: 38px;
+	display: block;
+}
+
+.hd-main .navs .def-nav .icon,
+.hd-main .navs .app-url .li:hover .icon {}
+
+.hd-main .navs .app-url .li .text {
+	height: 30px;
+	display: block;
+	font: 14px/30px "Microsoft YaHei", "Microsoft JhengHei"
+}
+
+.hd-main .navs .pulldown-nav {
+	position: relative
+}
+
+.hd-main .navs .pulldown-nav em {
+	position: absolute;
+	display: block;
+	left: 69px;
+	top: 30px;
+	font-size: 0;
+	background-position: -89px -45px
+}
+
+.arrow-bottom {
+	width: 0;
+	height: 0;
+	border-left: 6px solid transparent;
+	border-right: 6px solid transparent;
+	border-top: 8px solid white;
+	font-size: 0;
+	line-height: 0;
+}
+
+.arrow-top {
+	width: 0;
+	height: 0;
+	border-left: 6px solid transparent;
+	border-right: 6px solid transparent;
+	border-bottom: 8px solid white;
+	font-size: 0;
+	line-height: 0;
+}
+
+.logo-title{
+	float: left;
+    line-height: 60px;
+    color: cornflowerblue;
+    font-size: 21px;
+    font-family: cursive;
+}
+
+/*****************模拟excel表格********************/
+.table-box{
+	height: 100%;
+}
+
+.report-content .title-table{
+	border-collapse: collapse;
+	border-spacing: 0;
+	margin: 0;
+	border-width: 0;
+	table-layout: fixed;
+	width: 0;
+	outline-width: 0;
+	cursor: default;
+	max-width: none;
+	max-height: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.report-content .content-table{
+	border-collapse: collapse;
+	border-spacing: 0;
+	margin: 0;
+	border-width: 0;
+	table-layout: fixed;
+	width: 0;
+	outline-width: 0;
+	cursor: default;
+	max-width: none;
+	max-height: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.thead :nth-child(1) {
+    background-color:#fff !important;
+}
+
+.report-content table tbody{
+	display: table-row-group;
+	vertical-align: middle;
+	border-color: inherit;
+}
+
+.report-content table tbody tr{
+	display: table-row;
+	vertical-align: inherit;
+	border-color: inherit;
+}
+
+.report-content table tbody tr td{
+	border: #ccc 1px solid;
+	word-wrap: break-word;
+	word-break: break-all;
+	font-size: 12px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	width: 60px;
+	font-family: 微软雅黑;
+}
+
+.report-content table td:focus {
+    outline: 0;
+    border: 1px solid #5897fb;
+    box-shadow: 0 0 5px rgba(73, 177, 249, .5)
+}
+
+.drug-ele-td {
+    background-color: #f0f0f0 !important;
+    cursor: pointer;
+}
+
+.col-width-panel, .row-height-panel, .chosen-area-p, .rightmouse-panel-div, .chosen-area-p div {
+    position: absolute;
+}
+
+.col-width-panel div {
+    width: 8px;
+    position: absolute;
+    cursor: col-resize;
+    z-index: 99;
+}
+
+.row-height-panel div {
+    height: 8px;
+    position: absolute;
+    cursor: row-resize;
+    z-index: 99;
+}
+
+.selectTd {
+    background-color: #fff;
+}
+
+.td-chosen-muli-css {
+    background-color: rgba(0, 94, 255, 0.1);
+}
+
+.hr {
+    width: 100%;
+    height: 1px;
+    border-bottom: 1px solid #ccc;
+}
+
+.chosen-area-p {
+    background-color: #5292F7
+}
+
+.chosen-area-p-drug {
+    cursor: crosshair
+}
+
+.tableLeftTop{
+    position: fixed;
+    top: 78px;
+    width: 62px;
+    height: 25px;
+    z-index: 99;
+    background: #fff;
+    text-align: center;
+    line-height: 25px;
+    border-bottom: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+}
+
+.rightmouse-panel-div .wb {
+	line-height: 24px;
+	letter-spacing: 1px;
+	font-size: 13px;
+	padding-left: 7px;
+	cursor: pointer;
+}
+
+.rightmouse-panel-div .wb:hover {
+	background-color: #f0f8ff
+}
+
+.excel-rightmomuse-icon-css {
+	display: inline-block;
+	width: 20px
+}
+
+.excel-rightmomuse-icon-next-css {
+	margin-left: 33px;
+	font-size: 18px;
+	color: #795548
+}
