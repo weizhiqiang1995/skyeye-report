@@ -265,35 +265,6 @@
 				}
 			},
 
-			// 加载鼠标移动事件
-			loadMouseMove: function(){
-				var lineVerticalId = 'mouseVertical';
-				var lineHorizontallId = 'mouseHorizontal';
-				// 跟随鼠标的垂直参考线
-				f.newv("1px", lineVerticalId).css({
-					'left': 1,
-					'background-color': 'transparent',
-					'border-left': '1px dashed ' + params.mouseLineColor,
-					'cursor': 'default',
-					'width': '0px'
-				});
-				// 跟随鼠标的水平参考线
-				f.newh("1px", lineHorizontallId).css({
-					'top': 1,
-					'background-color': 'transparent',
-					'border-top': '1px dashed ' + params.mouseLineColor,
-					'cursor': 'default',
-					'height': '0px'
-				});
-				skyeyeReportContent.mousemove(function(e) {
-					e = e || window.event;
-					var _xx = e.pageX || e.clientX + document.body.scroolLeft;
-					var _yy = (e.pageY || e.clientY + document.body.scrollTop) - 60;
-					$("#" + lineVerticalId).css("left", _xx);
-					$("#" + lineHorizontallId).css("top", _yy);
-				});
-			},
-
 			// 加载菜单栏
 			loadHeader: function(){
 				var str = "";
@@ -353,14 +324,16 @@
 				return char;
 			},
 
+			// excel右键菜单
 			showRightPanel: function(table, e) {
 				var coll = table.find(".td-chosen-css");
 				f.closeRightPanel();
 				var rightMousePanel = $("<div class='rightmouse-panel-div'></div>").css("left", e.clientX).css("top", e.clientY).insertBefore(table);
 				var leftPanel = $("<div class='panel-div-left'></div>").width(200).appendTo(rightMousePanel);
-				var rightPanel = $("<div class='panel-div-right'></div>").width(130).appendTo(rightMousePanel);
+				var rightPanel = $("<div class='panel-div-right' style='display: none'></div>").width(130).appendTo(rightMousePanel);
 				$("<div class='wb duiqifangsi'></div>").html("<span class='excel-rightmomuse-icon-css'><i class='fa fa-th'></i></span><span class='excel-rightmomuse-text-css'>对齐方式</span><span class='excel-rightmomuse-icon-css excel-rightmomuse-icon-next-css'><i class='fa fa-caret-right'></i></span>").appendTo(leftPanel);
 				$("<div class='wb hebingdanyuange'></div>").html("<span class='excel-rightmomuse-icon-css'><i class='fa fa-columns'></i></span><span class='excel-rightmomuse-text-css'>合并单元格</span>").appendTo(leftPanel);
+				$("<div class='wb chaifendanyuange'></div>").html("<span class='excel-rightmomuse-icon-css'><i class='fa fa-columns'></i></span><span class='excel-rightmomuse-text-css'>拆分单元格</span>").appendTo(leftPanel);
 				$("<div class='wb fuzhidanyuange'></div>").html("<span class='excel-rightmomuse-icon-css'><i class='fa fa-columns'></i></span><span class='excel-rightmomuse-text-css'>复制单元格样式</span>").appendTo(leftPanel);
 				$("<div class='wb zhantiedanyuange'></div>").html("<span class='excel-rightmomuse-icon-css'><i class='fa fa-columns'></i></span><span class='excel-rightmomuse-text-css'>粘贴单元格样式</span>").appendTo(leftPanel);
 				$("<div class='hr'></div>").appendTo(leftPanel);
@@ -396,7 +369,7 @@
 						var reg = /^\d{1,4}$/;
 						if (reg.test(row) && reg.test(col)) {
 							width = reg.test(width) ? width : 0;
-							initTable(t, {row: Number(row) + 1, col: Number(col) + 1, width: width, type: 1})
+							f.initExcelTable({row: Number(row) + 1, col: Number(col) + 1, width: width, type: 1})
 						}
 					}
 				});
@@ -407,34 +380,37 @@
 							f.recordData()
 						}
 						if (obj.hasClass("hebingdanyuange")) {
-							mergeCell(table)
+							f.mergeCell(table)
+						}
+						if (obj.hasClass("chaifendanyuange")) {
+							f.splitBtn(table)
 						}
 						if (obj.hasClass("fuzhidanyuange")) {
-							copydanyuange(table)
+							f.copydanyuange(table)
 						}
 						if (obj.hasClass("zhantiedanyuange")) {
-							pastedanyuange(table)
+							f.pastedanyuange(table)
 						}
 						if (obj.hasClass("shangchayihang")) {
-							addRowCol(table, 0, t)
+							f.addRowCol(table, 0)
 						}
 						if (obj.hasClass("xiachayihang")) {
-							addRowCol(table, 1, t)
+							f.addRowCol(table, 1)
 						}
 						if (obj.hasClass("zuochayilie")) {
-							addRowCol(table, 2, t)
+							f.addRowCol(table, 2)
 						}
 						if (obj.hasClass("youchayilie")) {
-							addRowCol(table, 3, t)
+							f.addRowCol(table, 3)
 						}
 						if (obj.hasClass("shanchuhang")) {
-							addRowCol(table, 4, t)
+							f.addRowCol(table, 4)
 						}
 						if (obj.hasClass("shanchulie")) {
-							addRowCol(table, 5, t)
+							f.addRowCol(table, 5)
 						}
 						if (obj.hasClass("chexiao")) {
-							chexiaoFunc(t)
+							f.chexiaoFunc(t)
 						}
 						if (obj.hasClass("juzhong")) {
 							coll.css("text-align", "center")
@@ -455,7 +431,7 @@
 							coll.css("vertical-align", "bottom")
 						}
 						if (obj.hasClass("shangchayihang") || obj.hasClass("xiachayihang") || obj.hasClass("zuochayilie") || obj.hasClass("youchayilie") || obj.hasClass("shanchuhang") || obj.hasClass("shanchulie")) {
-							drugCell(table, t)
+							f.drugCell(table)
 						}
 						rightMousePanel.remove()
 					}
@@ -465,11 +441,299 @@
 				}
 			},
 
+			// 拆分单元格
+			splitBtn: function(table) {
+				var coll = table.find(".td-chosen-css");
+				if (coll.length === 1) {
+					f.mergeCell(table);
+				}
+			},
+
+			// 粘贴单元格属性
+			pastedanyuange: function() {
+				selectTd.replaceWith(selectTdStyle);
+				selectTd = $(selectTdStyle)
+				f.setSelectTdValue(selectTd);
+			},
+
+			drugCell: function(table, t) {
+				var colTransform = $('.col-width-panel-item').eq(1).css('transform');
+				t.find(".col-width-panel,.row-height-panel").remove();
+				t.find(".chosen-area-p").remove();
+				var colWidthPanel = $("<div class='col-width-panel'></div>");
+				var rowHeightPanel = $("<div class='row-height-panel'></div>");
+				var left = 0, top = 0;
+				var firstTr = table.find("tr").first();
+				colWidthPanel.insertBefore(table);
+				rowHeightPanel.insertBefore(table);
+				table.find("tr").first().find("td").each(function () {
+					left = this.offsetLeft;
+					let colWidthPanelItem = $("<div class='col-width-panel-item'></div>");
+					colWidthPanelItem.attr("draggable", true).mousedown(function (e) {
+						e.preventDefault && e.preventDefault();
+						var ele = $(e.target);
+						if (ele.data("left") == undefined) {
+							recordData(t);
+							ele.data("left", ele.css("left"));
+							ele.data("e-left", e.clientX);
+							t.data("drug-ele", ele);
+						}
+					}).mouseup(function () {
+						f.clearDurgEle(table, t)
+					}).css("transform",colTransform).css("left", left +this.offsetWidth - 4).css("height", firstTr[0].offsetHeight).appendTo(colWidthPanel)
+				});
+				table.find("tr").each(function () {
+					top = this.offsetTop;
+					$(this).height($(this).height());
+					let rowHeightPanelItem = $("<div class='row-height-panel-item'></div>");
+					rowHeightPanelItem.attr("draggable", true).mousedown(function (e) {
+						e.preventDefault && e.preventDefault();
+						var ele = $(e.target);
+						if (ele.data("top") == undefined) {
+							recordData(t);
+							ele.data("top", ele.css("top"));
+							ele.data("e-top", e.clientY);
+							t.data("drug-ele", ele);
+						}
+					}).mouseup(function () {
+						f.clearDurgEle(table, t);
+					}).css("top", top + this.offsetHeight - 4).css("width", firstTr.find("td")[0].offsetWidth).appendTo(rowHeightPanel)
+				});
+				colWidthPanel.find(".col-width-panel-item:first,.col-width-panel-item:last").css("display", "none");
+				rowHeightPanel.find(".row-height-panel-item:first,.row-height-panel-item:last").css("display", "none");
+				t.unbind("mouseup").unbind("mousemove").unbind("mousedown").unbind("mouseleave");
+				t.mousedown(function (e) {
+					var ele = t.data("drug-ele");
+					if (ele !== undefined) {
+						if (ele.hasClass("col-width-panel-item")) {
+							panelItemMouseleave(colWidthPanel, table, t);
+						}
+						if (ele.hasClass("row-height-panel-item")) {
+							panelItemMouseleave(rowHeightPanel, table, t);
+						}
+					}
+				}).mouseup(function (e) {
+					f.clearDurgEle(table, t);
+				}).mousemove(function (e) {
+					if (t.data("drug-ele") != undefined) {
+						closeRightPanel(t);
+						var ele = t.data("drug-ele");
+						if (ele.hasClass("col-width-panel-item") && ele.data("left") != undefined) {
+							var left = parseInt(ele.data("left")) + (e.clientX - ele.data("e-left"));
+							var ind = colWidthPanel.find(".col-width-panel-item").index(ele);
+							var upLeft = 0;
+							if (ind > 0) {
+								upLeft = parseInt(ele.prev(".col-width-panel-item").css("left")) + 4
+							}
+							var now = table.find("tr").find("td:eq(" + ind + ")");
+							now.width(left - upLeft);
+							//将负责调整宽度的元素加宽，以免出现鼠标滑动过快而导致调整失败
+							ele.css("left", left-250).css("width",500);
+						}
+						if (ele.hasClass("row-height-panel-item") && ele.data("top") != undefined) {
+							var top = parseInt(ele.data("top")) + (e.clientY - ele.data("e-top"));
+							var ind = rowHeightPanel.find(".row-height-panel-item").index(ele);
+							var upTop = 0;
+							if (ind > 0) {
+								upTop = parseInt(ele.prev(".row-height-panel-item").css("top")) + 4
+							}
+							if (top - upTop > 5) {
+								var now = table.find("tr:eq(" + ind + ")");
+								now.height(top - upTop);
+								ele.css("top", top-250).css("height",500);
+							}
+						}
+					}
+				})
+			},
+
+			addRowCol: function(table, type) {
+				var chosenColl = table.find(".td-chosen-css");
+				if (chosenColl.length == 1) {
+					var chosen = chosenColl.first();
+					var tr = chosen.closest("tr");
+					var col = table.find("tr").find("td:eq(" + (tr.find("td").index(chosen)) + ")");
+					if (type == 0) {
+						f.addRowColSpan(tr, type).insertBefore(tr)
+					} else if (type == 1) {
+						f.addRowColSpan(tr, type).insertAfter(tr)
+					} else if (type == 4) {
+						f.addRowColSpan(tr, type);
+						tr.remove()
+					} else if (type == 2) {
+						f.addRowColSpan(col, type)
+					} else if (type == 3) {
+						f.addRowColSpan(col, type)
+					} else if (type == 5) {
+						f.addRowColSpan(col, type);
+						col.remove()
+					}
+				}
+				table.find("td[rowspan=1][colspan=1]").removeAttr("rowspan").removeAttr("colspan");
+				skyeyeReportContent.find(".chosen-area-p").remove();
+				f.clearDurgEle(table);
+				f.drawDrugArea(table)
+			},
+
+			addRowColSpan: function(list, ty) {
+				var coll = [];
+				if (ty == 0 || ty == 1 || ty == 4) {
+					var tr = list;
+					tr.find("td").each(function () {
+						if ($(this).is(":hidden")) {
+							var p = f.getFatherCell($(this));
+							var con = true;
+							for (var i = 0; i < coll.length; i++) {
+								if (coll[i].is(p)) {
+									con = false;
+									break
+								}
+							}
+							if (con && p != null) {
+								coll[coll.length] = p;
+								p.attr("rowspan", spanNum(p.attr("rowspan"), ty == 4 ? -1 : 1))
+							}
+						} else {
+							if ($(this).attr("rowspan") && $(this).attr("colspan")) {
+								coll[coll.length] = $(this);
+								if (ty == 4) {
+									var nextTr = tr.next("tr");
+									if (nextTr.length == 1 && Number($(this).attr("rowspan")) > 1) {
+										var ind = tr.find("td").index($(this));
+										nextTr.find("td:eq(" + ind + ")").attr("rowspan", spanNum($(this).attr("rowspan"), -1)).attr("colspan", $(this).attr("colspan")).css("display", "")
+									}
+								} else {
+									$(this).attr("rowspan", Number($(this).attr("rowspan")) + 1)
+								}
+							}
+						}
+					});
+					var clone = tr.clone(true);
+					if (ty == 0) {
+						tr.find("td[rowspan][colspan]").each(function () {
+							$(this).removeAttr("rowspan").removeAttr("colspan").css("display", "none")
+						})
+					}
+					if (ty == 1) {
+						clone.find("td[rowspan][colspan]").each(function () {
+							$(this).removeAttr("rowspan").removeAttr("colspan").css("display", "none")
+						})
+					}
+					clone.height(25);
+					clone.find("td").removeClass("td-chosen-css").html("");
+					return clone
+				} else {
+					var cloneLs = [];
+					list.each(function () {
+						if ($(this).is(":hidden")) {
+							var p = f.getFatherCell($(this));
+							var con = true;
+							for (var i = 0; i < coll.length; i++) {
+								if (coll[i].is(p)) {
+									con = false;
+									break
+								}
+							}
+							if (con && p != null) {
+								coll[coll.length] = p;
+								p.attr("colspan", spanNum(p.attr("colspan"), ty == 5 ? -1 : 1))
+							}
+						} else {
+							if ($(this).attr("rowspan") && $(this).attr("colspan")) {
+								coll[coll.length] = $(this);
+								if (ty == 5) {
+									var nextTd = $(this).next("td");
+									if (nextTd.length == 1 && Number($(this).attr("colspan")) > 1) {
+										nextTd.width($(this).width()).attr("rowspan", $(this).attr("rowspan")).attr("colspan", spanNum($(this).attr("colspan"), -1)).css("display", "")
+									}
+								} else {
+									$(this).attr("colspan", Number($(this).attr("colspan")) + 1)
+								}
+							}
+						}
+						var clone = $(this).clone(true);
+						clone.width($(this).width());
+						clone.removeClass("td-chosen-css").html("");
+						cloneLs[cloneLs.length] = clone
+					});
+					for (var i = 0; i < cloneLs.length; i++) {
+						if (ty == 2) {
+							cloneLs[i].insertBefore($(list.get(i)));
+							var t = $(list.get(i));
+							if (t.attr("rowspan") && t.attr("colspan")) {
+								t.removeAttr("rowspan").removeAttr("colspan").css("display", "none")
+							}
+						}
+						if (ty == 3) {
+							cloneLs[i].insertAfter($(list.get(i)));
+							var t = cloneLs[i];
+							if (t.attr("rowspan") && t.attr("colspan")) {
+								t.removeAttr("rowspan").removeAttr("colspan").css("display", "none")
+							}
+						}
+					}
+				}
+			},
+
+			// 合并单元格
+			mergeCell: function(table) {
+				if (table.length == 1) {
+					var coll = table.find(".td-chosen-css");
+					if (coll.length > 1) {
+						var fir = $(coll.get(0));
+						var posi = f.getTdPosition(fir);
+						var r = 0, c = 0;
+						if (fir.attr("rowspan") != undefined && fir.attr("colspan") != undefined) {
+							r = Number(fir.attr("rowspan")) - 1;
+							c = Number(fir.attr("colspan")) - 1
+						}
+						coll.each(function () {
+							var p = f.getTdPosition($(this));
+							r = (p.row - posi.row) > r ? p.row - posi.row : r;
+							c = (p.col - posi.col) > c ? (p.col - posi.col) : c;
+							if (!$(this).is(fir)) {
+								$(this).removeClass("td-chosen-css").css("display", "none");
+								if ($(this).attr("rowspan") != undefined && $(this).attr("colspan") != undefined) {
+									r = (p.row + (Number($(this).attr("rowspan")) - 1) - posi.row) > r ? (p.row + (Number($(this).attr("rowspan")) - 1) - posi.row) : r;
+									c = (p.col + (Number($(this).attr("colspan")) - 1) - posi.col) > c ? (p.col + (Number($(this).attr("colspan")) - 1) - posi.col) : c
+								}
+							}
+						});
+						$(coll.get(0)).attr("rowspan", r + 1).attr("colspan", c + 1).css("display", "")
+					} else if (coll.length == 1) {
+						var fir = $(coll.get(0));
+						if (fir.attr("rowspan") != undefined && fir.attr("colspan") != undefined) {
+							var posi = f.getTdPosition(fir);
+							for (var i = posi.row; i <= (posi.row + (Number($(fir).attr("rowspan")) - 1)); i++) {
+								var tr = table.find("tr:eq(" + i + ")");
+								for (var j = posi.col; j <= (posi.col + (Number($(fir).attr("colspan")) - 1)); j++) {
+									var td = tr.find("td:eq(" + j + ")").css("display", "").addClass("td-chosen-css");
+									if (!td.is(fir)) {
+										td.removeAttr("rowspan").removeAttr("colspan")
+									}
+								}
+							}
+							fir.removeAttr("rowspan").removeAttr("colspan")
+						}
+					}
+				}
+			},
+
+			// 复制单元格样式
+			copydanyuange: function(table) {
+				if (f.hasAttr(selectTd, 'rowspan') || f.hasAttr(selectTd, 'colspan')) {
+					alert("合并后的单元格不允许复制样式");
+					return;
+				}
+				selectTdStyle = selectTd.prop("outerHTML");
+			},
+
 			selectTable: function(table, e) {
 				if (e.button == 2 && !$(e.target).hasClass("drug-ele-td")) {
 					if (table.find(".td-chosen-css").length == 0) {
 						$(e.target).addClass("td-chosen-css")
 					}
+					// 设置右键菜单监听事件
 					f.showRightPanel(table, e)
 				} else {
 					f.closeRightPanel();
@@ -532,7 +796,7 @@
 							for (var j = beg_col; j <= end_col; j++) {
 								var dt = tr.find("td:eq(" + j + ")");
 								if (dt.is(":hidden") && dt.data("get-father-state") == undefined) {
-									var p = getFatherCell(dt);
+									var p = f.getFatherCell(dt);
 									dt.data("get-father-state", 0);
 									if (p != null && p.length == 1) {
 										p.data("add-chosen-state", 0);
@@ -556,6 +820,35 @@
 						}
 					}
 					return coll
+				}
+			},
+
+			getFatherCell: function(noneTd) {
+				var table = noneTd.closest("table");
+				var fatherCell = [];
+				table.find("td[rowspan][colspan]").each(function () {
+					var posi = f.getTdPosition($(this));
+					var cell = $(this);
+					var con = false;
+					for (var i = posi.row; i <= (posi.row + (Number($(this).attr("rowspan")) - 1)); i++) {
+						var tr = table.find("tr:eq(" + i + ")");
+						for (var j = posi.col; j <= (posi.col + (Number($(this).attr("colspan")) - 1)); j++) {
+							var dt = tr.find("td:eq(" + j + ")");
+							if (noneTd.is(dt)) {
+								fatherCell[fatherCell.length] = cell;
+								con = true;
+								break
+							}
+						}
+						if (con) {
+							break
+						}
+					}
+				});
+				if (fatherCell.length == 1) {
+					return fatherCell[0]
+				} else {
+					return null
 				}
 			},
 
@@ -825,7 +1118,7 @@
 				if (skyeyeReportContent.data("record") != undefined) {
 					var record = skyeyeReportContent.data("record");
 					if (record.length > 0) {
-						initTable({data: record[record.length - 1], type: 0});
+						f.initExcelTable({data: record[record.length - 1], type: 0});
 						record.splice(record.length - 1, 1)
 					}
 				}
@@ -1085,19 +1378,32 @@
 			},
 
 			// 初始化Excel表格
-			initExcelTable: function(){
-				var table = $("<table></table>").appendTo(skyeyeReportContent);
-				var row = params.excelConfig.def.row;
-				var col = params.excelConfig.def.col;
-				var width = params.excelConfig.def.width;
-				for (var i = 0; i < row; i++) {
-					var tr = $("<tr></tr>").height(25).appendTo(table);
-					for (var j = 0; j < col; j++) {
-						$("<td></td>").appendTo(tr)
+			initExcelTable: function(setting){
+				skyeyeReportContent.empty();
+				var table;
+				if (setting.type == 0) {
+					// 回显用的
+					skyeyeReportContent.html(setting.data);
+					table = skyeyeReportContent.find("table").first();
+					var fir = table.find("tr:eq(0)");
+					var clone = fir.clone(false).height(25).insertBefore(fir);
+					clone.find("td").css("display", "").removeAttr("rowspan").removeAttr("colspan").html("").removeClass("td-chosen-css");
+					$("<td></td>").insertBefore(table.find("tr").find("td:eq(0)"))
+				} else if (setting.type == 1) {
+					// 生成table
+					table = $("<table></table>").appendTo(skyeyeReportContent);
+					var row = params.excelConfig.def.row;
+					var col = params.excelConfig.def.col;
+					var width = params.excelConfig.def.width;
+					for (var i = 0; i < row; i++) {
+						var tr = $("<tr></tr>").height(25).appendTo(table);
+						for (var j = 0; j < col; j++) {
+							$("<td></td>").appendTo(tr)
+						}
 					}
-				}
-				if (width && width > 0) {
-					table.find('td').css('width', width);
+					if (width && width > 0) {
+						table.find('td').css('width', width);
+					}
 				}
 				f.drawDrugArea(table);
 				f.eventBind(table);
@@ -1117,9 +1423,8 @@
 				f.crtdata();
 				f.loadHeader();
 				// 加载Excel表格
-				f.initExcelTable();
+				f.initExcelTable({type: 1});
 				f.initExcelEvent();
-				f.loadMouseMove();
 			}
 		};
 		f.init();

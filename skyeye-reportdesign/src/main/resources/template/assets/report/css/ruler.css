@@ -326,7 +326,7 @@ body {
 	float: left;
 	line-height: 60px;
 	color: cornflowerblue;
-	font-size: 21px;
+	font-size: 16px;
 	font-family: cursive;
 }
 
@@ -424,6 +424,66 @@ body {
 
 .chosen-area-p-drug {
 	cursor: crosshair
+}
+
+.rightmouse-panel-div {
+	background-color: #fff;
+	border: 1px solid #bbd8e5;
+	border-radius: 4px;
+	z-index: 9;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	-khtml-user-select: none;
+	user-select: none;
+	position: fixed;
+}
+
+.panel-div-left {
+	border-right: 1px solid #bbd8e5;
+}
+
+.panel-div-left, .panel-div-right {
+	float: left;
+}
+
+.rightmouse-panel-div .wb {
+	line-height: 24px;
+	letter-spacing: 1px;
+	font-size: 13px;
+	padding-left: 7px;
+	cursor: pointer;
+}
+
+.rightmouse-panel-div .wb:hover {
+	background-color: #f0f8ff;
+}
+
+.setting .setting-item {
+	margin-right: 7px;
+}
+
+.setting .setting-text {
+	color: #e91e63;
+}
+
+.setting .setting-input {
+	margin-left: 4px;
+}
+
+.setting input {
+	width: 35px;
+}
+
+.excel-rightmomuse-icon-css {
+	display: inline-block;
+	width: 20px;
+}
+
+.excel-rightmomuse-icon-next-css {
+	margin-left: 33px;
+	font-size: 18px;
+	color: #795548;
 }
 
 .tableLeftTop{
