@@ -6,26 +6,26 @@
 			'rulerFontColor': "burlywood", // 标尺字体颜色
 			'headerBgColor': 'burlywood', // 菜单栏背景颜色
 			'headerMenuJson': [{
-				"icon": "",
+				"icon": " fa fa-area-chart fa-fw",
 				"title": "图表",
 				"children": [{
-					"icon": "",
-					"title": "折线图",
+					"image": "../../assets/report/images/base1.png",
+					"title": "基础折线图",
 				}, {
-					"icon": "",
-					"title": "柱状图",
+					"image": "../../assets/report/images/base2.png",
+					"title": "基础平滑折线图",
 				}, {
-					"icon": "",
-					"title": "圆形图",
+					"image": "../../assets/report/images/base3.png",
+					"title": "基础面积图",
 				}]
 			}, {
-				"icon": "",
+				"icon": " fa fa-table fa-fw",
 				"title": "表格",
 				"children": [{
-					"icon": "",
+					"icon": " fa fa-table fa-fw",
 					"title": "简单表格",
 				}, {
-					"icon": "",
+					"icon": " fa fa-list-alt fa-fw",
 					"title": "复杂表格",
 				}]
 			}],
@@ -276,7 +276,7 @@
 							'</a>';
 					}else{
 						str += '<div class="def-nav has-pulldown-special">' +
-							'<a class="pulldown-nav" href="">' +
+							'<a class="pulldown-nav" href="javascript:void(0);">' +
 							'<em class="f-icon arrow-bottom"></em>' +
 							'<i class="icon' + item.icon + '"></i>' +
 							'<span>' + item.title + '</span>' +
@@ -284,10 +284,17 @@
 							'<div class="pulldown app-url">' +
 							'<div class="child-menu">';
 						$.each(item.children, function(j, bean) {
-							str += '<a class="li disk" href="">' +
-								'<span class="icon' + bean.icon + '"></span>' +
-								'<span class="text">' + bean.title + '</span>' +
-								'</a>';
+							if(f.isNull(bean.icon)){
+								str += '<a class="li disk layui-col-xs3" href="javascript:void(0);">' +
+									'<img class="image" src="' + bean.image + '"/>' +
+									'<span class="text">' + bean.title + '</span>' +
+									'</a>';
+							}else{
+								str += '<a class="li disk layui-col-xs3" href="javascript:void(0);">' +
+									'<i class="icon' + bean.icon + '"></i>' +
+									'<span class="text">' + bean.title + '</span>' +
+									'</a>';
+							}
 						});
 						str += '</div>' +
 							'</div>' +

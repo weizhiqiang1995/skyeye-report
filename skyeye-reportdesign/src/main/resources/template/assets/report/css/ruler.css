@@ -207,6 +207,9 @@ body {
 	display: none;
 	top: 60px;
 	z-index: 9999;
+	width: 450px;
+	max-height: 270px;
+	overflow-y: auto;
 }
 
 .hd-main .pulldown .child-menu {
@@ -249,7 +252,7 @@ body {
 }
 
 .hd-main .navs .app-url .child-menu {
-	height: 70px
+	display: flex;
 }
 
 .hd-main .navs .app-url .child-menu a,
@@ -260,8 +263,6 @@ body {
 .hd-main .navs .app-url .li {
 	cursor: pointer;
 	padding-top: 4px;
-	width: 66px;
-	height: 66px;
 	border-radius: 3px;
 	display: block;
 	float: left;
@@ -276,8 +277,19 @@ body {
 .hd-main .navs .app-url .li .icon {
 	margin: 0 auto;
 	width: 35px;
-	height: 38px;
+	height: 35px;
 	display: block;
+	font-size: 25px;
+	line-height: 35px;
+}
+
+.hd-main .navs .app-url .li .image{
+	margin: 0 auto;
+	width: 90px;
+	height: 60px;
+	display: block;
+	font-size: 25px;
+	line-height: 35px;
 }
 
 .hd-main .navs .def-nav .icon,
