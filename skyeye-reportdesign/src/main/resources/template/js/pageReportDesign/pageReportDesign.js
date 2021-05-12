@@ -3,13 +3,82 @@ layui.config({
     version: skyeyeVersion
 }).extend({
     window: 'js/winui.window',
-}).define(['window', 'jquery', 'winui', 'form'], function (exports) {
+    echarts: '../echarts/echarts',
+    echartsTheme: '../echarts/echartsTheme'
+}).define(['window', 'jquery', 'winui', 'form', 'echarts'], function (exports) {
     winui.renderColor();
     var $ = layui.$,
         form = layui.form;
 
     $.skyeyeReportDesigner({
-        mouseLineColor: "blue"
+        mouseLineColor: "blue",
+        headerMenuJson: [{
+            "icon": " fa fa-area-chart fa-fw",
+            "title": "图表",
+            "children": [{
+                "id": "111",
+                "image": "../../assets/report/images/base1.png",
+                "title": "基础折线图",
+                "attr": {
+                    "xAxis.type": {
+                        "value": "category",
+                        "edit": false,
+                        "desc": "category 类目轴，适用于离散的类目数据。为该类型时类目数据可自动从 series.data 或 dataset.source 中取，或者可通过 xAxis.data 设置类目数据。",
+                        "title": "X坐标轴类型",
+                        "editor": "",
+                        "editorChooseValue": ""
+                    },
+                    "xAxis.data": {
+                        "value": ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                        "edit": false,
+                        "desc": "X坐标轴数据",
+                        "title": "X坐标轴数据",
+                        "editor": "",
+                        "editorChooseValue": ""
+                    },
+                    "yAxis.type": {
+                        "value": "value",
+                        "edit": false,
+                        "desc": "category 类目轴，适用于离散的类目数据。为该类型时类目数据可自动从 series.data 或 dataset.source 中取，或者可通过 yAxis.data 设置类目数据。",
+                        "title": "Y坐标轴类型",
+                        "editor": "",
+                        "editorChooseValue": ""
+                    },
+                    "series.data": {
+                        "value": [150, 230, 224, 218, 135, 147, 260],
+                        "edit": false,
+                        "desc": "Y坐标轴数据",
+                        "title": "Y坐标轴数据",
+                        "editor": "",
+                        "editorChooseValue": ""
+                    },
+                    "series.type": {
+                        "value": "line",
+                        "edit": false,
+                        "desc": "报表类型为折线",
+                        "title": "报表类型",
+                        "editor": "",
+                        "editorChooseValue": ""
+                    }
+                }
+            }, {
+                "image": "../../assets/report/images/base2.png",
+                "title": "基础平滑折线图",
+            }, {
+                "image": "../../assets/report/images/base3.png",
+                "title": "基础面积图",
+            }]
+        }, {
+            "icon": " fa fa-table fa-fw",
+            "title": "表格",
+            "children": [{
+                "icon": " fa fa-table fa-fw",
+                "title": "简单表格",
+            }, {
+                "icon": " fa fa-list-alt fa-fw",
+                "title": "复杂表格",
+            }]
+        }]
     });
 
     form.render();

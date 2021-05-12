@@ -511,3 +511,64 @@ body {
 	border-right: 1px solid #ccc;
 	border-top: 1px solid #ccc;
 }
+
+.kuang {
+	box-sizing: border-box;
+	border: 1px solid #0f0;
+	width: 450px;
+	height: 300px;
+	position: absolute;
+	top: 0px;
+}
+
+.kuang .dian {
+	position: absolute;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background: #0f0;
+}
+
+.left_top {
+	left: -5px;
+	top: -5px;
+}
+
+.right_top {
+	right: -5px;
+	top: -5px;
+}
+
+.left_bottom {
+	left: -5px;
+	bottom: -5px;
+}
+
+.right_bottom {
+	right: -5px;
+	bottom: -5px;
+}
+
+.top {
+	top: -5px;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.bottom {
+	bottom: -5px;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.left {
+	left: -5px;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.right {
+	right: -5px;
+	top: 50%;
+	transform: translateY(-50%);
+}

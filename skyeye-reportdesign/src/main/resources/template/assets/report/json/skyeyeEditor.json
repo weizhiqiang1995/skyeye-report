@@ -1,0 +1,9 @@
+{
+  "1": {
+    "key": "radio",
+    "name": "单选框",
+    "html": "<div class='layui-form-item {{defaultWidth}}' controlType='radio'><label class='layui-form-label'>{{labelContent}}</label><div class='layui-input-block winui-radio'>{{{context}}}</div></div>",
+    "js": "",
+    "showValueTemplate": "{{#each rows}}<input type='checkbox' name='limitrequire' title='{{name}}' rowId='{{id}}' lay-filter='checkboxProperty' />{{/each}}"
+  }
+}

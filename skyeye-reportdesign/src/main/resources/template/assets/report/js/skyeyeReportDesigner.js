@@ -5,30 +5,7 @@
 			'rulerColor': "#f00", // 标尺颜色
 			'rulerFontColor': "burlywood", // 标尺字体颜色
 			'headerBgColor': 'burlywood', // 菜单栏背景颜色
-			'headerMenuJson': [{
-				"icon": " fa fa-area-chart fa-fw",
-				"title": "图表",
-				"children": [{
-					"image": "../../assets/report/images/base1.png",
-					"title": "基础折线图",
-				}, {
-					"image": "../../assets/report/images/base2.png",
-					"title": "基础平滑折线图",
-				}, {
-					"image": "../../assets/report/images/base3.png",
-					"title": "基础面积图",
-				}]
-			}, {
-				"icon": " fa fa-table fa-fw",
-				"title": "表格",
-				"children": [{
-					"icon": " fa fa-table fa-fw",
-					"title": "简单表格",
-				}, {
-					"icon": " fa fa-list-alt fa-fw",
-					"title": "复杂表格",
-				}]
-			}],
+			'headerMenuJson': [], // 菜单栏
 			// excel配置
 			excelConfig: {
 				def:{
@@ -44,6 +21,19 @@
 		// 当前复制的单元格样式
 		let selectTdStyle = {};
 		var flag = $("#skyeyeScaleBox").size() === 0 ? true : false;
+		// 支持的编辑器类型
+		var editorType = {};
+
+		var editoptions = {
+			left_top: true,
+			left: true,
+			right: true,
+			top: true,
+			bottom: true,
+			right_top: true,
+			left_bottom: true,
+			right_bottom: true,
+		};
 		if(flag) {
 			$('<div class="skyeyeScaleBox" id="skyeyeScaleBox" onselectstart="return false;">' +
 				'<div id="skyeyeScaleRulerH" class="skyeyeScaleRuler_h"></div>' +
@@ -285,12 +275,12 @@
 							'<div class="child-menu">';
 						$.each(item.children, function(j, bean) {
 							if(f.isNull(bean.icon)){
-								str += '<a class="li disk layui-col-xs3" href="javascript:void(0);">' +
+								str += '<a class="li disk layui-col-xs3" href="javascript:void(0);" rowId="' + bean.id + '">' +
 									'<img class="image" src="' + bean.image + '"/>' +
 									'<span class="text">' + bean.title + '</span>' +
 									'</a>';
 							}else{
-								str += '<a class="li disk layui-col-xs3" href="javascript:void(0);">' +
+								str += '<a class="li disk layui-col-xs3" href="javascript:void(0);" rowId="' + bean.id + '">' +
 									'<i class="icon' + bean.icon + '"></i>' +
 									'<span class="text">' + bean.title + '</span>' +
 									'</a>';
@@ -321,6 +311,141 @@
 					$(this).find(".pulldown-nav").find(".f-icon").addClass("arrow-bottom");
 					$(this).find(".pulldown-nav").find(".f-icon").removeClass("arrow-top");
 				});
+				f.setEchartsClickEvent();
+			},
+
+			// echarts报表点击事件
+			setEchartsClickEvent: function (){
+				skyeyeHeader.find(".disk").click(function () {
+					var id = $(this).attr("rowId");
+					var echartsMation;
+					$.each(params.headerMenuJson, function(i, item) {
+						if(!f.isNull(item.children)){
+							echartsMation = getInPoingArr(item.children, "id", id);
+							return false;
+						}
+					});
+					if(!f.isNull(echartsMation)){
+						var option = f.getEchartsOptions(echartsMation);
+						var echartsBox = f.getEchartsBox(id + getRandomValueToString());
+					}
+				});
+			},
+
+			getEchartsBox: function (id){
+				var box = f.createBox(id);
+
+			},
+
+			createBox: function(id){
+				// 创建一个div
+				var div = document.createElement("div");
+				// 遍历this.editoptions
+				for (let attr in editoptions) {
+					if (editoptions[attr]) {
+						// 循环创建左，左上，左下，右，右上，右下，上，下方位的小点
+						var dian = document.createElement("div");
+						dian.className = "dian " + attr;
+						dian.dataset.belongId = id;
+						// 设置类型为对应的attr
+						dian.dataset.type = attr;
+						// 当按下对应方位的小点时
+						dian.onmousedown = e => {
+							var e = e || window.event;
+							// 先获取鼠标距离屏幕的left与top值
+							var clientXY = {
+								x: e.clientX,
+								y: e.clientY
+							}
+							var id = e.target.dataset.belongId;
+							var that = $("#" + id);
+							// 获取鼠标按下时ele的宽高
+							var eleWH = {
+								width: $("#" + id).width(),
+								height: $("#" + id).height(),
+							}
+							// 阻止事件冒泡（针对父元素的move）
+							e.stopPropagation();
+							// 通过e.target获取精准事件源对应的type值
+							var type = e.target.dataset.type;
+							// 鼠标按下对应方位小点移动时，调用mousemove
+							document.onmousemove = function (e) {
+								// 查找type中是否包含”right“
+								if (type.indexOf('right') > -1) {
+									// 如果拖拽后的宽度小于最小宽度，就return出去
+									if (50 > eleWH.width + e.clientX - clientXY.x) {
+										return;
+									}
+									// ele拖拽后的宽度为：初始width+拖拽后鼠标距离屏幕的距离 - 第一次按下时鼠标距离屏幕的距离
+									that.width(eleWH.width - e.clientX + clientXY.x);
+								}
+								// 与”right“相同原理
+								if (type.indexOf("bottom") > -1) {
+									if (35 > eleWH.height + e.clientY - clientXY.y) {
+										return;
+									}
+									that.css({
+										height: (eleWH.height - e.clientY + clientXY.y) + "px"
+									});
+								}
+
+								if (type.indexOf("top") > -1) {
+									if (35 > eleWH.height - e.clientY + clientXY.y) {
+										return;
+									}
+									// ele拖拽后的高度为：初始height-拖拽后鼠标距离屏幕的距离 + 第一次按下时鼠标距离屏幕的距离
+									// 重新设置ele的top值为此时鼠标距离屏幕的y值
+									that.css({
+										height: (eleWH.height - e.clientY + clientXY.y) + "px",
+										top: e.clientY + "px"
+									});
+								}
+								// 与”top“相同原理
+								if (type.indexOf("left") > -1) {
+									if (50 > eleWH.width - e.clientX + clientXY.x) {
+										return;
+									}
+									// 重新设置ele的left值为此时鼠标距离屏幕的x值
+									that.css({
+										width: (eleWH.width - e.clientX + clientXY.x) + "px",
+										left: e.clientX + "px"
+									});
+								}
+							}
+							document.onmouseup = function () {
+								document.onmousemove = null;
+								document.onmouseup = null;
+							}
+						}
+					}
+					// 将类名为”dian“的div添加到div中
+					div.appendChild(dian);
+				}
+				// 为div设置类名
+				div.className = "kuang";
+				div.id = id;
+				skyeyeReportContent[0].appendChild(div);
+				return div;
+			},
+
+			// 获取echarts的配置信息
+			getEchartsOptions: function (echartsMation){
+				var echartsJson = {};
+				$.each(echartsMation.attr, function(key, val) {
+					echartsJson = $.extend(true, echartsJson, f.calcKeyHasPointToJson(key, val.value));
+				});
+				return echartsJson;
+			},
+
+			calcKeyHasPointToJson: function (key, value){
+				var keyArr = key.split(".");
+				var resultValue = value;
+				if(keyArr.length > 1){
+					resultValue = f.calcKeyHasPointToJson(key.substr(key.lastIndexOf(".") + 1), value);
+				}
+				var result = {};
+				result[keyArr[0]] = resultValue;
+				return result;
 			},
 
 			getChar: function(ind) {
@@ -1422,6 +1547,13 @@
 				});
 			},
 
+			// 加载编辑器类型
+			initEditorType: function (){
+				$.getJSON("../../assets/report/json/skyeyeEditor.json", function (data) {
+					editorType = data;
+				});
+			},
+
 			// 初始化执行
 			init: function() {
 				f.box();
@@ -1432,6 +1564,8 @@
 				// 加载Excel表格
 				f.initExcelTable({type: 1});
 				f.initExcelEvent();
+				// 加载编辑器类型
+				f.initEditorType();
 			}
 		};
 		f.init();
