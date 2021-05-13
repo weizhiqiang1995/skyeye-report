@@ -327,7 +327,12 @@
 					});
 					if(!f.isNull(echartsMation)){
 						var option = f.getEchartsOptions(echartsMation);
-						var echartsBox = f.getEchartsBox(id + getRandomValueToString());
+						var echartsId = f.getEchartsBox(id + getRandomValueToString());
+						var newChart = echarts.init(document.getElementById(echartsId));
+						newChart.setOption(option);
+						$("#" + echartsId).resize(function () {
+							newChart.resize();
+						})
 					}
 				});
 			},
@@ -335,6 +340,19 @@
 			getEchartsBox: function (id){
 				var box = f.createBox(id);
 
+				var echartsId = "box" + id;
+				var echartsBox = document.createElement("div");
+				// 为div设置类名
+				echartsBox.className = "echarts-box";
+				echartsBox.id = echartsId;
+				box.appendChild(echartsBox);
+				echartsBox.onmousedown = ee => {
+					var id = $("#" + echartsId).parent().attr("id");
+					f.setMoveEvent(ee, $("#" + id));
+					// 阻止事件冒泡（针对父元素的move）
+					ee.stopPropagation();
+				};
+				return echartsId;
 			},
 
 			createBox: function(id){
@@ -427,33 +445,36 @@
 					}
 				}
 				// 添加移动事件
-				div.onmousedown = ee => {
-					// 获取事件对象
-					var ee = ee || window.event;
-					// 鼠标按下时，鼠标相对于元素的x坐标
-					var x = ee.offsetX;
-					// 鼠标按下时，鼠标相对于元素的y坐标
-					var y = ee.offsetY;
+				$("#" + id).on('mousedown', function (ee){
 					var id = ee.target.dataset.boxId;
-					var that = $("#" + id);
-					// 鼠标按下移动时调用mousemove
-					document.onmousemove = e => {
-						// 元素ele移动的距离l
-						var l = e.clientX - x - 18;
-						// 元素ele移动的距离l
-						var t = e.clientY - y - 78;
-						that.css({
-							left: l + "px",
-							top: t + "px"
-						});
-					}
-					// 当鼠标弹起时，清空onmousemove与onmouseup
-					document.onmouseup = () => {
-						document.onmousemove = null;
-						document.onmouseup = null;
-					}
-				}
+					f.setMoveEvent(ee, $("#" + id));
+				});
 				return div;
+			},
+
+			setMoveEvent: function (ee, that){
+				// 获取事件对象
+				var ee = ee || window.event;
+				// 鼠标按下时，鼠标相对于元素的x坐标
+				var x = ee.offsetX;
+				// 鼠标按下时，鼠标相对于元素的y坐标
+				var y = ee.offsetY;
+				// 鼠标按下移动时调用mousemove
+				document.onmousemove = e => {
+					// 元素ele移动的距离l
+					var l = e.clientX - x - 18;
+					// 元素ele移动的距离l
+					var t = e.clientY - y - 78;
+					that.css({
+						left: l + "px",
+						top: t + "px"
+					});
+				}
+				// 当鼠标弹起时，清空onmousemove与onmouseup
+				document.onmouseup = () => {
+					document.onmousemove = null;
+					document.onmouseup = null;
+				}
 			},
 
 			// 获取echarts的配置信息

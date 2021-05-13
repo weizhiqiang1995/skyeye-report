@@ -520,6 +520,7 @@ body {
 	position: absolute;
 	top: 0px;
 	background-color: white;
+	z-index: 100;
 }
 
 .kuang .dian {
@@ -580,4 +581,9 @@ body {
 	top: 50%;
 	transform: translateY(-50%);
 	cursor: e-resize;
+}
+
+.echarts-box{
+	width: 100%;
+	height: 100%;
 }
