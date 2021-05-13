@@ -519,6 +519,7 @@ body {
 	height: 300px;
 	position: absolute;
 	top: 0px;
+	background-color: white;
 }
 
 .kuang .dian {
@@ -532,43 +533,51 @@ body {
 .left_top {
 	left: -5px;
 	top: -5px;
+	cursor: nw-resize;
 }
 
 .right_top {
 	right: -5px;
 	top: -5px;
+	cursor: ne-resize;
 }
 
 .left_bottom {
 	left: -5px;
 	bottom: -5px;
+	cursor: ne-resize;
 }
 
 .right_bottom {
 	right: -5px;
 	bottom: -5px;
+	cursor: nw-resize;
 }
 
 .top {
 	top: -5px;
 	left: 50%;
 	transform: translateX(-50%);
+	cursor: n-resize;
 }
 
 .bottom {
 	bottom: -5px;
 	left: 50%;
 	transform: translateX(-50%);
+	cursor: n-resize;
 }
 
 .left {
 	left: -5px;
 	top: 50%;
 	transform: translateY(-50%);
+	cursor: e-resize;
 }
 
 .right {
 	right: -5px;
 	top: 50%;
 	transform: translateY(-50%);
+	cursor: e-resize;
 }

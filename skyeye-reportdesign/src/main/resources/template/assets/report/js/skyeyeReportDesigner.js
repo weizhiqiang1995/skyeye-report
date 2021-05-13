@@ -340,6 +340,11 @@
 			createBox: function(id){
 				// 创建一个div
 				var div = document.createElement("div");
+				// 为div设置类名
+				div.className = "kuang";
+				div.id = id;
+				div.dataset.boxId = id;
+				skyeyeReportContent[0].appendChild(div);
 				// 遍历this.editoptions
 				for (let attr in editoptions) {
 					if (editoptions[attr]) {
@@ -349,15 +354,17 @@
 						dian.dataset.belongId = id;
 						// 设置类型为对应的attr
 						dian.dataset.type = attr;
+						// 将类名为”dian“的div添加到div中
+						div.appendChild(dian);
 						// 当按下对应方位的小点时
-						dian.onmousedown = e => {
-							var e = e || window.event;
+						dian.onmousedown = ee => {
+							var ee = ee || window.event;
 							// 先获取鼠标距离屏幕的left与top值
 							var clientXY = {
-								x: e.clientX,
-								y: e.clientY
+								x: ee.clientX,
+								y: ee.clientY
 							}
-							var id = e.target.dataset.belongId;
+							var id = ee.target.dataset.belongId;
 							var that = $("#" + id);
 							// 获取鼠标按下时ele的宽高
 							var eleWH = {
@@ -365,9 +372,9 @@
 								height: $("#" + id).height(),
 							}
 							// 阻止事件冒泡（针对父元素的move）
-							e.stopPropagation();
+							ee.stopPropagation();
 							// 通过e.target获取精准事件源对应的type值
-							var type = e.target.dataset.type;
+							var type = ee.target.dataset.type;
 							// 鼠标按下对应方位小点移动时，调用mousemove
 							document.onmousemove = function (e) {
 								// 查找type中是否包含”right“
@@ -377,7 +384,7 @@
 										return;
 									}
 									// ele拖拽后的宽度为：初始width+拖拽后鼠标距离屏幕的距离 - 第一次按下时鼠标距离屏幕的距离
-									that.width(eleWH.width - e.clientX + clientXY.x);
+									that.width(eleWH.width + e.clientX - clientXY.x);
 								}
 								// 与”right“相同原理
 								if (type.indexOf("bottom") > -1) {
@@ -385,7 +392,7 @@
 										return;
 									}
 									that.css({
-										height: (eleWH.height - e.clientY + clientXY.y) + "px"
+										height: (eleWH.height + e.clientY - clientXY.y) + "px"
 									});
 								}
 
@@ -397,7 +404,7 @@
 									// 重新设置ele的top值为此时鼠标距离屏幕的y值
 									that.css({
 										height: (eleWH.height - e.clientY + clientXY.y) + "px",
-										top: e.clientY + "px"
+										top: (e.clientY - 78) + "px"
 									});
 								}
 								// 与”top“相同原理
@@ -408,7 +415,7 @@
 									// 重新设置ele的left值为此时鼠标距离屏幕的x值
 									that.css({
 										width: (eleWH.width - e.clientX + clientXY.x) + "px",
-										left: e.clientX + "px"
+										left: (e.clientX - 18) + "px"
 									});
 								}
 							}
@@ -418,13 +425,34 @@
 							}
 						}
 					}
-					// 将类名为”dian“的div添加到div中
-					div.appendChild(dian);
 				}
-				// 为div设置类名
-				div.className = "kuang";
-				div.id = id;
-				skyeyeReportContent[0].appendChild(div);
+				// 添加移动事件
+				div.onmousedown = ee => {
+					// 获取事件对象
+					var ee = ee || window.event;
+					// 鼠标按下时，鼠标相对于元素的x坐标
+					var x = ee.offsetX;
+					// 鼠标按下时，鼠标相对于元素的y坐标
+					var y = ee.offsetY;
+					var id = ee.target.dataset.boxId;
+					var that = $("#" + id);
+					// 鼠标按下移动时调用mousemove
+					document.onmousemove = e => {
+						// 元素ele移动的距离l
+						var l = e.clientX - x - 18;
+						// 元素ele移动的距离l
+						var t = e.clientY - y - 78;
+						that.css({
+							left: l + "px",
+							top: t + "px"
+						});
+					}
+					// 当鼠标弹起时，清空onmousemove与onmouseup
+					document.onmouseup = () => {
+						document.onmousemove = null;
+						document.onmouseup = null;
+					}
+				}
 				return div;
 			},
 
