@@ -1425,6 +1425,20 @@
 			},
 
 			initExcelEvent: function(){
+				// 图表点击事件
+				$("body").on('click', ".echarts-box", function(){
+					$(".dian").hide();
+					$(".kuang").css({
+						"border": "1px solid white",
+						"z-index": 100
+					});
+					// 被选中项
+					$(this).parent().find(".dian").show();
+					$(this).parent().css({
+						"border": "1px solid #0f0",
+						"z-index": 200
+					});
+				});
 
 				f.tableScroll();
 			},
