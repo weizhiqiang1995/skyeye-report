@@ -39,4 +39,42 @@ public class ReportImportModelController {
         reportImportModelService.getReportImportModelList(inputObject, outputObject);
     }
 
+    /**
+     * 新增文件模型关系表格信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @RequestMapping("/post/ReportImportModelController/insertReportImportModel")
+    @ResponseBody
+    public void insertReportImportModel(InputObject inputObject, OutputObject outputObject) throws Exception {
+        reportImportModelService.insertReportImportModel(inputObject, outputObject);
+    }
+
+    /**
+     * 根据id删除文件模型关系表格信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @RequestMapping("/post/ReportImportModelController/delReportImportModelById")
+    @ResponseBody
+    public void delReportImportModelById(InputObject inputObject, OutputObject outputObject) throws Exception {
+        reportImportModelService.delReportImportModelById(inputObject, outputObject);
+    }
+
+    /**
+     * 根据id更新文件模型关系表格中fileName, modelId信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @RequestMapping("/post/ReportImportModelController/updateReportImportModelById")
+    @ResponseBody
+    public void updateReportImportModelById(InputObject inputObject, OutputObject outputObject) throws Exception {
+        reportImportModelService.updateReportImportModelById(inputObject, outputObject);
+    }
 }

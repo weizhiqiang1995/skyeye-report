@@ -19,4 +19,9 @@ public interface ReportImportModelService {
 
     public void getReportImportModelList(InputObject inputObject, OutputObject outputObject) throws Exception;
 
+    void insertReportImportModel(InputObject inputObject, OutputObject outputObject) throws Exception;
+
+    void delReportImportModelById(InputObject inputObject, OutputObject outputObject) throws Exception;
+
+    void updateReportImportModelById(InputObject inputObject, OutputObject outputObject) throws Exception;
 }

@@ -11,6 +11,24 @@
         <property id="fileName" name="fileName" ref="" var="文件名称"/>
         <property id="modelId" name="modelId" ref="" var="模型id"/>
     </url>
+
+    <url id="reportimportmodel002" path="/post/ReportImportModelController/insertReportImportModel"
+         val="新增文件模型关系表格信息" allUse="2" method="POST" groupName="文件模型关系">
+        <property id="fileName" name="fileName" ref="required" var="文件名称"/>
+        <property id="modelId" name="modelId" ref="required" var="模型id"/>
+    </url>
+
+    <url id="reportimportmodel003" path="/post/ReportImportModelController/delReportImportModelById"
+         val="根据id删除文件模型关系表格信息" allUse="2" method="POST" groupName="文件模型关系">
+        <property id="id" name="id" ref="required" var="文件模型唯一id"/>
+    </url>
+
+    <url id="reportimportmodel004" path="/post/ReportImportModelController/updateReportImportModelById"
+         val="更新文件模型关系表格信息" allUse="2" method="POST" groupName="文件模型关系">
+        <property id="id" name="id" ref="required" var="文件模型唯一id"/>
+        <property id="fileName" name="fileName" ref="required" var="文件名称"/>
+        <property id="modelId" name="modelId" ref="required" var="模型id"/>
+    </url>
     <!-- 文件模型关系结束 -->
 
 

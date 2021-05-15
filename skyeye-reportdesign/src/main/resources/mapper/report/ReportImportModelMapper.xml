@@ -24,5 +24,34 @@
         </if>
     </select>
 
+    <select id="queryReportImportModelByFileName" resultType="java.lang.Integer">
+        SELECT count(1) FROM report_import_model t where t.file_name = #{fileName}
+    </select>
+
+    <select id="queryReportImportModelByModelId" resultType="java.lang.Integer">
+        SELECT count(1) FROM report_import_model t where t.model_id = #{modelId}
+    </select>
+
+    <insert id="insertReportImportModel" parameterType="java.util.Map">
+        INSERT INTO report_import_model(id, file_name, model_id, create_id, create_time, last_update_id, last_update_time)
+        VALUES(#{id}, #{fileName}, #{modelId}, #{userId}, #{createTime}, #{userId}, #{createTime})
+    </insert>
+
+    <update id="updateReportImportModelById" parameterType="java.util.Map">
+        UPDATE report_import_model
+        SET
+        <if test="fileName != '' and fileName != null">
+            file_name = #{fileName},
+        </if>
+        <if test="modelId != '' and modelId != null">
+            model_id = #{modelId},
+        </if>
+        last_update_id = #{userId}, last_update_time =  #{createTime}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delReportImportModelById">
+        DELETE FROM report_import_model WHERE id = #{id}
+    </delete>
 
 </mapper>

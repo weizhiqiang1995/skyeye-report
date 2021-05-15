@@ -8,6 +8,7 @@ import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.skyeye.common.object.InputObject;
 import com.skyeye.common.object.OutputObject;
+import com.skyeye.common.util.ToolUtil;
 import com.skyeye.dao.ReportImportModelDao;
 import com.skyeye.service.ReportImportModelService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,4 +49,80 @@ public class ReportImportModelServiceImpl implements ReportImportModelService {
         outputObject.settotal(total);
     }
 
+    /**
+     * 新增文件模型关系表格信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @Override
+    public void insertReportImportModel(InputObject inputObject, OutputObject outputObject) throws Exception {
+        Map<String, Object> inputParams = inputObject.getParams();
+        // 校验fileName, modelId是否重复
+        if (duplicateNameCheck(inputParams, outputObject)) {
+            return;
+        }
+        inputParams.put("id", ToolUtil.getSurFaceId());
+        inputParams.put("createTime", ToolUtil.getTimeAndToString());
+        inputParams.put("userId", inputObject.getLogParams().get("id"));
+        reportImportModelDao.insertReportImportModel(inputParams);
+    }
+
+    /**
+     * 根据id删除文件模型关系表格信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @Override
+    public void delReportImportModelById(InputObject inputObject, OutputObject outputObject) throws Exception {
+        Map<String, Object> inputParams = inputObject.getParams();
+        reportImportModelDao.delReportImportModelById(String.valueOf(inputParams.get("id")));
+    }
+
+    /**
+     * 根据id更新文件模型关系表格中fileName, modelId信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @Override
+    public void updateReportImportModelById(InputObject inputObject, OutputObject outputObject) throws Exception {
+        Map<String, Object> inputParams = inputObject.getParams();
+        // 校验fileName, modelId是否重复e
+        if (duplicateNameCheck(inputParams, outputObject)) {
+            return;
+        }
+        inputParams.put("userId", String.valueOf(inputObject.getLogParams().get("id")));
+        inputParams.put("createTime", ToolUtil.getTimeAndToString());
+        reportImportModelDao.updateReportImportModelById(inputParams);
+        outputObject.setBean(inputParams);
+    }
+
+    /**
+     * 对fileName、modelId进行重名校验
+     *
+     * @param inputParams
+     * @param outputObject
+     * @return true表示有重名, false反之
+     */
+    private boolean duplicateNameCheck(Map<String, Object> inputParams, OutputObject outputObject) {
+        // fileName, modelId不重复
+        String fileName = inputParams.get("fileName").toString();
+        String modelId = inputParams.get("modelId").toString();
+        Integer totalNumber = reportImportModelDao.queryReportImportModelByFileName(fileName);
+        if (totalNumber > 0) {
+            outputObject.setreturnMessage("该fileName已存在");
+            return true;
+        }
+        totalNumber = reportImportModelDao.queryReportImportModelByModelId(modelId);
+        if (totalNumber > 0) {
+            outputObject.setreturnMessage("该modelId已存在");
+            return true;
+        }
+        return false;
+    }
 }

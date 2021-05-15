@@ -5,6 +5,7 @@
 package com.skyeye.dao;
 
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -20,5 +21,15 @@ import java.util.Map;
 public interface ReportImportModelDao {
 
     List<Map<String, Object>> getReportImportModelList(Map<String, Object> map, PageBounds pageBounds);
+
+    Integer queryReportImportModelByFileName(@Param("fileName") String fileName);
+
+    Integer queryReportImportModelByModelId(@Param("modelId") String modelId);
+
+    void insertReportImportModel(Map<String, Object> map);
+
+    Integer delReportImportModelById(@Param("id") String id);
+
+    void updateReportImportModelById(Map<String, Object> map);
 
 }
