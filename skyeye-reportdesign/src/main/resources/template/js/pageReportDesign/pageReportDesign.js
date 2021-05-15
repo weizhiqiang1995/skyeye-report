@@ -36,6 +36,14 @@ layui.config({
                         "editor": "",
                         "editorChooseValue": ""
                     },
+                    "xAxis.splitLine.show": {
+                        "value": "true",
+                        "edit": true,
+                        "desc": "是否显示分隔线。默认数值轴显示，类目轴不显示。",
+                        "title": "是否显示分隔线",
+                        "editor": "1",
+                        "editorChooseValue": "[{\"id\": \"true\",  \"name\": \"是\"}, {\"id\": \"false\",  \"name\": \"否\"}]"
+                    },
                     "yAxis.type": {
                         "value": "value",
                         "edit": false,

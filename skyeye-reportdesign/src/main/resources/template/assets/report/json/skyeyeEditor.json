@@ -2,8 +2,15 @@
   "1": {
     "key": "radio",
     "name": "单选框",
-    "html": "<div class='layui-form-item {{defaultWidth}}' controlType='radio'><label class='layui-form-label'>{{labelContent}}</label><div class='layui-input-block winui-radio'>{{{context}}}</div></div>",
+    "html": "<div class='layui-form-item {{defaultWidth}}' controlType='radio' modelKey='{{modelKey}}' boxId='{{boxId}}'><label class='layui-form-label'>{{labelContent}}</label><div class='layui-input-block winui-radio'>{{{showValueTemplate}}}</div></div>",
+    "js": "$('input:radio[name=\"{{boxId}}\"][value=\"{{context}}\"]').attr('checked', true);form.on('radio({{boxId}})', function(data){var value = data.value; dataValueChange(value, $(this));});",
+    "showValueTemplate": "{{#each rows}}<input type='radio' name='{{layFilter}}' title='{{name}}' rowId='{{id}}' value='{{id}}' lay-filter='{{layFilter}}' />{{/each}}"
+  },
+  "100": {
+    "key": "showDetail",
+    "name": "详情展示",
+    "html": "<div class='layui-form-item {{defaultWidth}}'><label class='layui-form-label'>{{labelContent}}：</label><div class='layui-input-block ver-center'>{{{context}}}</div></div>",
     "js": "",
-    "showValueTemplate": "{{#each rows}}<input type='checkbox' name='limitrequire' title='{{name}}' rowId='{{id}}' lay-filter='checkboxProperty' />{{/each}}"
+    "showValueTemplate": ""
   }
 }
