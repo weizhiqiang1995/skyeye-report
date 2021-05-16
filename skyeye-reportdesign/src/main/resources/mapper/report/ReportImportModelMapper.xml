@@ -34,11 +34,25 @@
     </select>
 
     <select id="queryReportImportModelByFileName" resultType="java.lang.Integer">
-        SELECT count(1) FROM report_import_model t where t.file_name = #{fileName}
+        SELECT
+            count(1)
+        FROM
+            report_import_model t
+        WHERE t.file_name = #{fileName}
+        <if test="id != '' and id != null">
+            AND t.id != #{id}
+        </if>
     </select>
 
     <select id="queryReportImportModelByModelId" resultType="java.lang.Integer">
-        SELECT count(1) FROM report_import_model t where t.model_id = #{modelId}
+        SELECT
+            count(1)
+        FROM
+            report_import_model t
+        WHERE t.model_id = #{modelId}
+        <if test="id != '' and id != null">
+            AND t.id != #{id}
+        </if>
     </select>
 
     <insert id="insertReportImportModel" parameterType="java.util.Map">

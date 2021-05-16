@@ -20,13 +20,13 @@ import java.util.Map;
  */
 public interface ReportDataBaseDao {
 
-    List<Map<String, Object>> getReportDataBaseList(Map<String, Object> map, PageBounds pageBounds);
+    List<Map<String, Object>> getReportDataBaseList(Map<String, Object> map, PageBounds pageBounds) throws Exception;
 
-    void insertReportDataBase(Map<String, Object> map);
+    void insertReportDataBase(Map<String, Object> map) throws Exception;
 
-    void delReportDataBaseById(@Param("id") String id);
+    void delReportDataBaseById(@Param("id") String id) throws Exception;
 
-    void updateReportDataBaseById(Map<String, Object> map);
+    void updateReportDataBaseById(Map<String, Object> map) throws Exception;
 
-    Map<String, Object> getReportDataBaseById(@Param("id") String id);
+    Map<String, Object> getReportDataBaseById(@Param("id") String id) throws Exception;
 }

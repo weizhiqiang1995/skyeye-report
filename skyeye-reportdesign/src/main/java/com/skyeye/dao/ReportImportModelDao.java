@@ -20,17 +20,17 @@ import java.util.Map;
  */
 public interface ReportImportModelDao {
 
-    List<Map<String, Object>> getReportImportModelList(Map<String, Object> map, PageBounds pageBounds);
+    List<Map<String, Object>> getReportImportModelList(Map<String, Object> map, PageBounds pageBounds) throws Exception;
 
-    Integer queryReportImportModelByFileName(@Param("fileName") String fileName);
+    Integer queryReportImportModelByFileName(@Param("fileName") String fileName, @Param("id") String id) throws Exception;
 
-    Integer queryReportImportModelByModelId(@Param("modelId") String modelId);
+    Integer queryReportImportModelByModelId(@Param("modelId") String modelId, @Param("id") String id) throws Exception;
 
-    void insertReportImportModel(Map<String, Object> map);
+    void insertReportImportModel(Map<String, Object> map) throws Exception;
 
-    Integer delReportImportModelById(@Param("id") String id);
+    Integer delReportImportModelById(@Param("id") String id) throws Exception;
 
-    void updateReportImportModelById(Map<String, Object> map);
+    void updateReportImportModelById(Map<String, Object> map) throws Exception;
 
-    Map<String, Object> getReportImportModelById(@Param("id") String id);
+    Map<String, Object> getReportImportModelById(@Param("id") String id) throws Exception;
 }

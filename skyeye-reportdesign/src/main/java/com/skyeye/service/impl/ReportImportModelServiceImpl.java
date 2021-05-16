@@ -107,6 +107,7 @@ public class ReportImportModelServiceImpl implements ReportImportModelService {
         Map<String, Object> inputParams = inputObject.getParams();
         Map<String, Object> bean = reportImportModelDao.getReportImportModelById(String.valueOf(inputParams.get("id")));
         outputObject.setBean(bean);
+        outputObject.settotal(1);
     }
 
     /**
@@ -116,16 +117,17 @@ public class ReportImportModelServiceImpl implements ReportImportModelService {
      * @param outputObject
      * @return true表示有重名, false反之
      */
-    private boolean duplicateNameCheck(Map<String, Object> inputParams, OutputObject outputObject) {
+    private boolean duplicateNameCheck(Map<String, Object> inputParams, OutputObject outputObject) throws Exception {
         // fileName, modelId不重复
         String fileName = inputParams.get("fileName").toString();
         String modelId = inputParams.get("modelId").toString();
-        Integer totalNumber = reportImportModelDao.queryReportImportModelByFileName(fileName);
+        String id = inputParams.containsKey("id") ? inputParams.get("id").toString() : null;
+        Integer totalNumber = reportImportModelDao.queryReportImportModelByFileName(fileName, id);
         if (totalNumber > 0) {
             outputObject.setreturnMessage("该fileName已存在");
             return true;
         }
-        totalNumber = reportImportModelDao.queryReportImportModelByModelId(modelId);
+        totalNumber = reportImportModelDao.queryReportImportModelByModelId(modelId, id);
         if (totalNumber > 0) {
             outputObject.setreturnMessage("该modelId已存在");
             return true;
