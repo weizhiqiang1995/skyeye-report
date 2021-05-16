@@ -102,6 +102,13 @@ public class ReportImportModelServiceImpl implements ReportImportModelService {
         outputObject.setBean(inputParams);
     }
 
+    @Override
+    public void getReportImportModelById(InputObject inputObject, OutputObject outputObject) throws Exception {
+        Map<String, Object> inputParams = inputObject.getParams();
+        Map<String, Object> bean = reportImportModelDao.getReportImportModelById(String.valueOf(inputParams.get("id")));
+        outputObject.setBean(bean);
+    }
+
     /**
      * 对fileName、modelId进行重名校验
      *

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.skyeye.dao.ReportDataBaseDao">
+
+    <sql id="baseField">
+        rd.id,
+        rd.name,
+        rd.driver_class AS driverClass,
+        rd.jdbc_url AS jdbcUrl,
+        rd.user,
+        rd.password,
+        rd.queryer_class AS queryerClass,
+        rd.pool_class AS poolClass,
+        rd.options,
+        rd.comment,
+        rd.create_id AS createName,
+        CONVERT(rd.create_time, char) createTime,
+        rd.last_update_id lastUpdateName,
+        CONVERT(rd.last_update_time, char) lastUpdateTime
+    </sql>
+
+    <select id="getReportDataBaseList" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT
+            <include refid="baseField"/>
+        FROM report_database rd
+        WHERE 1 = 1
+        <if test="name != '' and name != null">
+            AND rd.name LIKE '%${name}%'
+        </if>
+        ORDER BY rd.last_update_time DESC
+    </select>
+
+    <insert id="insertReportDataBase" parameterType="java.util.Map">
+        INSERT INTO report_database
+            (id, name, driver_class, jdbc_url, user, password, queryer_class, pool_class, options, comment, create_id, create_time, last_update_id, last_update_time)
+        VALUES
+            (#{id}, #{name}, #{driverClass}, #{jdbcUrl}, #{user}, #{password}, #{queryerClass}, #{poolClass}, #{options}, #{comment}, #{userId}, #{createTime}, #{userId}, #{createTime})
+    </insert>
+
+    <delete id="delReportDataBaseById">
+        DELETE FROM report_database WHERE id = #{id}
+    </delete>
+
+    <update id="updateReportDataBaseById" parameterType="java.util.Map">
+        UPDATE report_database set
+            <if test="name != '' and name != null">
+                name = #{name},
+            </if>
+            <if test="driverClass != '' and driverClass != null">
+                driver_class = #{driverClass},
+            </if>
+            <if test="jdbcUrl != '' and jdbcUrl != null">
+                jdbc_url = #{jdbcUrl},
+            </if>
+            <if test="user != '' and user != null">
+                user = #{user},
+            </if>
+            <if test="password != '' and password != null">
+                password = #{password},
+            </if>
+            <if test="queryerClass != '' and queryerClass != null">
+                queryer_class = #{queryerClass},
+            </if>
+            <if test="poolClass != '' and poolClass != null">
+                pool_class = #{poolClass},
+            </if>
+            <if test="options != '' and options != null">
+                options = #{options},
+            </if>
+            <if test="comment != '' and comment != null">
+                comment = #{comment},
+            </if>
+            last_update_id = #{userId},
+            last_update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
+
+    <select id="getReportDataBaseById" resultType="java.util.Map">
+        SELECT
+            <include refid="baseField"/>
+        FROM report_database rd
+        WHERE rd.id = #{id}
+    </select>
+</mapper>

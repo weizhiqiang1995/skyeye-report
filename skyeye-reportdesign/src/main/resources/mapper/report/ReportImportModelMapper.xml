@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.skyeye.dao.ReportImportModelDao">
+    <sql id="reportImportModelBaseField">
+        rim.id,
+        rim.file_name AS fileName,
+        rim.model_id AS modelId,
+        rim.create_id AS createName,
+        CONVERT(rim.create_time, char) createTime,
+        rim.last_update_id AS lastUpdateName,
+        CONVERT(rim.last_update_time, char) lastUpdateTime
+    </sql>
 
     <select id="getReportImportModelList" parameterType="java.util.Map" resultType="java.util.Map">
         SELECT
@@ -59,4 +68,10 @@
         WHERE id = #{id}
     </delete>
 
+    <select id="getReportImportModelById" resultType="java.util.Map">
+        SELECT
+            <include refid="reportImportModelBaseField"/>
+        FROM report_import_model rim
+        WHERE rim.id = #{id}
+    </select>
 </mapper>

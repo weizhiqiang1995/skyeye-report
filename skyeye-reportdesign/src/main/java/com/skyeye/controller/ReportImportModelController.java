@@ -77,4 +77,17 @@ public class ReportImportModelController {
     public void updateReportImportModelById(InputObject inputObject, OutputObject outputObject) throws Exception {
         reportImportModelService.updateReportImportModelById(inputObject, outputObject);
     }
+
+    /**
+     * 根据id查询文件模型关系信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @RequestMapping("/post/ReportImportModelController/getReportImportModelById")
+    @ResponseBody
+    public void getReportImportModelById(InputObject inputObject, OutputObject outputObject) throws Exception {
+        reportImportModelService.getReportImportModelById(inputObject, outputObject);
+    }
 }

@@ -14,23 +14,19 @@ import java.util.Map;
  * @ClassName: ReportImportModelDao
  * @Description:
  * @author: skyeye云系列--卫志强
- * @date: 2021/5/9 16:46
+ * @date: 2021/5/16 14:56
  * @Copyright: 2021 https://gitee.com/doc_wei01/skyeye Inc. All rights reserved.
  * 注意：本内容仅限购买后使用.禁止私自外泄以及用于其他的商业目的
  */
-public interface ReportImportModelDao {
+public interface ReportDataBaseDao {
 
-    List<Map<String, Object>> getReportImportModelList(Map<String, Object> map, PageBounds pageBounds);
+    List<Map<String, Object>> getReportDataBaseList(Map<String, Object> map, PageBounds pageBounds);
 
-    Integer queryReportImportModelByFileName(@Param("fileName") String fileName);
+    void insertReportDataBase(Map<String, Object> map);
 
-    Integer queryReportImportModelByModelId(@Param("modelId") String modelId);
+    void delReportDataBaseById(@Param("id") String id);
 
-    void insertReportImportModel(Map<String, Object> map);
+    void updateReportDataBaseById(Map<String, Object> map);
 
-    Integer delReportImportModelById(@Param("id") String id);
-
-    void updateReportImportModelById(Map<String, Object> map);
-
-    Map<String, Object> getReportImportModelById(@Param("id") String id);
+    Map<String, Object> getReportDataBaseById(@Param("id") String id);
 }

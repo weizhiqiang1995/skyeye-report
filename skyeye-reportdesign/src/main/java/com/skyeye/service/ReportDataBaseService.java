@@ -15,16 +15,15 @@ import com.skyeye.common.object.OutputObject;
  * @Copyright: 2021 https://gitee.com/doc_wei01/skyeye Inc. All rights reserved.
  * 注意：本内容仅限购买后使用.禁止私自外泄以及用于其他的商业目的
  */
-public interface ReportImportModelService {
+public interface ReportDataBaseService {
 
-    public void getReportImportModelList(InputObject inputObject, OutputObject outputObject) throws Exception;
+    void getReportDataBaseList(InputObject inputObject, OutputObject outputObject) throws Exception;
 
-    void insertReportImportModel(InputObject inputObject, OutputObject outputObject) throws Exception;
+    void insertReportDataBase(InputObject inputObject, OutputObject outputObject) throws Exception;
 
-    void delReportImportModelById(InputObject inputObject, OutputObject outputObject) throws Exception;
+    void delReportDataBaseById(InputObject inputObject, OutputObject outputObject) throws Exception;
 
-    void updateReportImportModelById(InputObject inputObject, OutputObject outputObject) throws Exception;
+    void updateReportDataBaseById(InputObject inputObject, OutputObject outputObject) throws Exception;
 
-    void getReportImportModelById(InputObject inputObject, OutputObject outputObject) throws Exception;
-
+    void getReportDataBaseById(InputObject inputObject, OutputObject outputObject) throws Exception;
 }
