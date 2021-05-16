@@ -16,10 +16,10 @@ import javax.sql.DataSource;
  * @ClassName: C3p0DataSourcePool
  * @Description: c3p0数据源连接池包装类--参考http://www.mchange.com/projects/c3p0/#quickstart
  * @author: skyeye云系列--卫志强
- * @date: 2021/5/16 23:09
+ * @date: 2021/5/16 23:21
  *
- * @Copyright: 2021 https://gitee.com/doc_wei01/skyeye Inc. All rights reserved.
- * 注意：本内容仅限购买后使用.禁止私自外泄以及用于其他的商业目的
+ * @Copyright: 2021 https://gitee.com/doc_wei01/skyeye-report Inc. All rights reserved.
+ * 注意：本内容具体规则请参照readme执行，地址：https://gitee.com/doc_wei01/skyeye-report/blob/master/README.md
  */
 public class C3p0DataSourcePool implements DataSourcePoolWrapper {
 
