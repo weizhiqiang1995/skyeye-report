@@ -5,26 +5,20 @@
      -->
 
     <!-- 文件模型关系开始 -->
-    <url id="reportimportmodel001" path="/post/ReportImportModelController/getReportImportModelList" val="获取文件模型关系表格信息" allUse="2" method="POST" groupName="文件模型关系">
+    <url id="reportimportmodel001" path="/post/ReportImportModelController/getReportImportModelList" val="获取文件模型关系表格信息" allUse="1" method="POST" groupName="文件模型关系">
         <property id="limit" name="limit" ref="required,num" var="分页参数,每页多少条数据" />
         <property id="page" name="page" ref="required,num" var="分页参数,第几页"/>
         <property id="fileName" name="fileName" ref="" var="文件名称"/>
         <property id="modelId" name="modelId" ref="" var="模型id"/>
     </url>
-
-    <url id="reportimportmodel002" path="/post/ReportImportModelController/insertReportImportModel"
-         val="新增文件模型关系表格信息" allUse="2" method="POST" groupName="文件模型关系">
+    <url id="reportimportmodel002" path="/post/ReportImportModelController/insertReportImportModel" val="新增文件模型关系表格信息" allUse="1" method="POST" groupName="文件模型关系">
         <property id="fileName" name="fileName" ref="required" var="文件名称"/>
         <property id="modelId" name="modelId" ref="required" var="模型id"/>
     </url>
-
-    <url id="reportimportmodel003" path="/post/ReportImportModelController/delReportImportModelById"
-         val="根据id删除文件模型关系表格信息" allUse="2" method="POST" groupName="文件模型关系">
+    <url id="reportimportmodel003" path="/post/ReportImportModelController/delReportImportModelById" val="根据id删除文件模型关系表格信息" allUse="1" method="DELETE" groupName="文件模型关系">
         <property id="id" name="id" ref="required" var="文件模型唯一id"/>
     </url>
-
-    <url id="reportimportmodel004" path="/post/ReportImportModelController/updateReportImportModelById"
-         val="更新文件模型关系表格信息" allUse="2" method="POST" groupName="文件模型关系">
+    <url id="reportimportmodel004" path="/post/ReportImportModelController/updateReportImportModelById" val="更新文件模型关系表格信息" allUse="1" method="PUT" groupName="文件模型关系">
         <property id="id" name="id" ref="required" var="文件模型唯一id"/>
         <property id="fileName" name="fileName" ref="required" var="文件名称"/>
         <property id="modelId" name="modelId" ref="required" var="模型id"/>
