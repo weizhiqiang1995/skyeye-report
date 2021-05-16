@@ -20,6 +20,14 @@ layui.config({
                 "image": "../../assets/report/images/base1.png",
                 "title": "基础折线图",
                 "attr": {
+                    "title.text": {
+                        "value": "折线图",
+                        "edit": true,
+                        "desc": "主标题文本，支持使用 \\n 换行。",
+                        "title": "主标题",
+                        "editor": "2",
+                        "editorChooseValue": ""
+                    },
                     "xAxis.type": {
                         "value": "category",
                         "edit": false,

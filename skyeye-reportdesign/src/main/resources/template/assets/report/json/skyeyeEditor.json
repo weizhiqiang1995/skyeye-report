@@ -2,9 +2,16 @@
   "1": {
     "key": "radio",
     "name": "单选框",
-    "html": "<div class='layui-form-item {{defaultWidth}}' controlType='radio' modelKey='{{modelKey}}' boxId='{{boxId}}'><label class='layui-form-label'>{{labelContent}}</label><div class='layui-input-block winui-radio'>{{{showValueTemplate}}}</div></div>",
-    "js": "$('input:radio[name=\"{{boxId}}\"][value=\"{{context}}\"]').attr('checked', true);form.on('radio({{boxId}})', function(data){var value = data.value; dataValueChange(value, $(this));});",
+    "html": "<div class='layui-form-item {{defaultWidth}}' controlType='radio' modelKey='{{modelKey}}' boxId='{{boxId}}'><label class='layui-form-label'>{{labelContent}}：</label><div class='layui-input-block winui-radio'>{{{showValueTemplate}}}</div></div>",
+    "js": "$('input:radio[name={{boxId}}][value={{context}}]').attr('checked', true);form.on('radio({{boxId}})', function(data){var value = data.value; dataValueChange(value, $(this));});",
     "showValueTemplate": "{{#each rows}}<input type='radio' name='{{layFilter}}' title='{{name}}' rowId='{{id}}' value='{{id}}' lay-filter='{{layFilter}}' />{{/each}}"
+  },
+  "2": {
+    "key": "input",
+    "name": "输入框",
+    "html": "<div class='layui-form-item {{defaultWidth}}' controlType='radio' modelKey='{{modelKey}}' boxId='{{boxId}}'><label class='layui-form-label'>{{labelContent}}：</label><div class='layui-input-block'><input type='text' id='input{{boxId}}' name='input{{boxId}}' class='layui-input' value='{{context}}'/></div></div>",
+    "js": "$('#input{{boxId}}').on('input',function(e){var value = e.delegateTarget.value; dataValueChange(value, $(this));});",
+    "showValueTemplate": ""
   },
   "100": {
     "key": "showDetail",
