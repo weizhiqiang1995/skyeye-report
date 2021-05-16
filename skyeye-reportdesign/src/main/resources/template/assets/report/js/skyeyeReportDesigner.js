@@ -14,12 +14,14 @@ layui.define(["jquery", 'form'], function(exports) {
 				'rulerFontColor': "burlywood", // 标尺字体颜色
 				'headerBgColor': 'burlywood', // 菜单栏背景颜色
 				'headerMenuJson': [], // 菜单栏
+				'numColWidth': 60, // 序号列的宽度
+				'charRowHeight': 25, // excel单元格的默认高度
 				// excel配置
 				excelConfig: {
 					def:{
 						width: '70px',
-						row: 70,
-						col: 50
+						row: 36,
+						col: 27
 					}
 				}
 			};
@@ -384,6 +386,8 @@ layui.define(["jquery", 'form'], function(exports) {
 					div.id = id;
 					div.dataset.boxId = id;
 					div.dataset.modelId = modelId;
+					div.style.top = params.charRowHeight + "px";
+					div.style.left = params.numColWidth + "px";
 					skyeyeReportContent[0].appendChild(div);
 					// 遍历this.editoptions
 					for (let attr in editoptions) {
@@ -440,11 +444,13 @@ layui.define(["jquery", 'form'], function(exports) {
 										if (35 > eleWH.height - e.clientY + clientXY.y) {
 											return;
 										}
+										var top = e.clientY - 78;
+										top = top < params.charRowHeight ? params.charRowHeight : top;
 										// ele拖拽后的高度为：初始height-拖拽后鼠标距离屏幕的距离 + 第一次按下时鼠标距离屏幕的距离
 										// 重新设置ele的top值为此时鼠标距离屏幕的y值
 										that.css({
 											height: (eleWH.height - e.clientY + clientXY.y) + "px",
-											top: (e.clientY - 78) + "px"
+											top: top + "px"
 										});
 									}
 									// 与”top“相同原理
@@ -452,10 +458,12 @@ layui.define(["jquery", 'form'], function(exports) {
 										if (50 > eleWH.width - e.clientX + clientXY.x) {
 											return;
 										}
+										var left = e.clientX - 18;
+										left = left < params.numColWidth ? params.numColWidth : left;
 										// 重新设置ele的left值为此时鼠标距离屏幕的x值
 										that.css({
 											width: (eleWH.width - e.clientX + clientXY.x) + "px",
-											left: (e.clientX - 18) + "px"
+											left: left + "px"
 										});
 									}
 								}
@@ -487,6 +495,8 @@ layui.define(["jquery", 'form'], function(exports) {
 						var l = e.clientX - x - 18;
 						// 元素ele移动的距离l
 						var t = e.clientY - y - 78;
+						l = l < params.numColWidth ? params.numColWidth : l;
+						t = t < params.charRowHeight ? params.charRowHeight : t;
 						that.css({
 							left: l + "px",
 							top: t + "px"
@@ -802,7 +812,7 @@ layui.define(["jquery", 'form'], function(exports) {
 								$(this).removeAttr("rowspan").removeAttr("colspan").css("display", "none")
 							})
 						}
-						clone.height(25);
+						clone.height(params.charRowHeight);
 						clone.find("td").removeClass("td-chosen-css").html("");
 						return clone
 					} else {
@@ -1257,7 +1267,7 @@ layui.define(["jquery", 'form'], function(exports) {
 						});
 
 						$(e.target).removeClass("td-chosen-css").removeClass('td-chosen-muli-css');
-						addHeight = $(table)[0].offsetHeight - 25;
+						addHeight = $(table)[0].offsetHeight - params.charRowHeight;
 					}
 					let pos = f.getTdPosition(selectTd);
 					$('#coordinate').html('<span>' + f.getChar(pos.col - 1) + pos.row + "</span>")
@@ -1391,7 +1401,7 @@ layui.define(["jquery", 'form'], function(exports) {
 					});
 					ind = 0;
 					table.find("tr").find("td:eq(0)").each(function () {
-						$(this).width(60).addClass("drug-ele-td drug-ele-td-vertical").css("text-align", "center").html(ind === 0 ? "" : ind);
+						$(this).width(params.numColWidth).addClass("drug-ele-td drug-ele-td-vertical").css("text-align", "center").html(ind === 0 ? "" : ind);
 						ind++
 					});
 				},
@@ -1667,7 +1677,7 @@ layui.define(["jquery", 'form'], function(exports) {
 						skyeyeReportContent.html(setting.data);
 						table = skyeyeReportContent.find("table").first();
 						var fir = table.find("tr:eq(0)");
-						var clone = fir.clone(false).height(25).insertBefore(fir);
+						var clone = fir.clone(false).height(params.charRowHeight).insertBefore(fir);
 						clone.find("td").css("display", "").removeAttr("rowspan").removeAttr("colspan").html("").removeClass("td-chosen-css");
 						$("<td></td>").insertBefore(table.find("tr").find("td:eq(0)"))
 					} else if (setting.type == 1) {
@@ -1677,12 +1687,12 @@ layui.define(["jquery", 'form'], function(exports) {
 						var col = params.excelConfig.def.col;
 						var width = params.excelConfig.def.width;
 						for (var i = 0; i < row; i++) {
-							var tr = $("<tr></tr>").height(25).appendTo(table);
+							var tr = $("<tr></tr>").height(params.charRowHeight).appendTo(table);
 							for (var j = 0; j < col; j++) {
 								$("<td></td>").appendTo(tr)
 							}
 						}
-						if (width && width > 0) {
+						if (width) {
 							table.find('td').css('width', width);
 						}
 					}
