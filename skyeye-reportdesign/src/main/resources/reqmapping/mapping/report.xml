@@ -4,6 +4,15 @@
         - allUse  是否需要登录才能使用   1是   0否  2需要登陆才能访问，但无需授权    默认为否
      -->
 
+    <!-- 报表公共接口开始 -->
+    <url id="reportcommon001" path="/post/ReportCommonController/testConnection" val="测试数据源" allUse="2" method="POST" groupName="报表公共接口">
+        <property id="driverClass" name="driverClass" ref="required" var="数据源驱动类" />
+        <property id="url" name="url" ref="required" var="数据源连接字符串"/>
+        <property id="user" name="user" ref="required" var="用户名"/>
+        <property id="pass" name="pass" ref="" var="密码"/>
+    </url>
+    <!-- 报表公共接口结束 -->
+
     <!-- 文件模型关系开始 -->
     <url id="reportimportmodel001" path="/post/ReportImportModelController/getReportImportModelList" val="获取文件模型关系表格信息" allUse="1" method="POST" groupName="文件模型关系">
         <property id="limit" name="limit" ref="required,num" var="分页参数,每页多少条数据" />

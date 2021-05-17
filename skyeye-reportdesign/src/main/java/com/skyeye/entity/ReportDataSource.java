@@ -96,17 +96,17 @@ public class ReportDataSource {
      * 获取报表引擎查询器类名(如:com.easytoolsoft.easyreport.engine.query.MySqlQueryer)
      *
      * @return 具体Queryer类完全名称
-     * @see com.easytoolsoft.easyreport.engine.query.Queryer
+     * @see com.skyeye.sql.query.Queryer
      */
     public String getQueryerClass() {
         return this.queryerClass;
     }
 
     /**
-     * 获取报表引擎查询器使用的数据源连接池类名(如:com.easytoolsoft.easyreport.engine.dbpool.C3p0DataSourcePool)
+     * 获取报表引擎查询器使用的数据源连接池类名(如:com.skyeye.sql.dbpool.impl.C3p0DataSourcePool)
      *
      * @return 具体DataSourcePoolWrapper类完全名称
-     * @see com.easytoolsoft.easyreport.engine.dbpool.DataSourcePoolWrapper
+     * @see com.skyeye.sql.dbpool.DataSourcePoolWrapper
      */
     public String getDbPoolClass() {
         return this.dbPoolClass;
