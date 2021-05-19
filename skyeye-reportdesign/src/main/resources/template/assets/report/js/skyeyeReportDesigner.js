@@ -9,8 +9,7 @@ layui.define(["jquery", 'form'], function(exports) {
 	(function($) {
 		$.skyeyeReportDesigner = function(params) {
 			var defaults = {
-				"mouseLineColor": "coral", // 鼠标跟踪线的颜色
-				'rulerColor': "#f00", // 标尺颜色
+				'rulerColor': "RGB(135, 221, 252)", // 标尺颜色
 				'rulerFontColor': "burlywood", // 标尺字体颜色
 				'headerBgColor': 'burlywood', // 菜单栏背景颜色
 				'headerMenuJson': [], // 菜单栏
@@ -24,14 +23,12 @@ layui.define(["jquery", 'form'], function(exports) {
 				}
 			};
 			params = $.extend({}, defaults, params);
-			// 单击选中的单元格
-			let selectTd;
-			// 当前复制的单元格样式
-			let selectTdStyle = {};
+
 			var flag = $("#skyeyeScaleBox").size() === 0 ? true : false;
 			// 支持的编辑器类型
 			var editorType = {};
 
+			// box拖拽的八个点
 			var editoptions = {
 				left_top: true,
 				left: true,
@@ -42,86 +39,26 @@ layui.define(["jquery", 'form'], function(exports) {
 				left_bottom: true,
 				right_bottom: true,
 			};
-			if(flag) {
-				$('<div class="skyeyeScaleBox" id="skyeyeScaleBox" onselectstart="return false;">' +
-					'<div id="skyeyeScaleRulerH" class="skyeyeScaleRuler_h"></div>' +
-					'<div id="skyeyeScaleRulerV" class="skyeyeScaleRuler_v"></div>' +
-					'<div id="skyeyeRefDotH" class="skyeyeRefDot_h"></div>' +
-					'<div id="skyeyeRefDotV" class="skyeyeRefDot_v"></div>' +
-					'<div class="skyeyeRefCrtBg" id="skyeyeRefCrtBg" style="display:none;">' +
-					'<div class="skyeyeRefCrtTit"><a href="javascript:void(0);" id="skyeyeRefCrtClose" class="skyeyeRefCrtClose"></a></div>' +
-					'<div class="skyeyeRefCrtX">' +
-					'<div class="skyeyeRefCrtLeft">' +
-					'<div class="skyeyeRefCrtDir">' +
-					'<input type="radio" id="skyeyeCrtV" class="skyeyeRefCrtRadio" name="skyeyeRefCrt" checked="checked" />' +
-					'<label for="skyeyeCrtV">垂直</label>' +
-					'</div>' +
-					'<div class="skyeyeRefCrtDir">' +
-					'<input type="radio" id="skyeyeCrtH" class="skyeyeRefCrtRadio" name="skyeyeRefCrt" />' +
-					'<label for="skyeyeCrtH">水平</label>' +
-					'</div>' +
-					'<div class="skyeyeRefCrtPlace">位置：<input id="skyeyeRefCrtInput" class="skyeyeRefCrtInput" type="text" />px</div>' +
-					'</div>' +
-					'<div class="skyeyeRefCrtRight">' +
-					'<button type="button" id="skyeyeRefCrtSure" class="skyeyeRefCrtBtn">确定</button>' +
-					'<button type="button" id="skyeyeRefCrtCancel" class="skyeyeRefCrtBtn">取消</button>' +
-					'</div>' +
-					'</div>' +
-					'</div>' +
-					'</div>' +
-					'<div class="hd-main clearfix" id="skyeyeHeader">' +
-					'<font class="logo-title">Skyeye系列-报表设计器</font>' +
-					'<div class="navs">' +
-					'</div>' +
-					'</div>' +
-					'<div class="report-content" id="reportContent">' +
-					'</div>').appendTo($("body"));
-			} else {
-				$("#skyeyeScaleBox").show();
-			}
-			//整个标尺盒子对象，垂直标尺与水平标尺对象，虚线对象，弹出框对象，单选对象，文本对象，按钮对象
-			var x = $("#skyeyeScaleBox"),
-				rh = $("#skyeyeScaleRulerH"),
-				rv = $("#skyeyeScaleRulerV"),
-				doth = $("#skyeyeRefDotH"),
-				dotv = $("#skyeyeRefDotV"),
-				bg = $("#skyeyeRefCrtBg"),
-				clo = $("#skyeyeRefCrtClose"),
-				skyeyeHeader = $("#skyeyeHeader"), // 头部菜单栏
-				skyeyeReportContent = $("#reportContent"), // Excel表格
-				rdov = $("#skyeyeCrtV"),
-				rdoh = $("#skyeyeCrtH"),
-				ipt = $("#skyeyeRefCrtInput"),
-				sur = $("#skyeyeRefCrtSure"),
-				cancel = $("#skyeyeRefCrtCancel"),
-				dragFlag = false,
-				oDrag = null;
-			//浏览器宽高
-			var w, h, bgw = bg.width(),
-				bgh = bg.height();
+
 			var f = {
 				box: function() {
-					w = $(window).width(), h = $(window).height();
-					//整个box的宽高
-					x.height(h).width(w);
-					//弹出层的定位
-					bg.css({
-						left: (w - bgw) / 2,
-						top: (h - bgh) / 2
-					});
+					var width = $(window).width();
+					var height = $(window).height();
+					// 整个box的宽高
+					x.height(height).width(width);
 				},
 
 				ui: function() {
 					rh.html("");
 					rv.html("");
 					// 创建标尺数值
-					for(var i = 0; i < w; i += 1) {
+					for(var i = 0; i < $(window).width(); i += 1) {
 						if(i % 50 === 0) {
 							$('<span class="n">' + i + '</span>').css("left", i + 2).appendTo(rh);
 						}
 					}
 					// 垂直标尺数值
-					for(var i = 0; i < h; i += 1) {
+					for(var i = 0; i < $(window).height(); i += 1) {
 						if(i % 50 === 0) {
 							$('<span class="n">' + i + '</span>').css("top", i + 2).appendTo(rv);
 						}
@@ -155,112 +92,6 @@ layui.define(["jquery", 'form'], function(exports) {
 						return true;
 					}
 					return false;
-				},
-
-				// 创建新的垂直参考线，有效宽度3像素
-				newv: function(title, id) {
-					if(f.isNull(id)){
-						id = "skyeyeRefLineV" + ($(".skyeyeRefLine_h").size() + 1);
-					}
-					$('<div class="skyeyeRefLine_v"></div>')
-						.appendTo(x)
-						.attr({
-							"id": id,
-							"title": title
-						});
-					return $("#" + id);
-				},
-
-				// 创建新的水平参考线，有效宽度3像素
-				newh: function(title, id) {
-					if(f.isNull(id)){
-						id = "skyeyeRefLineH" + ($(".skyeyeRefLine_h").size() + 1);
-					}
-					$('<div class="skyeyeRefLine_h"></div>')
-						.appendTo(x)
-						.attr({
-							"id": id,
-							"title": title
-						});
-					return $("#" + id);
-				},
-
-				dashv: function() {
-					$(document).bind("mousemove", function(e) {
-						if(dragFlag) {
-							//如果可以拖拽
-							//垂直虚线的左坐标
-							dotv.css("left", e.pageX);
-						}
-					});
-				},
-				dashh: function() {
-					$(document).bind("mousemove", function(e) {
-						if(dragFlag) {
-							//如果可以拖拽
-							//垂直虚线的左坐标
-							doth.css("top", e.pageY - $(window).scrollTop());
-						}
-					});
-				},
-
-				//弹出框相关方法
-				sure: function() {
-					//点击确定按钮
-					var dirv = rdov.attr("checked") ? true : false;
-					var v = parseInt(ipt.val(), 10);
-					if(v) {
-						var pos = v.toString() + "px";
-						if(dirv) {
-							f.newv(pos, "").css("left", v - 1);
-						} else {
-							f.newh(pos, "").css("top", v - 1);
-						}
-						$(".skyeyeRefLine_v").show();
-						$(".skyeyeRefLine_h").show();
-						f.cacl();
-					} else {
-						alert("请输入合适的数值。");
-					}
-				},
-				cacl: function() {
-					ipt.val("");
-					bg.hide();
-					return false;
-				},
-
-				//批量参考线创建
-				crtv: function(arr) {
-					if($.isArray(arr)) {
-						$.each(arr, function(i, n) {
-							var posv = parseInt(n, 10);
-							if(posv > 0 && posv < w) {
-								nposv = posv.toString() + "px";
-								f.newv(nposv, "").css("left", posv - 1);
-							}
-						});
-					}
-				},
-				crth: function(arr) {
-					if($.isArray(arr)) {
-						$.each(arr, function(i, n) {
-							var posh = parseInt(n, 10);
-							if(posh > 0 && posh < h) {
-								nposh = posh.toString() + "px";
-								f.newh(nposh, "").css("top", posh - 1);
-							}
-						});
-					}
-				},
-
-				// 获取批量参考线参数
-				crtdata: function() {
-					if(params.v) {
-						f.crtv(params.v);
-					}
-					if(params.h) {
-						f.crth(params.h);
-					}
 				},
 
 				// 加载菜单栏
@@ -457,7 +288,9 @@ layui.define(["jquery", 'form'], function(exports) {
 											return;
 										}
 										var left = e.clientX - 18;
+										var maxLeft = skyeyeReportContent.width() - that.width();
 										left = left < 0 ? 0 : left;
+										left = left > maxLeft ? maxLeft : left;
 										// 重新设置ele的left值为此时鼠标距离屏幕的x值
 										that.css({
 											width: (eleWH.width - e.clientX + clientXY.x) + "px",
@@ -487,17 +320,19 @@ layui.define(["jquery", 'form'], function(exports) {
 					var x = ee.offsetX;
 					// 鼠标按下时，鼠标相对于元素的y坐标
 					var y = ee.offsetY;
+					var maxLeft = skyeyeReportContent.width() - that.width();
 					// 鼠标按下移动时调用mousemove
 					document.onmousemove = e => {
 						// 元素ele移动的距离l
-						var l = e.clientX - x - 18;
+						var left = e.clientX - x - 44;
 						// 元素ele移动的距离t
-						var t = e.clientY - y - 78;
-						l = l < 0 ? 0 : l;
-						t = t < 0 ? 0 : t;
+						var top = e.clientY - y - 104;
+						left = left < 0 ? 0 : left;
+						top = top < 0 ? 0 : top;
+						left = left > maxLeft ? maxLeft : left;
 						that.css({
-							left: l + "px",
-							top: t + "px"
+							left: left + "px",
+							top: top + "px"
 						});
 					}
 					// 当鼠标弹起时，清空onmousemove与onmouseup
@@ -509,15 +344,11 @@ layui.define(["jquery", 'form'], function(exports) {
 
 				// 快捷键
 				tableKeyDown: function(e) {
-					if (selectTd == undefined || $('.rightmouse-panel-div').length != 0) {
-						return;
-					}
 					let eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
 					if (e.ctrlKey && eCode === 90) {
 						// 撤销
 
 					}
-					f.selectTdScroll();
 				},
 
 				// 记录缓存，方便撤销
@@ -544,13 +375,18 @@ layui.define(["jquery", 'form'], function(exports) {
 					$("body").on('click', skyeyeReportContent, function(){
 						f.removeEchartsEditMation();
 					});
+
+					// 编辑器点击防止触发父内容事件
+					$("body").on('click', ".form-box", function(e){
+						e.stopPropagation();
+					});
 				},
 
 				// 移除所有图表的编辑信息
 				removeEchartsEditMation: function(){
 					$(".dian").hide();
 					$(".kuang").css({
-						"border": "1px solid white",
+						"border": "1px solid darkgray",
 						"z-index": 100
 					});
 					$(".kuang").removeClass("active");
@@ -636,18 +472,54 @@ layui.define(["jquery", 'form'], function(exports) {
 					});
 				},
 
+				// reportContent的八个角
+				getEightCape: function(){
+					var capeResult = '<div class="cape cape_left1"></div>' +
+						'<div class="cape cape_left1_top"></div>' +
+						'<div class="cape cape_right1"></div>' +
+						'<div class="cape cape_right1_top"></div>' +
+						'<div class="cape cape_left2"></div>' +
+						'<div class="cape cape_left2_bottom"></div>' +
+						'<div class="cape cape_right2"></div>' +
+						'<div class="cape cape_right2_bottom"></div>';
+					return capeResult;
+				},
+
 				// 初始化执行
 				init: function() {
 					f.box();
 					f.ui();
 					f.ie6();
-					f.crtdata();
 					f.loadHeader();
 					f.initExcelEvent();
 					// 加载编辑器类型
 					f.initEditorType();
 				}
 			};
+
+			if(flag) {
+				$('<div class="skyeyeScaleBox" id="skyeyeScaleBox" onselectstart="return false;">' +
+					'<div id="skyeyeScaleRulerH" class="skyeyeScaleRuler_h"></div>' +
+					'<div id="skyeyeScaleRulerV" class="skyeyeScaleRuler_v"></div>' +
+					'</div>' +
+					'<div class="hd-main clearfix" id="skyeyeHeader">' +
+					'<font class="logo-title">Skyeye系列-报表设计器</font>' +
+					'<div class="navs"></div>' +
+					'</div>' +
+					f.getEightCape() +
+					'<div class="report-content" id="reportContent">' +
+					'</div>').appendTo($("body"));
+			} else {
+				$("#skyeyeScaleBox").show();
+			}
+			//整个标尺盒子对象，垂直标尺与水平标尺对象，虚线对象，弹出框对象，单选对象，文本对象，按钮对象
+			var x = $("#skyeyeScaleBox"),
+				rh = $("#skyeyeScaleRulerH"),
+				rv = $("#skyeyeScaleRulerV"),
+				skyeyeHeader = $("#skyeyeHeader"), // 头部菜单栏
+				skyeyeReportContent = $("#reportContent"); // 编辑器内容
+
+			// 初始化
 			f.init();
 
 			/*浏览器拉伸时，标尺自适应*/
@@ -656,111 +528,8 @@ layui.define(["jquery", 'form'], function(exports) {
 				f.ui();
 			});
 
-			// 参考线的水平拖移
-			$("body").on("mousedown", ".skyeyeRefLine_v", function(){
-				oDrag = $(this);
-				dragFlag = true;
-				f.dashv();
-			});
-			// 参考线的垂直拖移
-			$("body").on("mousedown", ".skyeyeRefLine_h", function(){
-				oDrag = $(this);
-				dragFlag = true;
-				f.dashh();
-			});
-
-			$(document).mouseup(function(e) {
-				$(this).unbind("mousemove");
-				dragFlag = false;
-				if(oDrag) {
-					if(oDrag.hasClass("skyeyeRefLine_v")) {
-						var v_l = e.pageX;
-						if(v_l < rv.width()) {
-							v_l = -600;
-						}
-						oDrag.css("left", v_l - 1).attr("title", v_l + "px");
-					} else {
-						var v_t = e.pageY - $(window).scrollTop();
-						if(v_t < rh.height()) {
-							v_t = 600;
-						}
-						oDrag.css("top", v_t - 1).attr("title", v_t + "px");
-					}
-				}
-				oDrag = null;
-				dotv.css("left", -10);
-				doth.css("top", -10);
-			}).keyup(function(e) {
-				if(e.keyCode === k["slash"]) {
-					bg.show();
-					ipt.focus();
-				}
-			});
-
-			// 拖动标尺创建新的参考线
-			rv.bind("mousedown", function() {
-				oDrag = f.newv();
-				dragFlag = true;
-				f.dashv();
-			});
-			rh.bind("mousedown", function() {
-				oDrag = f.newh();
-				dragFlag = true;
-				f.dashh();
-			});
-
-			// 弹出框一些方法事件的绑定
-			clo.bind("click", f.cacl);
-			cancel.bind("click", f.cacl);
-			sur.bind("click", f.sure);
-			ipt.bind("keyup", function(e) {
-				if(e.keyCode === k["enter"]) {
-					f.sure();
-				}
-			});
 		};
 
-		//快捷键参数
-		var k = {
-			"enter": 13, //回车
-			"r": 82, //字母R
-			"slash": 220, //斜线keyCode
-			"semi": 59, //分号，火狐
-			"semi2": 186, //分号
-			"esc": 27
-		};
-
-		// 侦听键盘事件
-		$(document).keyup(function(e) {
-			if(e.keyCode === k["r"]) {
-				$.pageRulerToggle();
-			}
-			if(e.keyCode === k["semi"] || e.keyCode === k["semi2"]) {
-				$.lineToggle();
-			}
-			if(e.keyCode === k["esc"]) {
-				$.pageRulerHide();
-			}
-		});
-		$.lineToggle = function() {
-			$(".skyeyeRefLine_v").toggle();
-			$(".skyeyeRefLine_h").toggle();
-		};
-
-		// 隐藏
-		$.pageRulerHide = function() {
-			$("#skyeyeScaleBox").hide();
-		};
-
-		// 显示标尺
-		$.pageRulerToggle = function(params) {
-			if($("#skyeyeScaleBox").size() && $("#skyeyeScaleBox").css("display") === "block") {
-				$("#skyeyeScaleRulerH").toggle();
-				$("#skyeyeScaleRulerV").toggle();
-			} else {
-				$.skyeyeReportDesigner(params);
-			}
-		};
 	})(jQuery);
 	exports('skyeyeReportDesigner', null);
 });
