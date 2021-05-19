@@ -53,7 +53,7 @@ Redis|3.2
 |效果图|效果图|
 | ------------- | ------------- |
 |![输入图片说明](https://images.gitee.com/uploads/images/2021/0509/215923_b1694e7a_1541735.png "屏幕截图.png")|![输入图片说明](https://images.gitee.com/uploads/images/2021/0509/215939_0cd740c8_1541735.png "屏幕截图.png")|
-|![输入图片说明](https://images.gitee.com/uploads/images/2021/0509/220142_0ace6ff3_1541735.png "屏幕截图.png")|![输入图片说明](https://images.gitee.com/uploads/images/2021/0509/215734_5d697a57_1541735.png "屏幕截图.png")|
+|![输入图片说明](https://images.gitee.com/uploads/images/2021/0509/220142_0ace6ff3_1541735.png "屏幕截图.png")|![输入图片说明](https://images.gitee.com/uploads/images/2021/0519/222753_9d0c4492_1541735.png "屏幕截图.png")|
 
 #### 使用说明
 
