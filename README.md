@@ -27,7 +27,6 @@ MyBatis|ORM框架|http://www.mybatis.org/mybatis-3/zh/index.html
 Druid|数据库连接池|https://github.com/alibaba/druid
 Maven|项目构建管理|http://maven.apache.org/
 redis|key-value存储系统|https://redis.io/
-webSocket|浏览器与服务器全双工(full-duplex)通信|http://www.runoob.com/html/html5-websocket.html
 jQuery|函式库|http://jquery.com/
 layui|模块化前端UI|https://www.layui.com/
 winui|win10风格UI|https://gitee.com/doc_wei01_admin/skyeye
