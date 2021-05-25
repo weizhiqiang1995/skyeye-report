@@ -39,4 +39,16 @@ public class ReportCommonController {
         reportCommonService.testConnection(inputObject, outputObject);
     }
 
+    /**
+     * 解析Xml格式文本
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @RequestMapping("/post/ReportCommonController/parseXmlText")
+    public void parseXmlText(InputObject inputObject, OutputObject outputObject) throws Exception {
+        reportCommonService.parseXmlText(inputObject, outputObject);
+    }
+
 }

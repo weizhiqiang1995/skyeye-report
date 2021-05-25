@@ -11,6 +11,10 @@
         <property id="user" name="user" ref="required" var="用户名"/>
         <property id="pass" name="pass" ref="" var="密码"/>
     </url>
+
+    <url id="reportcommon002" path="/post/ReportCommonController/parseXmlText" val="解析xml格式文本" allUse="2" method="POST" groupName="报表公共接口">
+        <property id="xmlText" name="xmlText" ref="required" var="xml格式文本" />
+    </url>
     <!-- 报表公共接口结束 -->
 
     <!-- 文件模型关系开始 -->

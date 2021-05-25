@@ -8,6 +8,10 @@ import com.skyeye.common.object.InputObject;
 import com.skyeye.common.object.OutputObject;
 import com.skyeye.dao.ReportCommonDao;
 import com.skyeye.service.ReportCommonService;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.tree.DefaultElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +20,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @ClassName: ReportCommonServiceImpl
@@ -75,6 +79,44 @@ public class ReportCommonServiceImpl implements ReportCommonService {
             return false;
         } finally {
             this.releaseConnection(conn);
+        }
+    }
+
+    /**
+     * 解析Xml格式文本
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @Override
+    public void parseXmlText(InputObject inputObject, OutputObject outputObject) throws Exception {
+        Element rootElement;
+        try {
+            Map<String, Object> inputParams = inputObject.getParams();
+            // 获取xml文件
+            Document document = DocumentHelper.parseText(String.valueOf(inputParams.get("xmlText")));
+            // 获取根目录
+            rootElement = document.getRootElement();
+        } catch (Exception ex) {
+            LOGGER.info("该文本不符合xml文件格式, 故无法解析. ", ex);
+            outputObject.setreturnMessage("该文本不符合xml文件格式, 故无法解析.");
+            return;
+        }
+        Map<String, Object> resultBean = new HashMap<>();
+        List<String> nodeList = new ArrayList<>();
+        parseSubNode(rootElement.elements(), nodeList, rootElement.getName());
+        resultBean.put("nodeArray", nodeList);
+        outputObject.setBean(resultBean);
+    }
+
+    // 解析并拼接节点下所有子节点名称
+    private void parseSubNode(List<DefaultElement> elements,
+        List<String> nodeList, String name) {
+        elements.forEach(ele ->
+            parseSubNode(ele.elements(), nodeList,name.concat(".").concat(ele.getName())));
+        if (elements.size() == 0) {
+            nodeList.add(name);
         }
     }
 

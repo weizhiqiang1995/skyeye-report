@@ -32,4 +32,12 @@ public interface ReportCommonService {
     boolean connectionDataBase(final String driverClass, final String url, final String user,
                                       final String password) throws Exception;
 
+    /**
+     * 解析Xml格式文本
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    void parseXmlText(InputObject inputObject, OutputObject outputObject) throws Exception;
 }
