@@ -95,7 +95,7 @@ public class ReportCommonServiceImpl implements ReportCommonService {
         try {
             Map<String, Object> inputParams = inputObject.getParams();
             // 获取xml文件
-            Document document = DocumentHelper.parseText(String.valueOf(inputParams.get("xmlText")));
+            Document document = DocumentHelper.parseText(inputParams.get("xmlText").toString());
             // 获取根目录
             rootElement = document.getRootElement();
         } catch (Exception ex) {
@@ -112,9 +112,9 @@ public class ReportCommonServiceImpl implements ReportCommonService {
 
     // 解析并拼接节点下所有子节点名称
     private void parseSubNode(List<DefaultElement> elements,
-        List<String> nodeList, String name) {
+                              List<String> nodeList, String name) {
         elements.forEach(ele ->
-            parseSubNode(ele.elements(), nodeList,name.concat(".").concat(ele.getName())));
+                parseSubNode(ele.elements(), nodeList, name.concat(".").concat(ele.getName())));
         if (elements.size() == 0) {
             nodeList.add(name);
         }
