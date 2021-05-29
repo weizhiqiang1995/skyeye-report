@@ -6,6 +6,7 @@ package com.skyeye.service;
 
 import com.skyeye.common.object.InputObject;
 import com.skyeye.common.object.OutputObject;
+import com.skyeye.entity.ReportDataSource;
 
 /**
  *
@@ -28,4 +29,13 @@ public interface ReportDataBaseService {
     void updateReportDataBaseById(InputObject inputObject, OutputObject outputObject) throws Exception;
 
     void getReportDataBaseById(InputObject inputObject, OutputObject outputObject) throws Exception;
+
+    /**
+     * 获取数据库对象
+     *
+     * @param dataBaseId 数据库id
+     * @return
+     * @throws Exception
+     */
+    ReportDataSource getReportDataSource(String dataBaseId) throws Exception;
 }

@@ -23,7 +23,7 @@ import com.skyeye.sql.query.Queryer;
  */
 public class SQLiteQueryer extends AbstractQueryer implements Queryer {
 
-    public SQLiteQueryer(final ReportDataSource dataSource, final ReportParameter parameter) {
+    public SQLiteQueryer(ReportDataSource dataSource, ReportParameter parameter) {
         super(dataSource, parameter);
     }
 

@@ -24,9 +24,9 @@ import javax.sql.DataSource;
 public class DruidDataSourcePool implements DataSourcePoolWrapper {
 
     @Override
-    public DataSource wrap(final ReportDataSource rptDs) {
+    public DataSource wrap(ReportDataSource rptDs) {
         try {
-            final DruidDataSource dataSource = new DruidDataSource();
+            DruidDataSource dataSource = new DruidDataSource();
             dataSource.setDriverClassName(rptDs.getDriverClass());
             dataSource.setUrl(rptDs.getJdbcUrl());
             dataSource.setUsername(rptDs.getUser());

@@ -77,4 +77,16 @@ public class ReportCommonController {
         reportCommonService.queryPoolMationList(inputObject, outputObject);
     }
 
+    /**
+     * 解析SQL数据源
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @RequestMapping("/post/ReportCommonController/parseSQLText")
+    public void parseSQLText(InputObject inputObject, OutputObject outputObject) throws Exception {
+        reportCommonService.parseSQLText(inputObject, outputObject);
+    }
+
 }

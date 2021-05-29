@@ -21,15 +21,15 @@ import java.lang.reflect.Constructor;
  * 注意：本内容具体规则请参照readme执行，地址：https://gitee.com/doc_wei01/skyeye-report/blob/master/README.md
  */
 public class QueryerFactory {
-    public static Queryer create(final ReportDataSource dataSource) {
+    public static Queryer create(ReportDataSource dataSource) {
         return create(dataSource, null);
     }
 
-    public static Queryer create(final ReportDataSource dataSource, final ReportParameter parameter) {
+    public static Queryer create(ReportDataSource dataSource, ReportParameter parameter) {
         if (dataSource != null) {
             try {
-                final Class<?> clazz = Class.forName(dataSource.getQueryerClass());
-                final Constructor<?> constructor = clazz.getConstructor(ReportDataSource.class, ReportParameter.class);
+                Class<?> clazz = Class.forName(dataSource.getQueryerClass());
+                Constructor<?> constructor = clazz.getConstructor(ReportDataSource.class, ReportParameter.class);
                 return (Queryer)constructor.newInstance(dataSource, parameter);
             } catch (final Exception ex) {
                 throw new RuntimeException("create report engine queryer error", ex);

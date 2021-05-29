@@ -23,7 +23,7 @@ import com.skyeye.sql.query.Queryer;
  */
 public class OracleQueryer extends AbstractQueryer implements Queryer {
 
-    public OracleQueryer(final ReportDataSource dataSource, final ReportParameter parameter) {
+    public OracleQueryer(ReportDataSource dataSource, ReportParameter parameter) {
         super(dataSource, parameter);
     }
 

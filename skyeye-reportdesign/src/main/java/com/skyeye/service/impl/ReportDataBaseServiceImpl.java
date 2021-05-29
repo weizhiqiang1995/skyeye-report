@@ -4,6 +4,7 @@
 
 package com.skyeye.service.impl;
 
+import com.gexin.fastjson.JSON;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.skyeye.common.object.InputObject;
@@ -11,10 +12,13 @@ import com.skyeye.common.object.OutputObject;
 import com.skyeye.common.util.ToolUtil;
 import com.skyeye.constants.ReportConstants;
 import com.skyeye.dao.ReportDataBaseDao;
+import com.skyeye.entity.ReportDataSource;
 import com.skyeye.service.ReportDataBaseService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +34,7 @@ import java.util.Map;
  */
 @Service
 public class ReportDataBaseServiceImpl implements ReportDataBaseService {
+
     @Autowired
     private ReportDataBaseDao reportDataBaseDao;
 
@@ -94,5 +99,30 @@ public class ReportDataBaseServiceImpl implements ReportDataBaseService {
         bean.put("poolClass", ReportConstants.PoolMation.getTypeByPoolClass(poolClass));
         outputObject.setBean(bean);
         outputObject.settotal(1);
+    }
+
+    /**
+     * 获取数据库对象
+     *
+     * @param dataBaseId 数据库id
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public ReportDataSource getReportDataSource(String dataBaseId) throws Exception {
+        // 获取数据源信息
+        Map<String, Object> dataBase = reportDataBaseDao.getReportDataBaseById(dataBaseId);
+        Map<String, Object> options = new HashMap<>();
+        String optionsStr = dataBase.get("options").toString();
+        if (StringUtils.isNotEmpty(optionsStr)) {
+            options = JSON.parseObject(optionsStr);
+        }
+        return new ReportDataSource(
+                dataBaseId,
+                dataBase.get("driverClass").toString(),
+                dataBase.get("jdbcUrl").toString(), dataBase.get("user").toString(), dataBase.get("password").toString(),
+                dataBase.get("queryerClass").toString(),
+                dataBase.get("poolClass").toString(),
+                options);
     }
 }

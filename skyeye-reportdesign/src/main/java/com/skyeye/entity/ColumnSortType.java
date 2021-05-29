@@ -4,6 +4,8 @@
 
 package com.skyeye.entity;
 
+import com.skyeye.constants.ReportConstants;
+
 /**
  *
  * @ClassName: ColumnSortType
@@ -41,27 +43,17 @@ public enum ColumnSortType {
      */
     CHAR_DESCENDING(4);
 
-    private final int value;
+    private int value;
 
-    ColumnSortType(final int value) {
+    ColumnSortType(int value) {
         this.value = value;
     }
 
-    public static ColumnSortType valueOf(final int arg) {
-        if (arg == 0) {
-            return DEFAULT;
-        }
-        if (arg == 1) {
-            return DIGIT_ASCENDING;
-        }
-        if (arg == 2) {
-            return DIGIT_DESCENDING;
-        }
-        if (arg == 3) {
-            return CHAR_ASCENDING;
-        }
-        if (arg == 4) {
-            return CHAR_DESCENDING;
+    public static ColumnSortType valueOf(int arg) {
+        for (ColumnSortType item : ColumnSortType.values()) {
+            if(item.getValue() == arg){
+                return item;
+            }
         }
         return DEFAULT;
     }

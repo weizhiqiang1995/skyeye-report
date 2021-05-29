@@ -33,7 +33,7 @@ public class NoDataSourcePool implements DataSourcePoolWrapper {
     }
 
     private static class NoDataSource implements DataSource {
-        private final ReportDataSource reportDataSource;
+        private ReportDataSource reportDataSource;
 
         public NoDataSource(ReportDataSource reportDataSource) {
             this.reportDataSource = reportDataSource;

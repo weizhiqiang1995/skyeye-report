@@ -24,9 +24,9 @@ import javax.sql.DataSource;
 public class DBCP2DataSourcePool implements DataSourcePoolWrapper {
 
     @Override
-    public DataSource wrap(final ReportDataSource rptDs) {
+    public DataSource wrap(ReportDataSource rptDs) {
         try {
-            final BasicDataSource dataSource = new BasicDataSource();
+            BasicDataSource dataSource = new BasicDataSource();
             dataSource.setDriverClassName(rptDs.getDriverClass());
             dataSource.setUrl(rptDs.getJdbcUrl());
             dataSource.setUsername(rptDs.getUser());

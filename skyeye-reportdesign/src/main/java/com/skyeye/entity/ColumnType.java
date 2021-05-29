@@ -42,17 +42,10 @@ public enum ColumnType {
     }
 
     public static ColumnType valueOf(final int arg) {
-        if (arg == 1) {
-            return LAYOUT;
-        }
-        if (arg == 2) {
-            return DIMENSION;
-        }
-        if (arg == 3) {
-            return STATISTICAL;
-        }
-        if (arg == 4) {
-            return COMPUTED;
+        for (ColumnType item : ColumnType.values()) {
+            if(item.getValue() == arg){
+                return item;
+            }
         }
         return DIMENSION;
     }

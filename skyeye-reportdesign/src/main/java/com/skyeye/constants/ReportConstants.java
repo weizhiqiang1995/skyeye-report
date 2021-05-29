@@ -177,4 +177,50 @@ public class ReportConstants {
         }
     }
 
+    /**
+     * 数据源类型
+     */
+    public static enum DataFromTypeMation {
+        XML(1, "XML数据源"),
+        JSON(2, "JSON数据源"),
+        REST_API(3, "Rest接口数据源"),
+        SQL(4, "SQL数据源");
+
+        private int type;
+        private String name;
+
+        DataFromTypeMation(int type, String name) {
+            this.type = type;
+            this.name = name;
+        }
+
+        public static List<Map<String, Object>> getDataFromTypeList(){
+            List<Map<String, Object>> beans = new ArrayList<>();
+            for (DataFromTypeMation item : DataFromTypeMation.values()) {
+                Map<String, Object> bean = new HashMap<>();
+                bean.put("id", item.getType());
+                bean.put("name", item.getName());
+                beans.add(bean);
+            }
+            return beans;
+        }
+
+        public static String getNameByType(int type) {
+            for (DataFromTypeMation bean : DataFromTypeMation.values()) {
+                if (bean.getType() == type) {
+                    return bean.getName();
+                }
+            }
+            return null;
+        }
+
+        public int getType() {
+            return type;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
 }

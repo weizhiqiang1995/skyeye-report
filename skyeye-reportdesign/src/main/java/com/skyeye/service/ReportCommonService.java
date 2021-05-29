@@ -59,4 +59,13 @@ public interface ReportCommonService {
      * @throws Exception
      */
     void queryPoolMationList(InputObject inputObject, OutputObject outputObject) throws Exception;
+
+    /**
+     * 解析SQL数据源
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    void parseSQLText(InputObject inputObject, OutputObject outputObject) throws Exception;
 }

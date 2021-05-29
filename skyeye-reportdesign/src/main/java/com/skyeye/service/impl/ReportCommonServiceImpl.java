@@ -8,7 +8,9 @@ import com.skyeye.common.object.InputObject;
 import com.skyeye.common.object.OutputObject;
 import com.skyeye.constants.ReportConstants;
 import com.skyeye.dao.ReportCommonDao;
+import com.skyeye.entity.ReportDataSource;
 import com.skyeye.service.ReportCommonService;
+import com.skyeye.service.ReportDataBaseService;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -38,6 +40,9 @@ public class ReportCommonServiceImpl implements ReportCommonService {
 
     @Autowired
     private ReportCommonDao reportCommonDao;
+
+    @Autowired
+    private ReportDataBaseService reportDataBaseService;
 
     /**
      * 测试数据源
@@ -94,9 +99,9 @@ public class ReportCommonServiceImpl implements ReportCommonService {
      */
     @Override
     public void parseXmlText(InputObject inputObject, OutputObject outputObject) throws Exception {
+        Map<String, Object> inputParams = inputObject.getParams();
         Element rootElement;
         try {
-            Map<String, Object> inputParams = inputObject.getParams();
             // 获取xml文件
             Document document = DocumentHelper.parseText(inputParams.get("xmlText").toString());
             // 获取根目录
@@ -164,6 +169,24 @@ public class ReportCommonServiceImpl implements ReportCommonService {
         List<Map<String, Object>> beans = ReportConstants.PoolMation.getPoolMationList();
         outputObject.setBeans(beans);
         outputObject.settotal(beans.size());
+    }
+
+    /**
+     * 解析SQL数据源
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @Override
+    public void parseSQLText(InputObject inputObject, OutputObject outputObject) throws Exception {
+        Map<String, Object> params = inputObject.getParams();
+        String sqlText = params.get("sqlText").toString();
+        String dataBaseId = params.get("dataBaseId").toString();
+        // 获取数据源信息
+        ReportDataSource dataBase = reportDataBaseService.getReportDataSource(dataBaseId);
+
+
     }
 
 }

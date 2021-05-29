@@ -32,11 +32,10 @@ public enum LayoutType {
     }
 
     public static LayoutType valueOf(final int arg) {
-        if (arg == 1) {
-            return HORIZONTAL;
-        }
-        if (arg == 2) {
-            return VERTICAL;
+        for (LayoutType item : LayoutType.values()) {
+            if(item.getValue() == arg){
+                return item;
+            }
         }
         return HORIZONTAL;
     }
