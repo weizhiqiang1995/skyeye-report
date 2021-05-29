@@ -9,6 +9,7 @@ import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.skyeye.common.object.InputObject;
 import com.skyeye.common.object.OutputObject;
 import com.skyeye.common.util.ToolUtil;
+import com.skyeye.constants.ReportConstants;
 import com.skyeye.dao.ReportDataBaseDao;
 import com.skyeye.service.ReportDataBaseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,12 @@ public class ReportDataBaseServiceImpl implements ReportDataBaseService {
         List<Map<String, Object>> beans = reportDataBaseDao.getReportDataBaseList(inputParams,
                 new PageBounds(Integer.parseInt(inputParams.get("page").toString()), Integer.parseInt(inputParams.get("limit").toString())));
         PageList<Map<String, Object>> beansPageList = (PageList<Map<String, Object>>)beans;
+        beans.forEach(bean -> {
+            String driverClass = bean.get("driverClass").toString();
+            String poolClass = bean.get("poolClass").toString();
+            bean.put("dataType", ReportConstants.DataBaseMation.getTypeByDricerClass(driverClass));
+            bean.put("poolClass", ReportConstants.PoolMation.getTitleByPoolClass(poolClass));
+        });
         outputObject.setBeans(beans);
         outputObject.settotal(beansPageList.getPaginator().getTotalCount());
     }
@@ -48,7 +55,16 @@ public class ReportDataBaseServiceImpl implements ReportDataBaseService {
         inputParams.put("id", ToolUtil.getSurFaceId());
         inputParams.put("userId", inputObject.getLogParams().get("id"));
         inputParams.put("createTime", ToolUtil.getTimeAndToString());
+        setCommonDataMation(inputParams);
         reportDataBaseDao.insertReportDataBase(inputParams);
+    }
+
+    private void setCommonDataMation(Map<String, Object> inputParams){
+        String dataBaseType = inputParams.get("dataType").toString();
+        String poolClass = inputParams.get("poolClass").toString();
+        inputParams.put("driverClass", ReportConstants.DataBaseMation.getDricerClassByType(dataBaseType));
+        inputParams.put("queryerClass", ReportConstants.DataBaseMation.getQueryerClassByType(dataBaseType));
+        inputParams.put("poolClass", ReportConstants.PoolMation.getPoolClassByType(poolClass));
     }
 
     @Override
@@ -62,14 +78,21 @@ public class ReportDataBaseServiceImpl implements ReportDataBaseService {
         Map<String, Object> inputParams = inputObject.getParams();
         inputParams.put("userId", inputObject.getLogParams().get("id"));
         inputParams.put("updateTime", ToolUtil.getTimeAndToString());
+        setCommonDataMation(inputParams);
         reportDataBaseDao.updateReportDataBaseById(inputParams);
-        outputObject.setBean(inputParams);
     }
 
     @Override
     public void getReportDataBaseById(InputObject inputObject, OutputObject outputObject) throws Exception {
         Map<String, Object> inputParams = inputObject.getParams();
-        Map<String, Object> beans = reportDataBaseDao.getReportDataBaseById(String.valueOf(inputParams.get("id")));
-        outputObject.setBean(beans);
+        String id = inputParams.get("id").toString();
+        Map<String, Object> bean = reportDataBaseDao.getReportDataBaseById(id);
+
+        String driverClass = bean.get("driverClass").toString();
+        String poolClass = bean.get("poolClass").toString();
+        bean.put("dataType", ReportConstants.DataBaseMation.getTypeByDricerClass(driverClass));
+        bean.put("poolClass", ReportConstants.PoolMation.getTypeByPoolClass(poolClass));
+        outputObject.setBean(bean);
+        outputObject.settotal(1);
     }
 }

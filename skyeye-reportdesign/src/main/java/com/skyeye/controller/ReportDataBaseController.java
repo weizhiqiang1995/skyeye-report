@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 /**
  *
  * @ClassName: ReportDataBaseController
- * @Description: 文件模型关系
+ * @Description: 数据库操作信息
  * @author: skyeye云系列--卫志强
  * @date: 2021/5/16 23:17
  *
@@ -29,7 +29,7 @@ public class ReportDataBaseController {
     private ReportDataBaseService reportDataBaseService;
 
     /**
-     * 获取文件模型关系表格信息
+     * 获取数据库列表信息
      *
      * @param inputObject
      * @param outputObject
@@ -42,7 +42,7 @@ public class ReportDataBaseController {
     }
 
     /**
-     * 新增数据源配置信息
+     * 新增数据库配置信息
      *
      * @param inputObject
      * @param outputObject
@@ -55,7 +55,7 @@ public class ReportDataBaseController {
     }
 
     /**
-     * 根据id删除数据源配置信息
+     * 根据id删除数据库配置信息
      *
      * @param inputObject
      * @param outputObject
@@ -68,7 +68,7 @@ public class ReportDataBaseController {
     }
 
     /**
-     * 根据id更新数据源配置信息
+     * 根据id更新数据库配置信息
      *
      * @param inputObject
      * @param outputObject
@@ -81,7 +81,7 @@ public class ReportDataBaseController {
     }
 
     /**
-     * 根据id查询数据源配置信息
+     * 根据id查询数据库配置信息
      *
      * @param inputObject
      * @param outputObject

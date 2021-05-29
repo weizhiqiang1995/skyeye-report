@@ -6,6 +6,7 @@ package com.skyeye.service.impl;
 
 import com.skyeye.common.object.InputObject;
 import com.skyeye.common.object.OutputObject;
+import com.skyeye.constants.ReportConstants;
 import com.skyeye.dao.ReportCommonDao;
 import com.skyeye.service.ReportCommonService;
 import org.dom4j.Document;
@@ -51,9 +52,7 @@ public class ReportCommonServiceImpl implements ReportCommonService {
         String url = params.get("url").toString();
         String user = params.get("user").toString();
         String pass = params.containsKey("pass") ? params.get("pass").toString() : "";
-        if(!connectionDataBase(driverClass, url, user, pass)){
-            outputObject.setreturnMessage("连接失败");
-        }
+        connectionDataBase(driverClass, url, user, pass, outputObject);
     }
 
     /**
@@ -63,12 +62,13 @@ public class ReportCommonServiceImpl implements ReportCommonService {
      * @param url 数据源连接字符串
      * @param user 用户名
      * @param password 密码
+     * @param outputObject 接口出参，如果没有可以填null
      * @return
      * @throws Exception
      */
     @Override
     public boolean connectionDataBase(final String driverClass, final String url, final String user,
-                                  final String password) {
+                                      final String password, OutputObject outputObject) {
         Connection conn = null;
         try {
             Class.forName(driverClass);
@@ -76,6 +76,9 @@ public class ReportCommonServiceImpl implements ReportCommonService {
             return true;
         } catch (final Exception e) {
             LOGGER.warn("testConnection", e);
+            if(outputObject != null){
+                outputObject.setreturnMessage(e.getMessage());
+            }
             return false;
         } finally {
             this.releaseConnection(conn);
@@ -133,6 +136,34 @@ public class ReportCommonServiceImpl implements ReportCommonService {
                 LOGGER.warn("测试数据库连接后释放资源失败", ex);
             }
         }
+    }
+
+    /**
+     * 获取数据源类型
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @Override
+    public void queryDataBaseMationList(InputObject inputObject, OutputObject outputObject) throws Exception {
+        List<Map<String, Object>> beans = ReportConstants.DataBaseMation.getDataBaseMationList();
+        outputObject.setBeans(beans);
+        outputObject.settotal(beans.size());
+    }
+
+    /**
+     * 获取连接池类型
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @Override
+    public void queryPoolMationList(InputObject inputObject, OutputObject outputObject) throws Exception {
+        List<Map<String, Object>> beans = ReportConstants.PoolMation.getPoolMationList();
+        outputObject.setBeans(beans);
+        outputObject.settotal(beans.size());
     }
 
 }

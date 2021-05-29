@@ -51,4 +51,30 @@ public class ReportCommonController {
         reportCommonService.parseXmlText(inputObject, outputObject);
     }
 
+    /**
+     * 获取数据源类型
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @RequestMapping("/post/ReportCommonController/queryDataBaseMationList")
+    @ResponseBody
+    public void queryDataBaseMationList(InputObject inputObject, OutputObject outputObject) throws Exception{
+        reportCommonService.queryDataBaseMationList(inputObject, outputObject);
+    }
+
+    /**
+     * 获取连接池类型
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @RequestMapping("/post/ReportCommonController/queryPoolMationList")
+    @ResponseBody
+    public void queryPoolMationList(InputObject inputObject, OutputObject outputObject) throws Exception{
+        reportCommonService.queryPoolMationList(inputObject, outputObject);
+    }
+
 }

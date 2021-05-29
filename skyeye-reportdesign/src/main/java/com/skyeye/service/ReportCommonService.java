@@ -26,11 +26,12 @@ public interface ReportCommonService {
      * @param url 数据源连接字符串
      * @param user 用户名
      * @param password 密码
+     * @param outputObject 接口出参，如果没有可以填null
      * @return
      * @throws Exception
      */
     boolean connectionDataBase(final String driverClass, final String url, final String user,
-                                      final String password) throws Exception;
+                                      final String password, OutputObject outputObject) throws Exception;
 
     /**
      * 解析Xml格式文本
@@ -40,4 +41,22 @@ public interface ReportCommonService {
      * @throws Exception
      */
     void parseXmlText(InputObject inputObject, OutputObject outputObject) throws Exception;
+
+    /**
+     * 获取数据源类型
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    void queryDataBaseMationList(InputObject inputObject, OutputObject outputObject) throws Exception;
+
+    /**
+     * 获取连接池类型
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    void queryPoolMationList(InputObject inputObject, OutputObject outputObject) throws Exception;
 }

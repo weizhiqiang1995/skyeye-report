@@ -15,6 +15,10 @@
     <url id="reportcommon002" path="/post/ReportCommonController/parseXmlText" val="解析xml格式文本" allUse="2" method="POST" groupName="报表公共接口">
         <property id="xmlText" name="xmlText" ref="required" var="xml格式文本" />
     </url>
+    <url id="reportcommon006" path="/post/ReportCommonController/queryDataBaseMationList" val="获取数据源类型" allUse="2" method="GET" groupName="报表公共接口">
+    </url>
+    <url id="reportcommon007" path="/post/ReportCommonController/queryPoolMationList" val="获取连接池类型" allUse="2" method="GET" groupName="报表公共接口">
+    </url>
     <!-- 报表公共接口结束 -->
 
     <!-- 文件模型关系开始 -->
@@ -41,42 +45,40 @@
     </url>
     <!-- 文件模型关系结束 -->
 
-    <!-- 数据源配置开始 -->
-    <url id="reportdatabase001" path="/post/ReportDataBaseController/getReportDataBaseList" val="获取数据源配置信息" method="POST" allUse="1" groupName="数据源配置信息">
+    <!-- 数据库配置开始 -->
+    <url id="reportdatabase001" path="/post/ReportDataBaseController/getReportDataBaseList" val="获取数据库配置信息" method="POST" allUse="1" groupName="数据库配置信息">
         <property id="limit" name="limit" ref="required,num" var="分页参数,每页多少条数据" />
         <property id="page" name="page" ref="required,num" var="分页参数,第几页"/>
-        <property id="name" name="name" ref="required" var="数据源名称"/>
+        <property id="name" name="name" ref="" var="数据库名称"/>
     </url>
-    <url id="reportdatabase002" path="/post/ReportDataBaseController/insertReportDataBase" val="新增数据源配置信息" allUse="1" method="POST" groupName="数据源配置信息">
-        <property id="name" name="name" ref="required" var="数据源名称"/>
-        <property id="driverClass" name="driverClass" ref="required" var="数据源驱动类"/>
-        <property id="jdbcUrl" name="jdbcUrl" ref="required" var="数据源连接字符串"/>
-        <property id="user" name="user" ref="required" var="数据源登录用户名"/>
-        <property id="password" name="password" ref="" var="数据源登录密码"/>
-        <property id="queryerClass" name="queryerClass" ref="required" var="获取报表引擎查询器类名"/>
-        <property id="poolClass" name="poolClass" ref="required" var="报表引擎查询器使用的数据源连接池"/>
-        <property id="options" name="options" ref="required" var="数据源配置选项"/>
+    <url id="reportdatabase002" path="/post/ReportDataBaseController/insertReportDataBase" val="新增数据库配置信息" allUse="1" method="POST" groupName="数据库配置信息">
+        <property id="name" name="name" ref="required" var="数据库名称"/>
+        <property id="dataType" name="dataType" ref="required" var="数据库类型"/>
+        <property id="jdbcUrl" name="jdbcUrl" ref="required" var="数据库连接字符串"/>
+        <property id="user" name="user" ref="required" var="数据库登录用户名"/>
+        <property id="password" name="password" ref="" var="数据库登录密码"/>
+        <property id="poolClass" name="poolClass" ref="required" var="报表引擎查询器使用的数据库连接池"/>
+        <property id="options" name="options" ref="required" var="数据库配置选项"/>
         <property id="comment" name="comment" ref="" var="说明备注"/>
     </url>
-    <url id="reportdatabase003" path="/post/ReportDataBaseController/delReportDataBaseById" val="根据id删除数据源配置信息" allUse="1" method="DELETE" groupName="数据源配置信息">
-        <property id="id" name="id" ref="required" var="数据源配置信息唯一id"/>
+    <url id="reportdatabase003" path="/post/ReportDataBaseController/delReportDataBaseById" val="根据id删除数据库配置信息" allUse="1" method="DELETE" groupName="数据库配置信息">
+        <property id="id" name="id" ref="required" var="数据库配置信息唯一id"/>
     </url>
-    <url id="reportdatabase004" path="/post/ReportDataBaseController/updateReportDataBaseById" val="根据id更新数据源配置信息" allUse="1" method="PUT" groupName="数据源配置信息">
-        <property id="id" name="id" ref="required" var="数据源配置信息唯一id"/>
-        <property id="name" name="name" ref="" var="数据源名称"/>
-        <property id="driverClass" name="driverClass" ref="" var="数据源驱动类"/>
-        <property id="jdbcUrl" name="jdbcUrl" ref="" var="数据源连接字符串"/>
-        <property id="user" name="user" ref="" var="数据源登录用户名"/>
-        <property id="password" name="password" ref="" var="数据源登录密码"/>
-        <property id="queryerClass" name="queryerClass" ref="" var="获取报表引擎查询器类名"/>
-        <property id="poolClass" name="poolClass" ref="" var="报表引擎查询器使用的数据源连接池"/>
-        <property id="options" name="options" ref="" var="数据源配置选项"/>
+    <url id="reportdatabase004" path="/post/ReportDataBaseController/updateReportDataBaseById" val="根据id更新数据库配置信息" allUse="1" method="PUT" groupName="数据库配置信息">
+        <property id="id" name="id" ref="required" var="数据库配置信息唯一id"/>
+        <property id="name" name="name" ref="" var="数据库名称"/>
+        <property id="dataType" name="dataType" ref="required" var="数据库类型"/>
+        <property id="jdbcUrl" name="jdbcUrl" ref="" var="数据库连接字符串"/>
+        <property id="user" name="user" ref="" var="数据库登录用户名"/>
+        <property id="password" name="password" ref="" var="数据库登录密码"/>
+        <property id="poolClass" name="poolClass" ref="" var="报表引擎查询器使用的数据库连接池"/>
+        <property id="options" name="options" ref="" var="数据库配置选项"/>
         <property id="comment" name="comment" ref="" var="说明备注"/>
     </url>
-    <url id="reportdatabase005" path="/post/ReportDataBaseController/getReportDataBaseById" val="根据id查询数据源配置信息" allUse="1" method="POST" groupName="数据源配置信息">
-        <property id="id" name="id" ref="required" var="数据源配置信息唯一id"/>
+    <url id="reportdatabase005" path="/post/ReportDataBaseController/getReportDataBaseById" val="根据id查询数据库配置信息" allUse="2" method="GET" groupName="数据库配置信息">
+        <property id="id" name="id" ref="required" var="数据库配置信息唯一id"/>
     </url>
-    <!-- 数据源配置结束 -->
+    <!-- 数据库配置结束 -->
 
 
 </controller>

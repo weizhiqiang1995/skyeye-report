@@ -2,27 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.skyeye.dao.ReportDataBaseDao">
 
-    <sql id="baseField">
-        rd.id,
-        rd.name,
-        rd.driver_class AS driverClass,
-        rd.jdbc_url AS jdbcUrl,
-        rd.user,
-        rd.password,
-        rd.queryer_class AS queryerClass,
-        rd.pool_class AS poolClass,
-        rd.options,
-        rd.comment,
-        rd.create_id AS createName,
-        CONVERT(rd.create_time, char) createTime,
-        rd.last_update_id lastUpdateName,
-        CONVERT(rd.last_update_time, char) lastUpdateTime
-    </sql>
-
     <select id="getReportDataBaseList" parameterType="java.util.Map" resultType="java.util.Map">
         SELECT
-            <include refid="baseField"/>
-        FROM report_database rd
+            rd.id,
+            rd.name,
+            rd.driver_class AS driverClass,
+            rd.jdbc_url AS jdbcUrl,
+            rd.user,
+            rd.password,
+            rd.queryer_class AS queryerClass,
+            rd.pool_class AS poolClass,
+            rd.options,
+            rd.comment,
+            b.user_name createName,
+            CONVERT(rd.create_time, char) createTime,
+            c.user_name lastUpdateName,
+            CONVERT(rd.last_update_time, char) lastUpdateTime
+        FROM
+            report_database rd
+            LEFT JOIN sys_eve_user_staff b ON rd.create_id = b.user_id
+            LEFT JOIN sys_eve_user_staff c ON rd.last_update_id = c.user_id
         WHERE 1 = 1
         <if test="name != '' and name != null">
             AND rd.name LIKE '%${name}%'
@@ -77,7 +76,16 @@
 
     <select id="getReportDataBaseById" resultType="java.util.Map">
         SELECT
-            <include refid="baseField"/>
+            rd.id,
+            rd.name,
+            rd.driver_class AS driverClass,
+            rd.jdbc_url AS jdbcUrl,
+            rd.user,
+            rd.password,
+            rd.queryer_class AS queryerClass,
+            rd.pool_class AS poolClass,
+            rd.options,
+            rd.comment
         FROM report_database rd
         WHERE rd.id = #{id}
     </select>
