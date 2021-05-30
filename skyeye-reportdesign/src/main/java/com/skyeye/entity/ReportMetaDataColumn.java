@@ -32,11 +32,6 @@ public class ReportMetaDataColumn implements Serializable {
     private String name;
 
     /**
-     * 获取报表元数据列对应的标题文本
-     */
-    private String text;
-
-    /**
      * 获取报表元数据列---数据类型名称
      */
     private String dataType;
@@ -109,26 +104,9 @@ public class ReportMetaDataColumn implements Serializable {
     public ReportMetaDataColumn() {
     }
 
-    public ReportMetaDataColumn(final String name, final String text, final ColumnType type) {
+    public ReportMetaDataColumn(String name, ColumnType type) {
         this.name = name;
-        this.text = text;
         this.type = type;
-    }
-
-    public String getName() {
-        return this.name == null ? "" : this.name.trim().toLowerCase();
-    }
-
-    /**
-     * 获取报表元数据列对应的标题文本
-     *
-     * @return 报表元数据列对应的标题文本
-     */
-    public String getText() {
-        if (this.text == null || this.text.trim().length() == 0) {
-            return this.name;
-        }
-        return this.text;
     }
 
     public String getExpression() {
@@ -143,18 +121,13 @@ public class ReportMetaDataColumn implements Serializable {
         return this.comment == null ? "" : this.comment;
     }
 
-    public ReportMetaDataColumn copyToNew() {
-        return this.copyToNew(this.name, this.text);
+    public ReportMetaDataColumn copyToNew(String name) {
+        return this.copyToNew(name, this.isPercent);
     }
 
-    public ReportMetaDataColumn copyToNew(final String name, final String text) {
-        return this.copyToNew(name, text, this.isPercent);
-    }
-
-    public ReportMetaDataColumn copyToNew(final String name, final String text, final boolean isPercent) {
+    public ReportMetaDataColumn copyToNew(String name, boolean isPercent) {
         ReportMetaDataColumn column = new ReportMetaDataColumn();
         column.setName(name);
-        column.setText(text);
         column.setPercent(isPercent);
         column.setDataType(this.dataType);
         column.setExtensions(this.isExtensions);

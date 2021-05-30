@@ -187,12 +187,12 @@ public class ReportCommonServiceImpl implements ReportCommonService {
         Map<String, Object> params = inputObject.getParams();
         String sqlText = params.get("sqlText").toString();
         String dataBaseId = params.get("dataBaseId").toString();
+        LOGGER.info("data base id is {}", dataBaseId);
         // 1.获取数据源信息
         ReportDataSource dataBase = reportDataBaseService.getReportDataSource(dataBaseId);
         // 2.获取查询的列信息
         List<ReportMetaDataColumn> dataColumns = QueryerFactory.create(dataBase).parseMetaDataColumns(sqlText);
-        List<Map<String, Object>> beans = JSONArray.fromObject(JSONUtils.toJSONString(dataColumns));
-        outputObject.setBeans(beans);
+        outputObject.setBeans(JSONArray.fromObject(dataColumns));
     }
 
 }

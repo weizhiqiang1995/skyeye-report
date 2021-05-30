@@ -14,6 +14,7 @@ import com.skyeye.constants.ReportConstants;
 import com.skyeye.dao.ReportDataBaseDao;
 import com.skyeye.entity.ReportDataSource;
 import com.skyeye.service.ReportDataBaseService;
+import net.sf.json.JSONArray;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -115,7 +116,10 @@ public class ReportDataBaseServiceImpl implements ReportDataBaseService {
         Map<String, Object> options = new HashMap<>();
         String optionsStr = dataBase.get("options").toString();
         if (StringUtils.isNotEmpty(optionsStr)) {
-            options = JSON.parseObject(optionsStr);
+            List<Map<String, Object>> optionsList = JSONArray.fromObject(optionsStr);
+            optionsList.stream().forEach(bean -> {
+                options.put(bean.get("configKey").toString(), bean.get("configValue").toString());
+            });
         }
         return new ReportDataSource(
                 dataBaseId,
