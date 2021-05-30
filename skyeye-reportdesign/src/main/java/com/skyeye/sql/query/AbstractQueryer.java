@@ -1,3 +1,7 @@
+/*******************************************************************************
+ * Copyright 卫志强 QQ：598748873@qq.com Inc. All rights reserved. 开源地址：https://gitee.com/doc_wei01/skyeye-report
+ ******************************************************************************/
+
 package com.skyeye.sql.query;
 
 import com.skyeye.entity.*;
@@ -13,7 +17,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @author tomdeng
+ *
+ * @ClassName: AbstractQueryer
+ * @Description: 数据库查询父类
+ * @author: skyeye云系列--卫志强
+ * @date: 2021/5/30 0:29
+ *
+ * @Copyright: 2021 https://gitee.com/doc_wei01/skyeye-report Inc. All rights reserved.
+ * 注意：本内容具体规则请参照readme执行，地址：https://gitee.com/doc_wei01/skyeye-report/blob/master/README.md
  */
 public abstract class AbstractQueryer {
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -29,29 +40,38 @@ public abstract class AbstractQueryer {
             new ArrayList<>(this.parameter.getMetaColumns());
     }
 
+    /**
+     * 获取sql查询出来的所有列
+     *
+     * @param sqlText sql语句
+     * @return
+     */
     public List<ReportMetaDataColumn> parseMetaDataColumns(String sqlText) {
         Connection conn = null;
         Statement stmt = null;
         ResultSet rs = null;
         List<ReportMetaDataColumn> columns = null;
-
         try {
             this.logger.debug("Parse Report MetaDataColumns SQL:{},", sqlText);
+            // 创建连接
             conn = this.getJdbcConnection();
+            // 创建通讯
             stmt = conn.createStatement();
+            // 执行sql
             rs = stmt.executeQuery(this.preprocessSqlText(sqlText));
+            // 获取结果
             ResultSetMetaData rsMataData = rs.getMetaData();
             int count = rsMataData.getColumnCount();
             columns = new ArrayList<>(count);
             for (int i = 1; i <= count; i++) {
-                final ReportMetaDataColumn column = new ReportMetaDataColumn();
+                ReportMetaDataColumn column = new ReportMetaDataColumn();
                 column.setName(rsMataData.getColumnLabel(i));
                 column.setDataType(rsMataData.getColumnTypeName(i));
                 column.setWidth(rsMataData.getColumnDisplaySize(i));
                 columns.add(column);
             }
-        } catch (final SQLException ex) {
-            throw new RuntimeException(ex);
+        } catch (SQLException ex) {
+            throw new CustomException(ex);
         } finally {
             JdbcUtils.releaseJdbcResource(conn, stmt, rs);
         }
@@ -97,15 +117,14 @@ public abstract class AbstractQueryer {
         Connection conn = null;
         Statement stmt = null;
         ResultSet rs = null;
-
         try {
-            this.logger.debug(this.parameter.getSqlText());
+            logger.info(this.parameter.getSqlText());
             conn = this.getJdbcConnection();
             stmt = conn.createStatement();
             rs = stmt.executeQuery(this.parameter.getSqlText());
             return this.getMetaDataRows(rs, this.getSqlColumns(this.parameter.getMetaColumns()));
         } catch (final Exception ex) {
-            this.logger.error(String.format("SqlText:%s，Msg:%s", this.parameter.getSqlText(), ex));
+            logger.warn(String.format("SqlText:%s，Msg:%s", this.parameter.getSqlText(), ex));
             throw new CustomException(ex);
         } finally {
             JdbcUtils.releaseJdbcResource(conn, stmt, rs);

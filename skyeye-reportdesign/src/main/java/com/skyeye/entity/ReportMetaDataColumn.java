@@ -37,7 +37,7 @@ public class ReportMetaDataColumn implements Serializable {
     private String text;
 
     /**
-     * 获取报表元数据列数据类型名称
+     * 获取报表元数据列---数据类型名称
      */
     private String dataType;
 
@@ -152,7 +152,7 @@ public class ReportMetaDataColumn implements Serializable {
     }
 
     public ReportMetaDataColumn copyToNew(final String name, final String text, final boolean isPercent) {
-        final ReportMetaDataColumn column = new ReportMetaDataColumn();
+        ReportMetaDataColumn column = new ReportMetaDataColumn();
         column.setName(name);
         column.setText(text);
         column.setPercent(isPercent);

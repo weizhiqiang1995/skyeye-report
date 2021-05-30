@@ -4,13 +4,17 @@
 
 package com.skyeye.service.impl;
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.skyeye.common.object.InputObject;
 import com.skyeye.common.object.OutputObject;
 import com.skyeye.constants.ReportConstants;
 import com.skyeye.dao.ReportCommonDao;
 import com.skyeye.entity.ReportDataSource;
+import com.skyeye.entity.ReportMetaDataColumn;
 import com.skyeye.service.ReportCommonService;
 import com.skyeye.service.ReportDataBaseService;
+import com.skyeye.sql.query.factory.QueryerFactory;
+import net.sf.json.JSONArray;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -183,10 +187,12 @@ public class ReportCommonServiceImpl implements ReportCommonService {
         Map<String, Object> params = inputObject.getParams();
         String sqlText = params.get("sqlText").toString();
         String dataBaseId = params.get("dataBaseId").toString();
-        // 获取数据源信息
+        // 1.获取数据源信息
         ReportDataSource dataBase = reportDataBaseService.getReportDataSource(dataBaseId);
-
-
+        // 2.获取查询的列信息
+        List<ReportMetaDataColumn> dataColumns = QueryerFactory.create(dataBase).parseMetaDataColumns(sqlText);
+        List<Map<String, Object>> beans = JSONArray.fromObject(JSONUtils.toJSONString(dataColumns));
+        outputObject.setBeans(beans);
     }
 
 }
