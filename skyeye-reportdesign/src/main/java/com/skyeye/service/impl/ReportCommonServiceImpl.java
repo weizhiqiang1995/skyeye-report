@@ -195,4 +195,18 @@ public class ReportCommonServiceImpl implements ReportCommonService {
         outputObject.setBeans(JSONArray.fromObject(dataColumns));
     }
 
+    /**
+     * 获取数据源类型列表
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @Override
+    public void queryDataFromTypeMationList(InputObject inputObject, OutputObject outputObject) throws Exception {
+        List<Map<String, Object>> beans = ReportConstants.DataFromTypeMation.getDataFromTypeList();
+        outputObject.setBeans(beans);
+        outputObject.settotal(beans.size());
+    }
+
 }

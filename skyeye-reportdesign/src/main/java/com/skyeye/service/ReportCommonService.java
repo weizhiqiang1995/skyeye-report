@@ -68,4 +68,13 @@ public interface ReportCommonService {
      * @throws Exception
      */
     void parseSQLText(InputObject inputObject, OutputObject outputObject) throws Exception;
+
+    /**
+     * 获取数据源类型列表
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    void queryDataFromTypeMationList(InputObject inputObject, OutputObject outputObject) throws Exception;
 }

@@ -89,4 +89,16 @@ public class ReportCommonController {
         reportCommonService.parseSQLText(inputObject, outputObject);
     }
 
+    /**
+     * 获取数据源类型列表
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @RequestMapping("/post/ReportCommonController/queryDataFromTypeMationList")
+    public void queryDataFromTypeMationList(InputObject inputObject, OutputObject outputObject) throws Exception {
+        reportCommonService.queryDataFromTypeMationList(inputObject, outputObject);
+    }
+
 }
