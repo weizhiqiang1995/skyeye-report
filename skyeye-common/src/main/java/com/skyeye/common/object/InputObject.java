@@ -70,14 +70,18 @@ public class InputObject extends PutObject implements Serializable{
 	 * @throws
 	 */
 	private static String checkParamsByJson(String sessionKey) throws Exception{
-		String str = GetRequestJsonUtils.getRequestJsonString(getRequest());
-		try{
-			Map<String, Object> map = JSONUtil.toBean(str, null);
-			return setParamsObjToMapReStr(sessionKey, map);
-		}catch(Exception e){
-			Map<String, Object> formMap = ToolUtil.getUrlParams(str);
-			return setParamsObjToMapReStr(sessionKey, formMap);
+		Map<String, Object> params = getRequestParams();
+		if(params == null){
+			String str = GetRequestJsonUtils.getRequestJsonString(getRequest());
+			try{
+				Map<String, Object> map = JSONUtil.toBean(str, null);
+				return setParamsObjToMapReStr(sessionKey, map);
+			}catch(Exception e){
+				Map<String, Object> formMap = ToolUtil.getUrlParams(str);
+				return setParamsObjToMapReStr(sessionKey, formMap);
+			}
 		}
+		return null;
 	}
 	
 	/**
@@ -227,6 +231,9 @@ public class InputObject extends PutObject implements Serializable{
 	
 	private static Map<String, Object> getRequestParams(){
 		String requestId = (String) getRequest().getAttribute(REQUEST_ID_KEY);
+		if(ToolUtil.isBlank(requestId)){
+			return null;
+		}
 		JedisClientService jedisClient = SpringUtils.getBean(JedisClientService.class);
 		return JSONUtil.toBean(jedisClient.get(requestId), null);
 	}
