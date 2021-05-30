@@ -14,6 +14,9 @@
     <url id="reportcommon002" path="/post/ReportCommonController/parseXmlText" val="解析xml格式文本" allUse="2" method="POST" groupName="报表公共接口">
         <property id="xmlText" name="xmlText" ref="required" var="xml格式文本" />
     </url>
+    <url id="reportcommon003" path="/post/ReportCommonController/parseJsonText" val="解析Json格式文本" allUse="2" method="POST" groupName="报表公共接口">
+        <property id="jsonText" name="jsonText" ref="required" var="json格式文本" />
+    </url>
     <url id="reportcommon004" path="/post/ReportCommonController/parseSQLText" val="解析SQL数据源" allUse="2" method="POST" groupName="报表公共接口">
         <property id="sqlText" name="sqlText" ref="required" var="sql语句" />
         <property id="dataBaseId" name="dataBaseId" ref="required" var="数据源id" />

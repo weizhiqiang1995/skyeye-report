@@ -43,6 +43,15 @@ public interface ReportCommonService {
     void parseXmlText(InputObject inputObject, OutputObject outputObject) throws Exception;
 
     /**
+     * 解析Json格式文本
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    void parseJsonText(InputObject inputObject, OutputObject outputObject) throws Exception;
+
+    /**
      * 获取数据源类型
      *
      * @param inputObject

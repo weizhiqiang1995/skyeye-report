@@ -5,6 +5,7 @@
 package com.skyeye.service.impl;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.google.gson.Gson;
 import com.skyeye.common.object.InputObject;
 import com.skyeye.common.object.OutputObject;
 import com.skyeye.constants.ReportConstants;
@@ -103,9 +104,9 @@ public class ReportCommonServiceImpl implements ReportCommonService {
      */
     @Override
     public void parseXmlText(InputObject inputObject, OutputObject outputObject) throws Exception {
-        Map<String, Object> inputParams = inputObject.getParams();
         Element rootElement;
         try {
+            Map<String, Object> inputParams = inputObject.getParams();
             // 获取xml文件
             Document document = DocumentHelper.parseText(inputParams.get("xmlText").toString());
             // 获取根目录
@@ -130,6 +131,56 @@ public class ReportCommonServiceImpl implements ReportCommonService {
         if (elements.size() == 0) {
             nodeList.add(name);
         }
+    }
+
+    @Override
+    public void parseJsonText(InputObject inputObject, OutputObject outputObject) throws Exception {
+        Map<String, Object> map;
+        try  {
+            Map<String, Object> inputParams = inputObject.getParams();
+            String jsonText = inputParams.get("jsonText").toString();
+            Gson gson = new Gson();
+            map = gson.fromJson(jsonText, Map.class);
+        } catch (Exception ex) {
+            LOGGER.info("该文本不符合json文件格式, 故无法解析. ", ex);
+            outputObject.setreturnMessage("该文本不符合json文件格式, 故无法解析.");
+            return;
+        }
+        Set<String> result = new HashSet<>();
+        parseJsonSubNode(map, result, true, "");
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("nodeArray", result);
+        outputObject.setBean(resultMap);
+    }
+
+    // 解析Json并拼接节点下所有子节点名称
+    private void parseJsonSubNode(Map<String, Object> paramMap, Set<String> sets, boolean isFirstTime, String name) {
+        Set<Map.Entry<String, Object>> entries = paramMap.entrySet();
+        String key;
+        Object value;
+        for (Map.Entry<String, Object> obj : entries) {
+            key = obj.getKey();
+            value = obj.getValue();
+            if (value instanceof Map) {
+                parseJsonSubNode((Map<String, Object>) value, sets, false, getNewName(isFirstTime, name, key));
+            } else if (value instanceof List) {
+                List<Object> tempList = (List<Object>) value;
+                for (Object object : tempList) {
+                    if (object instanceof Map) {
+                        parseJsonSubNode((Map<String, Object>) object, sets, false, getNewName(isFirstTime, name, key));
+                    } else {
+                        sets.add(name.concat(".").concat(key));
+                    }
+                }
+            } else {
+                sets.add(getNewName(isFirstTime, name, key));
+            }
+        }
+    }
+
+    // 根据是否首个节点后, 依照不同规则进行拼接字符
+    private String getNewName(boolean isFirstTime, String name, String key) {
+        return isFirstTime ? key : name.concat(".").concat(key);
     }
 
     /**

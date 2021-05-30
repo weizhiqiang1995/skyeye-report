@@ -52,6 +52,18 @@ public class ReportCommonController {
     }
 
     /**
+     * 解析Json格式文本
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @RequestMapping("/post/ReportCommonController/parseJsonText")
+    public void parseJsonText(InputObject inputObject, OutputObject outputObject) throws Exception {
+        reportCommonService.parseJsonText(inputObject, outputObject);
+    }
+
+    /**
      * 获取数据源类型
      *
      * @param inputObject
