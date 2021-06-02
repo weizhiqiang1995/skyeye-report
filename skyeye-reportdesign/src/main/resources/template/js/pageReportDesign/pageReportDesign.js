@@ -5,7 +5,7 @@ layui.config({
     window: 'js/winui.window',
     echarts: '../echarts/echarts',
     echartsTheme: '../echarts/echartsTheme'
-}).define(['window', 'jquery', 'winui', 'form', 'echarts'], function (exports) {
+}).define(['window', 'jquery', 'winui', 'form', 'echarts', 'colorpicker'], function (exports) {
     winui.renderColor();
     var $ = layui.$,
         form = layui.form;
@@ -26,6 +26,14 @@ layui.config({
                         "desc": "主标题文本，支持使用 \\n 换行。",
                         "title": "主标题",
                         "editor": "2",
+                        "editorChooseValue": ""
+                    },
+                    "title.textStyle.color": {
+                        "value": "rgba(27, 26, 26, 1)",
+                        "edit": true,
+                        "desc": "主标题文字颜色",
+                        "title": "主标题文字颜色",
+                        "editor": "3",
                         "editorChooseValue": ""
                     },
                     "xAxis.type": {

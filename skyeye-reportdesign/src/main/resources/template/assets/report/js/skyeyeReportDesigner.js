@@ -357,6 +357,8 @@ layui.define(["jquery", 'form'], function(exports) {
 				},
 
 				initExcelEvent: function(){
+					// 不触发‘移除所有图表的编辑信息’的事件的对象的class--颜色选择器
+					var notTriggerRemove = ["layui-colorpicker-main"];
 					// 图表点击事件
 					$("body").on('click', ".echarts-box", function(e){
 						f.removeEchartsEditMation();
@@ -372,8 +374,16 @@ layui.define(["jquery", 'form'], function(exports) {
 					});
 
 					// 内容点击
-					$("body").on('click', skyeyeReportContent, function(){
-						f.removeEchartsEditMation();
+					$("body").on('click', skyeyeReportContent, function(e){
+						var pass = true;
+						$.each(notTriggerRemove, function (i, item){
+							if($(e.target).parents("." + item).length > 0 || $(e.target).attr('class').indexOf(item) != -1){
+								pass = false;
+							}
+						});
+						if(pass){
+							f.removeEchartsEditMation();
+						}
 					});
 
 					// 编辑器点击防止触发父内容事件
