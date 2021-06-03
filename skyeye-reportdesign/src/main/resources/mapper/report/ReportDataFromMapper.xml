@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.skyeye.dao.ReportDataFromDao">
+
+    <sql id="base">
+        rdf.id,
+        rdf.name,
+        rdf.type,
+        rdf.remark,
+        rdf.create_id AS createId,
+        rdf.create_time AS createTime,
+        rdf.last_update_id AS lastUpdateId,
+        rdf.last_update_time AS lastUpdateTime
+    </sql>
+
+    <select id="getReportDataFromList" resultType="java.util.Map">
+        SELECT
+            <include refid="base"/>
+        FROM report_data_from rdf
+        ORDER BY rdf.last_update_time DESC;
+    </select>
+
+    <insert id="insertReportDataFrom" parameterType="java.util.Map">
+        INSERT INTO report_data_from
+            (id, name, type, remark, create_id, create_time, last_update_id, last_update_time)
+        VALUES
+            (#{id}, #{name}, #{type}, #{remark}, #{userId}, #{createTime}, #{userId}, #{createTime})
+    </insert>
+
+    <select id="getDuplicateName" resultType="java.lang.Integer">
+        SELECT
+            COUNT(1)
+        FROM report_data_from
+        WHERE name = #{name}
+    </select>
+
+    <delete id="delReportDataFromById">
+        DELETE FROM report_data_from WHERE id = #{id}
+    </delete>
+
+    <update id="updateReportDataFromById" parameterType="java.util.Map">
+        UPDATE report_data_from
+        SET name = #{name}, type = #{type}, remark = #{remark}, last_update_id = #{userId}, last_update_time = #{createTime}
+        WHERE id = #{id}
+    </update>
+
+    <select id="getReportDataFromById" resultType="java.util.Map">
+        SELECT
+            <include refid="base"/>
+        FROM report_data_from rdf
+        WHERE id = #{id}
+    </select>
+
+</mapper>

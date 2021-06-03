@@ -88,5 +88,29 @@
     </url>
     <!-- 数据库配置结束 -->
 
+    <!-- 数据来源-父信息开始 -->
+    <url id="reportdatafrom001" path="/post/ReportDataFromController/getReportDataFromList" val="获取所有数据来源父信息" method="POST" allUse="2" groupName="数据来源父信息">
+        <property id="limit" name="limit" ref="required,num" var="分页参数,每页多少条数据" />
+        <property id="page" name="page" ref="required,num" var="分页参数,第几页"/>
+    </url>
+    <url id="reportdatafrom002" path="/post/ReportDataFromController/insertReportDataFrom" val="保存数据来源父信息" method="POST" allUse="2" groupName="数据来源父信息">
+        <property id="name" name="name" ref="required" var="数据来源名称"/>
+        <property id="type" name="type" ref="required,num" var="数据来源类型"/>
+        <property id="remark" name="remark" ref="" var="备注"/>
+    </url>
+    <url id="reportdatafrom003" path="/post/ReportDataFromController/delReportDataFromById" val="根据Id删除数据来源父信息" method="POST" allUse="2" groupName="数据来源父信息">
+        <property id="id" name="id" ref="required" var="数据来源Id"/>
+    </url>
+    <url id="reportdatafrom004" path="/post/ReportDataFromController/updateReportDataFromById" val="根据Id更新数据来源父信息" method="POST" allUse="2" groupName="数据来源父信息">
+        <property id="id" name="id" ref="required" var="数据来源Id"/>
+        <property id="name" name="name" ref="required" var="数据来源名称"/>
+        <property id="type" name="type" ref="required,num" var="数据来源类型"/>
+        <property id="remark" name="remark" ref="" var="备注"/>
+    </url>
+    <url id="reportdatafrom005" path="/post/ReportDataFromController/getReportDataFromById" val="根据Id查询数据来源父信息" method="POST" allUse="2" groupName="数据来源父信息">
+        <property id="id" name="id" ref="required" var="数据来源Id"/>
+    </url>
+    <!-- 数据来源-父信息结束 -->
+
 
 </controller>
