@@ -412,20 +412,24 @@ layui.define(["jquery", 'form'], function(exports) {
 					if(!f.isNull(echartsMation)) {
 						var attr = echartsMation.attr;
 						$("#showForm").html("");
+						var indexNumber = 1;
 						$.each(attr, function(key, val) {
 							if(val.edit){
 								// 可以编辑
 								var formItem = editorType[val.editor];
 								if(!f.isNull(formItem)){
-									var data = f.getFormItemData(key, val, boxId);
+									// 如果表单类型中支持的编辑器类型存在，则去解析
+									var data = f.getFormItemData(key, val, boxId, indexNumber);
 									if(!f.isNull(formItem.showValueTemplate)){
+										// 一般单选，多选，下拉框会用到，加载可选择的数据项
 										var showValueTemplate = getDataUseHandlebars(formItem.showValueTemplate, {rows: data.bean.editorChooseValue});
 										data.bean.showValueTemplate = showValueTemplate;
 									}
-									// 如果表单类型中支持的编辑器类型存在，则去解析
+									// 获取解析后的html
 									var html = getDataUseHandlebars('{{#bean}}' + formItem.html + '{{/bean}}', data);
 									$(html).appendTo($("#showForm").get(0));
 									if(!f.isNull(formItem.js)){
+										// 获取解析后的js
 										var js = getDataUseHandlebars('{{#bean}}' + formItem.js + '{{/bean}}', data);
 										var jsCon = '<script>layui.define(["jquery"], function(exports) {var jQuery = layui.jquery;(function($) {' + js + '})(jQuery);});</script>';
 										$("#showForm").append(jsCon);
@@ -433,23 +437,24 @@ layui.define(["jquery", 'form'], function(exports) {
 								}
 							}else{
 								var formItem = editorType["100"];
-								var data = f.getFormItemData(key, val, boxId);
-								// 如果表单类型中支持的编辑器类型存在，则去解析
+								var data = f.getFormItemData(key, val, boxId, indexNumber);
 								var html = getDataUseHandlebars('{{#bean}}' + formItem.html + '{{/bean}}', data);
 								$(html).appendTo($("#showForm").get(0))
 							}
+							indexNumber++;
 						});
 						form.render();
 					}
 				},
 
 				// 将echarts的数据格式转化为form表单的数据格式
-				getFormItemData: function(key, val, boxId){
+				getFormItemData: function(key, val, boxId, indexNumber){
 					var editorChooseValue = []
 					if(isJSON(val.editorChooseValue)){
 						editorChooseValue = JSON.parse(val.editorChooseValue);
 						$.each(editorChooseValue, function(i, item){
-							item["layFilter"] = boxId;
+							item["boxId"] = boxId;
+							item["indexNumber"] = indexNumber;
 						});
 					}
 					return {
@@ -459,7 +464,8 @@ layui.define(["jquery", 'form'], function(exports) {
 							defaultWidth: "layui-col-xs12",
 							labelContent: val.title,
 							context: val.value,
-							editorChooseValue: editorChooseValue
+							editorChooseValue: editorChooseValue,
+							indexNumber: indexNumber // 第几个组件
 						}
 					};
 				},
@@ -470,7 +476,7 @@ layui.define(["jquery", 'form'], function(exports) {
 						'<fieldset class="layui-elem-field layui-field-title">' +
 						'  <legend>属性</legend>' +
 						'</fieldset>' +
-						'<form class="layui-form" action="" id="showForm" autocomplete="off"></form>' +
+						'<form class="layui-form" action="" id="showForm" autocomplete="off" style="padding-right: 5px; height: auto; position: absolute;"></form>' +
 						'</div>';
 					skyeyeReportContent.append(editForm);
 				},

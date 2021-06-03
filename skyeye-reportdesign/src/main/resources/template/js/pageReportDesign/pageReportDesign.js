@@ -36,6 +36,14 @@ layui.config({
                         "editor": "3",
                         "editorChooseValue": ""
                     },
+                    "title.textStyle.fontSize": {
+                        "value": "30",
+                        "edit": true,
+                        "desc": "主标题文字大小",
+                        "title": "主标题文字大小",
+                        "editor": "4",
+                        "editorChooseValue": ""
+                    },
                     "xAxis.type": {
                         "value": "category",
                         "edit": false,

@@ -3,21 +3,28 @@
     "key": "radio",
     "name": "单选框",
     "html": "<div class='layui-form-item {{defaultWidth}}' controlType='radio' modelKey='{{modelKey}}' boxId='{{boxId}}'><label class='layui-form-label'>{{labelContent}}：</label><div class='layui-input-block winui-radio'>{{{showValueTemplate}}}</div></div>",
-    "js": "$('input:radio[name={{boxId}}][value={{context}}]').attr('checked', true);form.on('radio({{boxId}})', function(data){var value = data.value; dataValueChange(value, $(this));});",
-    "showValueTemplate": "{{#each rows}}<input type='radio' name='{{layFilter}}' title='{{name}}' rowId='{{id}}' value='{{id}}' lay-filter='{{layFilter}}' />{{/each}}"
+    "js": "$('input:radio[name={{boxId}}{{indexNumber}}][value={{context}}]').attr('checked', true);form.on('radio({{boxId}}{{indexNumber}})', function(data){var value = data.value; dataValueChange(value, $(this));});",
+    "showValueTemplate": "{{#each rows}}<input type='radio' name='{{boxId}}{{indexNumber}}' title='{{name}}' rowId='{{id}}' value='{{id}}' lay-filter='{{boxId}}{{indexNumber}}' />{{/each}}"
   },
   "2": {
     "key": "input",
     "name": "输入框",
-    "html": "<div class='layui-form-item {{defaultWidth}}' controlType='radio' modelKey='{{modelKey}}' boxId='{{boxId}}'><label class='layui-form-label'>{{labelContent}}：</label><div class='layui-input-block'><input type='text' id='input{{boxId}}' name='input{{boxId}}' class='layui-input' value='{{context}}'/></div></div>",
-    "js": "$('#input{{boxId}}').on('input',function(e){var value = e.delegateTarget.value; dataValueChange(value, $(this));});",
+    "html": "<div class='layui-form-item {{defaultWidth}}' controlType='radio' modelKey='{{modelKey}}' boxId='{{boxId}}'><label class='layui-form-label'>{{labelContent}}：</label><div class='layui-input-block'><input type='text' id='input{{boxId}}{{indexNumber}}' name='input{{boxId}}{{indexNumber}}' class='layui-input' value='{{context}}'/></div></div>",
+    "js": "$('#input{{boxId}}{{indexNumber}}').on('input',function(e){var value = e.delegateTarget.value; dataValueChange(value, $(this));});",
     "showValueTemplate": ""
   },
   "3": {
     "key": "inputColor",
     "name": "颜色选择器",
-    "html": "<div class='layui-form-item {{defaultWidth}}' controlType='radio' modelKey='{{modelKey}}' boxId='{{boxId}}'><label class='layui-form-label'>{{labelContent}}：</label><div class='layui-input-block'><div class='layui-input-inline'><input type='text' value='{{context}}' class='layui-input' id='{{boxId}}-color' /></div><div class='layui-inline'><div id='{{boxId}}-colorBtn'></div></div></div></div>",
-    "js": "var colorpicker = layui.colorpicker; colorpicker.render({elem: '#{{boxId}}-colorBtn', color: '{{context}}', alpha: true, format: 'rgb', change: function(color){$('#{{boxId}}-color').val(color); dataValueChange(color, $('#{{boxId}}-colorBtn'));}, done: function(color){$('#{{boxId}}-color').val(color); dataValueChange(color, $('#{{boxId}}-colorBtn'));}});",
+    "html": "<div class='layui-form-item {{defaultWidth}}' controlType='radio' modelKey='{{modelKey}}' boxId='{{boxId}}'><label class='layui-form-label'>{{labelContent}}：</label><div class='layui-input-block'><div class='layui-input-inline'><input type='text' value='{{context}}' class='layui-input' id='{{boxId}}{{indexNumber}}-color' /></div><div class='layui-inline'><div id='{{boxId}}{{indexNumber}}-colorBtn'></div></div></div></div>",
+    "js": "var colorpicker = layui.colorpicker; colorpicker.render({elem: '#{{boxId}}{{indexNumber}}-colorBtn', color: '{{context}}', alpha: true, format: 'rgb', change: function(color){$('#{{boxId}}{{indexNumber}}-color').val(color); dataValueChange(color, $('#{{boxId}}{{indexNumber}}-colorBtn'));}, done: function(color){$('#{{boxId}}{{indexNumber}}-color').val(color); dataValueChange(color, $('#{{boxId}}{{indexNumber}}-colorBtn'));}});",
+    "showValueTemplate": ""
+  },
+  "4": {
+    "key": "numberInput",
+    "name": "数字输入框",
+    "html": "<div class='layui-form-item {{defaultWidth}}' controlType='radio' modelKey='{{modelKey}}' boxId='{{boxId}}'><label class='layui-form-label'>{{labelContent}}：</label><div class='layui-input-block'><input type='number' id='numberInput{{boxId}}{{indexNumber}}' name='numberInput{{boxId}}{{indexNumber}}' class='layui-input' value='{{context}}'/></div></div>",
+    "js": "$('#numberInput{{boxId}}{{indexNumber}}').on('input',function(e){var value = e.delegateTarget.value; dataValueChange(value, $(this));});",
     "showValueTemplate": ""
   },
   "100": {
