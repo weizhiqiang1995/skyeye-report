@@ -29,7 +29,7 @@ public class ReportDataFromController {
     private ReportDataFromService reportDataFromService;
 
     /**
-     * 获取所有数据来源父信息列表
+     * 获取所有数据来源列表
      *
      * @param inputObject
      * @param outputObject
@@ -42,7 +42,7 @@ public class ReportDataFromController {
     }
 
     /**
-     * 新增数据来源-父信息
+     * 新增数据来源
      *
      * @param inputObject
      * @param outputObject
@@ -55,7 +55,7 @@ public class ReportDataFromController {
     }
 
     /**
-     * 根据id删除数据库配置信息
+     * 根据id删除数据来源信息
      *
      * @param inputObject
      * @param outputObject
@@ -68,7 +68,7 @@ public class ReportDataFromController {
     }
 
     /**
-     * 根据id更新数据来源父信息
+     * 根据id更新数据来源
      *
      * @param inputObject
      * @param outputObject
@@ -81,7 +81,7 @@ public class ReportDataFromController {
     }
 
     /**
-     * 根据id查询数据来源-父信息
+     * 根据id查询数据来源
      *
      * @param inputObject
      * @param outputObject
