@@ -62,7 +62,7 @@
         <td><input type="checkbox" rowId="{{id}}" lay-filter="checkboxProperty" name="tableCheckRow"/></td>
         <td><input type="text" class="layui-input" id="{{headerKey}}" win-verify="required" /></td>
         <td><input type="text" class="layui-input" id="{{headerValue}}" win-verify="required" /></td>
-        <td><input type="text" class="layui-input" id="{{headerDescription}}" win-verify="required" /></td>
+        <td><input type="text" class="layui-input" id="{{headerDescription}}" /></td>
     </tr>
 </script>
 

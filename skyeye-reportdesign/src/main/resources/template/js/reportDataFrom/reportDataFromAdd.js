@@ -44,8 +44,11 @@ layui.config({
                 var params = {
                     name: $("#name").val(),
                     remark: $("#remark").val(),
-                    type: $("input[name='dataFromType']:checked").val()
+                    type: $("input[name='dataFromType']:checked").val(),
+                    analysisData: getAnalysisData()
                 };
+                var otherData = getDataByType();
+                params = $.extend(true, params, otherData);
                 AjaxPostUtil.request({url:reqBasePath + "reportimportmodel002", params: params, type:'json', method: "POST", callback:function(json){
                     if(json.returnCode == 0){
                         parent.layer.close(index);
@@ -57,6 +60,87 @@ layui.config({
             }
             return false;
         });
+
+        function getDataByType(){
+            var dataFromType = $("input[name='dataFromType']:checked").val();
+            if(dataFromType == 1){
+                // XML数据源
+                return getXMLData();
+            } else if(dataFromType == 2){
+                // JSON数据源
+                return getJSONData();
+            } else if(dataFromType == 3){
+                // Rest接口数据源
+                return getRESTData();
+            } else if(dataFromType == 4){
+                // SQL数据源
+                return getSQLData();
+            }
+            return {};
+        }
+
+        function getXMLData(){
+            return {
+                xmlContent: xmlContent.getValue()
+            };
+        }
+
+        function getJSONData(){
+            return {
+                jsonContent: jsonContent.getValue()
+            };
+        }
+
+        function getRESTData(){
+            return {
+                restUrl: $("#restUrl").val(),
+                restMethod: $("#restMethod").val(),
+                restHeader: getRestRequestHeaderData(),
+                restRequestBody: restRequestBodyContent.getValue()
+            };
+        }
+
+        function getSQLData(){
+            return {
+                sqlDataBaseId: $("#sqlDataBase").val(),
+                sqlContent: sqlContent.getValue()
+            };
+        }
+
+        function getAnalysisData(){
+            var tableData = new Array();
+            var rowTr = $("#analysisTable tr");
+            $.each(rowTr, function(i, item) {
+                //获取行编号
+                var rowNum = $(item).attr("trcusid").replace("tr", "");
+                var row = {
+                    key: $("#key" + rowNum).val(),
+                    title: $("#title" + rowNum).val(),
+                    dataType: $("#dataType" + rowNum).val(),
+                    dataLength: $("#dataLength" + rowNum).val(),
+                    dataPrecision: $("#dataPrecision" + rowNum).val(),
+                    remark: $("#remark" + rowNum).val()
+                };
+                tableData.push(row);
+            });
+            return JSON.stringify(tableData);
+        }
+
+        function getRestRequestHeaderData(){
+            var tableData = new Array();
+            var rowTr = $("#restHeaderTable tr");
+            $.each(rowTr, function(i, item) {
+                //获取行编号
+                var rowNum = $(item).attr("trcusid").replace("tr", "");
+                var row = {
+                    headerKey: $("#headerKey" + rowNum).val(),
+                    headerValue: $("#headerValue" + rowNum).val(),
+                    headerDescription: $("#headerDescription" + rowNum).val()
+                };
+                tableData.push(row);
+            });
+            return JSON.stringify(tableData);
+        }
 
         form.on('radio(dataFromType)', function (data) {
             var val = data.value;
@@ -116,6 +200,43 @@ layui.config({
                 matchBrackets: true,
             };
         }
+
+        /**
+         * 字段解析
+         */
+        $("body").on("click", "#fieldResolution", function() {
+            var dataFromType = $("input[name='dataFromType']:checked").val();
+            var url = "";
+            var params = {};
+            if(dataFromType == 1){
+                // XML数据源
+                url = "reportcommon002";
+                params = {
+                    xmlText: xmlContent.getValue()
+                };
+            } else if(dataFromType == 2){
+                // JSON数据源
+                url = "reportcommon003";
+                params = {
+                    jsonText: jsonContent.getValue()
+                };
+            } else if(dataFromType == 3){
+                // Rest接口数据源
+                url = "";
+                params = {};
+            } else if(dataFromType == 4){
+                // SQL数据源
+                url = "";
+                params = {};
+            }
+            AjaxPostUtil.request({url:reqBasePath + url, params: params, type:'json', method: "POST", callback:function(json){
+                if(json.returnCode == 0){
+
+                }else{
+                    winui.window.msg(json.returnMessage, {icon: 2,time: 2000});
+                }
+            }});
+        });
 
         /**********************************rest数据源header--start**************************************/
         //新增行
