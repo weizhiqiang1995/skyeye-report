@@ -181,17 +181,21 @@ public class ReportConstants {
      * 数据源类型
      */
     public static enum DataFromTypeMation {
-        XML(1, "XML数据源"),
-        JSON(2, "JSON数据源"),
-        REST_API(3, "Rest接口数据源"),
-        SQL(4, "SQL数据源");
+        XML(1, "XML数据源", "tpl/reportDataFrom/dataFromTpl/xmlTemplate.tpl", true),
+        JSON(2, "JSON数据源", "tpl/reportDataFrom/dataFromTpl/jsonTemplate.tpl", false),
+        REST_API(3, "Rest接口数据源", "tpl/reportDataFrom/dataFromTpl/restTemplate.tpl", false),
+        SQL(4, "SQL数据源", "tpl/reportDataFrom/dataFromTpl/sqlTemplate.tpl", false);
 
         private int type;
         private String name;
+        private String staticTplPath;
+        private Boolean checked;
 
-        DataFromTypeMation(int type, String name) {
+        DataFromTypeMation(int type, String name, String staticTplPath, Boolean checked) {
             this.type = type;
             this.name = name;
+            this.staticTplPath = staticTplPath;
+            this.checked = checked;
         }
 
         public static List<Map<String, Object>> getDataFromTypeList(){
@@ -200,6 +204,10 @@ public class ReportConstants {
                 Map<String, Object> bean = new HashMap<>();
                 bean.put("id", item.getType());
                 bean.put("name", item.getName());
+                bean.put("staticTplPath", item.getStaticTplPath());
+                if(item.getChecked()){
+                    bean.put("checked", "checked");
+                }
                 beans.add(bean);
             }
             return beans;
@@ -220,6 +228,14 @@ public class ReportConstants {
 
         public String getName() {
             return name;
+        }
+
+        public String getStaticTplPath() {
+            return staticTplPath;
+        }
+
+        public Boolean getChecked() {
+            return checked;
         }
     }
 

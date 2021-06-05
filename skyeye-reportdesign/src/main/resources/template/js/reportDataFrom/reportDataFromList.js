@@ -12,7 +12,7 @@ layui.config({
         form = layui.form,
         table = layui.table;
 
-    authBtn('1621139557781');
+    authBtn('1622876929121');
 
     // 数据源类型列表
     showGrid({
@@ -25,17 +25,17 @@ layui.config({
         ajaxSendLoadBefore: function(hdb){
         },
         ajaxSendAfter:function(json){
-            loadTable();
+            initTable();
         }
     });
 
     // 数据源列表
-    function loadTable(){
+    function initTable(){
         table.render({
             id: 'messageTable',
             elem: '#messageTable',
             method: 'post',
-            url: reqBasePath + 'reportimportmodel001',
+            url: reqBasePath + 'reportdatafrom001',
             where: getTableParams(),
             even: true,
             page: true,
@@ -44,7 +44,7 @@ layui.config({
             cols: [[
                 { title: systemLanguage["com.skyeye.serialNumber"][languageType], type: 'numbers'},
                 { field: 'name', title: '名称', align: 'left', width: 150},
-                { field: 'typeName', title: '类型', align: 'left', width: 100 },
+                { field: 'typeName', title: '来源', align: 'left', width: 100 },
                 { field: 'remark', title: '备注', align: 'left', width: 150 },
                 { field: 'createName', title: '创建人', align: 'left', width: 100 },
                 { field: 'createTime', title: '创建时间', align: 'center', width: 140 },

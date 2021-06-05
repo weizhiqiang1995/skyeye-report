@@ -15,9 +15,24 @@
 
     <select id="getReportDataFromList" resultType="java.util.Map">
         SELECT
-            <include refid="base"/>
-        FROM report_data_from rdf
-        ORDER BY rdf.last_update_time DESC;
+            rdf.id,
+            rdf.name,
+            rdf.type,
+            rdf.remark,
+            b.user_name createName,
+            CONVERT(rdf.create_time, char) createTime,
+            c.user_name lastUpdateName,
+            CONVERT(rdf.last_update_time, char) lastUpdateTime
+        FROM
+            report_data_from rdf
+            LEFT JOIN sys_eve_user_staff b ON rdf.create_id = b.user_id
+            LEFT JOIN sys_eve_user_staff c ON rdf.last_update_id = c.user_id
+        WHERE
+            1=1
+        <if test="name != '' and name != null">
+            AND rdf.name LIKE '%${name}%'
+        </if>
+        ORDER BY rdf.last_update_time DESC
     </select>
 
     <insert id="insertReportDataFrom" parameterType="java.util.Map">
@@ -40,7 +55,12 @@
 
     <update id="updateReportDataFromById" parameterType="java.util.Map">
         UPDATE report_data_from
-        SET name = #{name}, type = #{type}, remark = #{remark}, last_update_id = #{userId}, last_update_time = #{createTime}
+        SET
+            name = #{name},
+            type = #{type},
+            remark = #{remark},
+            last_update_id = #{userId},
+            last_update_time = #{createTime}
         WHERE id = #{id}
     </update>
 
