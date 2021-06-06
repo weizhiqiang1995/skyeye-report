@@ -1,7 +1,7 @@
 <div class="layui-form-item layui-col-xs12">
     <label class="layui-form-label">JSON数据<i class="red">*</i></label>
     <div class="layui-input-block">
-        <textarea id="jsonData" name="jsonData" class="layui-textarea" win-verify="required" style="height: 100px;"></textarea>
+        <textarea id="jsonData" name="jsonData" class="layui-textarea" style="height: 100px;"></textarea>
     </div>
 </div>
 

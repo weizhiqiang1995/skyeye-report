@@ -47,7 +47,17 @@ layui.config({
                     type: $("input[name='dataFromType']:checked").val(),
                     analysisData: getAnalysisData()
                 };
+                if(JSON.parse(params.analysisData).length == 0){
+                    winui.window.msg('请进行字段解析操作。', {icon: 2,time: 2000});
+                    return false;
+                }
                 var otherData = getDataByType();
+                if((isNull(otherData.xmlContent) && params.type == 1)
+                    || (isNull(otherData.jsonContent) && params.type == 2)
+                    || (isNull(otherData.sqlContent) && params.type == 4)){
+                    winui.window.msg('必填项不能为空', {icon: 2,time: 2000});
+                    return false;
+                }
                 params = $.extend(true, params, otherData);
                 AjaxPostUtil.request({url:reqBasePath + "reportimportmodel002", params: params, type:'json', method: "POST", callback:function(json){
                     if(json.returnCode == 0){
@@ -226,17 +236,56 @@ layui.config({
                 params = {};
             } else if(dataFromType == 4){
                 // SQL数据源
-                url = "";
-                params = {};
+                url = "reportcommon004";
+                params = {
+                    sqlText: sqlContent.getValue(),
+                    dataBaseId: $("#sqlDataBase").val()
+                };
             }
             AjaxPostUtil.request({url:reqBasePath + url, params: params, type:'json', method: "POST", callback:function(json){
                 if(json.returnCode == 0){
-
+                    var data = getDataByDataFromType(dataFromType, json);
+                    loadFieldResolution(dataFromType, data);
                 }else{
                     winui.window.msg(json.returnMessage, {icon: 2,time: 2000});
                 }
             }});
         });
+
+        function getDataByDataFromType(dataFromType, json){
+            if(dataFromType == 1){
+                // XML数据源
+                return json.bean.nodeArray;
+            } else if(dataFromType == 2){
+                // JSON数据源
+                return json.bean.nodeArray;
+            } else if(dataFromType == 3){
+                // Rest接口数据源
+            } else if(dataFromType == 4){
+                // SQL数据源
+                return json.rows;
+            }
+        }
+
+        function loadFieldResolution(dataFromType, data){
+            $.each(data, function (i, item){
+                addAnalysisRow();
+                $("#key" + (rowNum - 1)).val(item);
+                if(dataFromType == 1){
+                    // XML数据源
+                } else if(dataFromType == 2){
+                    // JSON数据源
+                } else if(dataFromType == 3){
+                    // Rest接口数据源
+                } else if(dataFromType == 4){
+                    // SQL数据源
+                    $("#key" + (rowNum - 1)).val(item.name);
+                    $("#dataType" + (rowNum - 1)).val(item.dataType);
+                    $("#dataLength" + (rowNum - 1)).val(item.width);
+                    $("#dataPrecision" + (rowNum - 1)).val(item.decimals);
+                }
+            });
+        }
 
         /**********************************rest数据源header--start**************************************/
         //新增行
