@@ -3,9 +3,10 @@ var form;
 // 已经添加上的echarts图表
 var inPageEcharts = {};
 var inPageEchartsObject = {};
-layui.define(["jquery", 'form'], function(exports) {
+layui.define(["jquery", 'form', 'element'], function(exports) {
 	var jQuery = layui.jquery;
 	form = layui.form;
+	var element = layui.element;
 	(function($) {
 		$.skyeyeReportDesigner = function(params) {
 			var defaults = {
@@ -386,6 +387,11 @@ layui.define(["jquery", 'form'], function(exports) {
 						}
 					});
 
+					// 面板切换
+					$("body").on('click', '.layui-colla-title', function(e){
+						$(this).parent().find('.layui-colla-content').toggleClass('layui-show');
+					});
+
 					// 编辑器点击防止触发父内容事件
 					$("body").on('click', ".form-box", function(e){
 						e.stopPropagation();
@@ -410,41 +416,61 @@ layui.define(["jquery", 'form'], function(exports) {
 					var echartsMation = inPageEcharts[boxId];
 					f.addNewFormBox();
 					if(!f.isNull(echartsMation)) {
-						var attr = echartsMation.attr;
 						$("#showForm").html("");
 						var indexNumber = 1;
-						$.each(attr, function(key, val) {
-							if(val.edit){
-								// 可以编辑
-								var formItem = editorType[val.editor];
-								if(!f.isNull(formItem)){
-									// 如果表单类型中支持的编辑器类型存在，则去解析
+						var newArray = f.restAttrToArrayByTypeName(echartsMation.attr);
+						$('<div class="layui-collapse" id="showFormPanel"></div>').appendTo($("#showForm").get(0));
+						$.each(newArray, function(typeName, attr) {
+							var panelHTML = '<div class="layui-colla-item"><h2 class="layui-colla-title">' + typeName + '</h2><div class="layui-colla-content" id="' + typeName + '"></div>';
+							$(panelHTML).appendTo($("#showFormPanel").get(0));
+							$.each(attr, function (key, val) {
+								if (val.edit) {
+									// 可以编辑
+									var formItem = editorType[val.editor];
+									if (!f.isNull(formItem)) {
+										// 如果表单类型中支持的编辑器类型存在，则去解析
+										var data = f.getFormItemData(key, val, boxId, indexNumber);
+										if (!f.isNull(formItem.showValueTemplate)) {
+											// 一般单选，多选，下拉框会用到，加载可选择的数据项
+											var showValueTemplate = getDataUseHandlebars(formItem.showValueTemplate, {rows: data.bean.editorChooseValue});
+											data.bean.showValueTemplate = showValueTemplate;
+										}
+										// 获取解析后的html
+										var html = getDataUseHandlebars('{{#bean}}' + formItem.html + '{{/bean}}', data);
+										$(html).appendTo($("#" + typeName).get(0));
+										if (!f.isNull(formItem.js)) {
+											// 获取解析后的js
+											var js = getDataUseHandlebars('{{#bean}}' + formItem.js + '{{/bean}}', data);
+											var jsCon = '<script>layui.define(["jquery"], function(exports) {var jQuery = layui.jquery;(function($) {' + js + '})(jQuery);});</script>';
+											$("#" + typeName).append(jsCon);
+										}
+									}
+								} else {
+									var formItem = editorType["100"];
 									var data = f.getFormItemData(key, val, boxId, indexNumber);
-									if(!f.isNull(formItem.showValueTemplate)){
-										// 一般单选，多选，下拉框会用到，加载可选择的数据项
-										var showValueTemplate = getDataUseHandlebars(formItem.showValueTemplate, {rows: data.bean.editorChooseValue});
-										data.bean.showValueTemplate = showValueTemplate;
-									}
-									// 获取解析后的html
 									var html = getDataUseHandlebars('{{#bean}}' + formItem.html + '{{/bean}}', data);
-									$(html).appendTo($("#showForm").get(0));
-									if(!f.isNull(formItem.js)){
-										// 获取解析后的js
-										var js = getDataUseHandlebars('{{#bean}}' + formItem.js + '{{/bean}}', data);
-										var jsCon = '<script>layui.define(["jquery"], function(exports) {var jQuery = layui.jquery;(function($) {' + js + '})(jQuery);});</script>';
-										$("#showForm").append(jsCon);
-									}
+									$(html).appendTo($("#" + typeName).get(0));
 								}
-							}else{
-								var formItem = editorType["100"];
-								var data = f.getFormItemData(key, val, boxId, indexNumber);
-								var html = getDataUseHandlebars('{{#bean}}' + formItem.html + '{{/bean}}', data);
-								$(html).appendTo($("#showForm").get(0))
-							}
-							indexNumber++;
+								indexNumber++;
+							});
 						});
 						form.render();
 					}
+				},
+
+				// 将echarts属性根据类型名称进行分组
+				restAttrToArrayByTypeName: function(attr) {
+					var array = {};
+					$.each(attr, function(key, val){
+						var typeName = f.isNull(val.typeName) ? "未分组" : val.typeName;
+						var simpleTypeNameList = array[typeName];
+						if(f.isNull(simpleTypeNameList)){
+							simpleTypeNameList = {};
+						}
+						simpleTypeNameList[key] = val;
+						array[typeName] = simpleTypeNameList
+					});
+					return array;
 				},
 
 				// 将echarts的数据格式转化为form表单的数据格式
@@ -457,13 +483,17 @@ layui.define(["jquery", 'form'], function(exports) {
 							item["indexNumber"] = indexNumber;
 						});
 					}
+					var value = val.value;
+					if(isJSON(val.value)){
+						value = JSON.parse(val.value);
+					}
 					return {
 						"bean": {
 							modelKey: key,
 							boxId: boxId,
 							defaultWidth: "layui-col-xs12",
 							labelContent: val.title,
-							context: val.value,
+							context: value,
 							editorChooseValue: editorChooseValue,
 							indexNumber: indexNumber // 第几个组件
 						}
@@ -476,7 +506,7 @@ layui.define(["jquery", 'form'], function(exports) {
 						'<fieldset class="layui-elem-field layui-field-title">' +
 						'  <legend>属性</legend>' +
 						'</fieldset>' +
-						'<form class="layui-form" action="" id="showForm" autocomplete="off" style="padding-right: 5px; height: auto; position: absolute;"></form>' +
+						'<form class="layui-form layui-col-xs12" action="" id="showForm" autocomplete="off" style="height: calc(100% - 50px); position: absolute; overflow-y: auto"></form>' +
 						'</div>';
 					skyeyeReportContent.append(editForm);
 				},
@@ -554,6 +584,9 @@ layui.define(["jquery", 'form'], function(exports) {
 function dataValueChange(value, _this){
 	var modelKey = _this.parents('.layui-form-item').attr('modelKey');
 	var boxId = _this.parents('.layui-form-item').attr('boxId');
+	// 控件类型
+	var controlType = _this.parents('.layui-form-item').attr('controlType');
+	value = getValueByControlType(controlType, value, _this.parents('.layui-form-item'));
 	layui.$.each(inPageEcharts[boxId].attr, function(key, val){
 		if(modelKey == key){
 			val.value = getVal(value);
@@ -564,6 +597,18 @@ function dataValueChange(value, _this){
 	// 加载图表
 	var newChart = inPageEchartsObject[boxId];
 	newChart.setOption(option);
+}
+
+function getValueByControlType(controlType, value, parentBox){
+	if(controlType == 'inputMoreColor'){
+		// 多行颜色选择器
+		var array = new Array();
+		layui.$.each(parentBox.find(".customer-attr"), function (i, item){
+			array.push(layui.$(item).val());
+		});
+		value = array;
+	}
+	return value;
 }
 
 // 获取echarts的配置信息

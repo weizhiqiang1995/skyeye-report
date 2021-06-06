@@ -384,6 +384,23 @@ body {
 	height: 19px;
 }
 
+.layui-colla-item{
+	height: auto;
+	width: 100%;
+	display: table;
+}
+
+.layui-colla-title{
+	height: 35px;
+	line-height: 35px;
+}
+
+.layui-colla-content{
+	height: auto;
+	position: relative;
+	padding: 5px 0px;
+}
+
 
 
 

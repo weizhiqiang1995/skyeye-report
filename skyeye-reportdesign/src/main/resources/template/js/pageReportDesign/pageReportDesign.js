@@ -20,13 +20,23 @@ layui.config({
                 "image": "../../assets/report/images/base1.png",
                 "title": "基础折线图",
                 "attr": {
+                    "color": {
+                        "value": ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'],
+                        "edit": true,
+                        "desc": "折线图线条颜色",
+                        "title": "线条颜色",
+                        "editor": "5",
+                        "editorChooseValue": "",
+                        "typeName": "基础配置"
+                    },
                     "title.text": {
                         "value": "折线图",
                         "edit": true,
                         "desc": "主标题文本，支持使用 \\n 换行。",
                         "title": "主标题",
                         "editor": "2",
-                        "editorChooseValue": ""
+                        "editorChooseValue": "",
+                        "typeName": "标题配置"
                     },
                     "title.textStyle.color": {
                         "value": "rgba(27, 26, 26, 1)",
@@ -34,7 +44,8 @@ layui.config({
                         "desc": "主标题文字颜色",
                         "title": "主标题文字颜色",
                         "editor": "3",
-                        "editorChooseValue": ""
+                        "editorChooseValue": "",
+                        "typeName": "标题配置"
                     },
                     "title.textStyle.fontSize": {
                         "value": "30",
@@ -42,7 +53,8 @@ layui.config({
                         "desc": "主标题文字大小",
                         "title": "主标题文字大小",
                         "editor": "4",
-                        "editorChooseValue": ""
+                        "editorChooseValue": "",
+                        "typeName": "标题配置"
                     },
                     "xAxis.type": {
                         "value": "category",
@@ -50,7 +62,8 @@ layui.config({
                         "desc": "category 类目轴，适用于离散的类目数据。为该类型时类目数据可自动从 series.data 或 dataset.source 中取，或者可通过 xAxis.data 设置类目数据。",
                         "title": "X坐标轴类型",
                         "editor": "",
-                        "editorChooseValue": ""
+                        "editorChooseValue": "",
+                        "typeName": "X轴"
                     },
                     "xAxis.data": {
                         "value": ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -58,7 +71,8 @@ layui.config({
                         "desc": "X坐标轴数据",
                         "title": "X坐标轴数据",
                         "editor": "",
-                        "editorChooseValue": ""
+                        "editorChooseValue": "",
+                        "typeName": "X轴"
                     },
                     "xAxis.splitLine.show": {
                         "value": "true",
@@ -66,7 +80,8 @@ layui.config({
                         "desc": "是否显示分隔线。默认数值轴显示，类目轴不显示。",
                         "title": "是否显示分隔线",
                         "editor": "1",
-                        "editorChooseValue": "[{\"id\": \"true\",  \"name\": \"是\"}, {\"id\": \"false\",  \"name\": \"否\"}]"
+                        "editorChooseValue": "[{\"id\": \"true\",  \"name\": \"是\"}, {\"id\": \"false\",  \"name\": \"否\"}]",
+                        "typeName": "X轴"
                     },
                     "yAxis.type": {
                         "value": "value",
@@ -74,7 +89,8 @@ layui.config({
                         "desc": "category 类目轴，适用于离散的类目数据。为该类型时类目数据可自动从 series.data 或 dataset.source 中取，或者可通过 yAxis.data 设置类目数据。",
                         "title": "Y坐标轴类型",
                         "editor": "",
-                        "editorChooseValue": ""
+                        "editorChooseValue": "",
+                        "typeName": "Y轴"
                     },
                     "series.data": {
                         "value": [150, 230, 224, 218, 135, 147, 260],
@@ -82,7 +98,8 @@ layui.config({
                         "desc": "Y坐标轴数据",
                         "title": "Y坐标轴数据",
                         "editor": "",
-                        "editorChooseValue": ""
+                        "editorChooseValue": "",
+                        "typeName": "Y轴"
                     },
                     "series.type": {
                         "value": "line",
@@ -90,7 +107,8 @@ layui.config({
                         "desc": "报表类型为折线",
                         "title": "报表类型",
                         "editor": "",
-                        "editorChooseValue": ""
+                        "editorChooseValue": "",
+                        "typeName": "报表类型"
                     }
                 }
             }, {

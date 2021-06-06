@@ -9,22 +9,29 @@
   "2": {
     "key": "input",
     "name": "输入框",
-    "html": "<div class='layui-form-item {{defaultWidth}}' controlType='radio' modelKey='{{modelKey}}' boxId='{{boxId}}'><label class='layui-form-label'>{{labelContent}}：</label><div class='layui-input-block'><input type='text' id='input{{boxId}}{{indexNumber}}' name='input{{boxId}}{{indexNumber}}' class='layui-input' value='{{context}}'/></div></div>",
+    "html": "<div class='layui-form-item {{defaultWidth}}' controlType='input' modelKey='{{modelKey}}' boxId='{{boxId}}'><label class='layui-form-label'>{{labelContent}}：</label><div class='layui-input-block'><input type='text' id='input{{boxId}}{{indexNumber}}' name='input{{boxId}}{{indexNumber}}' class='layui-input' value='{{context}}'/></div></div>",
     "js": "$('#input{{boxId}}{{indexNumber}}').on('input',function(e){var value = e.delegateTarget.value; dataValueChange(value, $(this));});",
     "showValueTemplate": ""
   },
   "3": {
     "key": "inputColor",
     "name": "颜色选择器",
-    "html": "<div class='layui-form-item {{defaultWidth}}' controlType='radio' modelKey='{{modelKey}}' boxId='{{boxId}}'><label class='layui-form-label'>{{labelContent}}：</label><div class='layui-input-block'><div class='layui-input-inline'><input type='text' value='{{context}}' class='layui-input' id='{{boxId}}{{indexNumber}}-color' /></div><div class='layui-inline'><div id='{{boxId}}{{indexNumber}}-colorBtn'></div></div></div></div>",
+    "html": "<div class='layui-form-item {{defaultWidth}}' controlType='inputColor' modelKey='{{modelKey}}' boxId='{{boxId}}'><label class='layui-form-label'>{{labelContent}}：</label><div class='layui-input-block'><div class='layui-input-inline'><input type='text' value='{{context}}' class='layui-input' id='{{boxId}}{{indexNumber}}-color' /></div><div class='layui-inline'><div id='{{boxId}}{{indexNumber}}-colorBtn'></div></div></div></div>",
     "js": "var colorpicker = layui.colorpicker; colorpicker.render({elem: '#{{boxId}}{{indexNumber}}-colorBtn', color: '{{context}}', alpha: true, format: 'rgb', change: function(color){$('#{{boxId}}{{indexNumber}}-color').val(color); dataValueChange(color, $('#{{boxId}}{{indexNumber}}-colorBtn'));}, done: function(color){$('#{{boxId}}{{indexNumber}}-color').val(color); dataValueChange(color, $('#{{boxId}}{{indexNumber}}-colorBtn'));}});",
     "showValueTemplate": ""
   },
   "4": {
     "key": "numberInput",
     "name": "数字输入框",
-    "html": "<div class='layui-form-item {{defaultWidth}}' controlType='radio' modelKey='{{modelKey}}' boxId='{{boxId}}'><label class='layui-form-label'>{{labelContent}}：</label><div class='layui-input-block'><input type='number' id='numberInput{{boxId}}{{indexNumber}}' name='numberInput{{boxId}}{{indexNumber}}' class='layui-input' value='{{context}}'/></div></div>",
+    "html": "<div class='layui-form-item {{defaultWidth}}' controlType='numberInput' modelKey='{{modelKey}}' boxId='{{boxId}}'><label class='layui-form-label'>{{labelContent}}：</label><div class='layui-input-block'><input type='number' id='numberInput{{boxId}}{{indexNumber}}' name='numberInput{{boxId}}{{indexNumber}}' class='layui-input' value='{{context}}'/></div></div>",
     "js": "$('#numberInput{{boxId}}{{indexNumber}}').on('input',function(e){var value = e.delegateTarget.value; dataValueChange(value, $(this));});",
+    "showValueTemplate": ""
+  },
+  "5": {
+    "key": "inputMoreColor",
+    "name": "多行颜色选择器",
+    "html": "<div class='layui-form-item {{defaultWidth}}' controlType='inputMoreColor' modelKey='{{modelKey}}' boxId='{{boxId}}'><label class='layui-form-label'>{{labelContent}}：</label><div class='layui-input-block'>{{#each context}}<div class='layui-input-inline'><input type='text' value='{{this}}' class='layui-input customer-attr' id='{{boxId}}{{indexNumber}}-color{{@index}}' /></div><div class='layui-inline'><div id='{{boxId}}{{indexNumber}}-colorBtn{{@index}}'></div></div>{{/each}}</div></div>",
+    "js": "var colorpicker = layui.colorpicker; {{#each context}}colorpicker.render({elem: '#{{boxId}}{{indexNumber}}-colorBtn{{@index}}', color: '{{this}}', alpha: true, format: 'rgb', change: function(color){$('#{{boxId}}{{indexNumber}}-color{{@index}}').val(color); dataValueChange(color, $('#{{boxId}}{{indexNumber}}-colorBtn{{@index}}'));}, done: function(color){$('#{{boxId}}{{indexNumber}}-color{{@index}}').val(color); dataValueChange(color, $('#{{boxId}}{{indexNumber}}-colorBtn{{@index}}'));}});{{/each}}",
     "showValueTemplate": ""
   },
   "100": {
