@@ -89,4 +89,12 @@
         FROM report_database rd
         WHERE rd.id = #{id}
     </select>
+
+    <select id="getReportDataBaseListToSelect" resultType="java.util.Map">
+        SELECT
+            rd.id,
+            rd.name
+        FROM
+            report_database rd
+    </select>
 </mapper>

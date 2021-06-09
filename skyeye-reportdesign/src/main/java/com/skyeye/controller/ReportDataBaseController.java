@@ -92,4 +92,18 @@ public class ReportDataBaseController {
     public void getReportDataBaseById(InputObject inputObject, OutputObject outputObject) throws Exception {
         reportDataBaseService.getReportDataBaseById(inputObject, outputObject);
     }
+
+    /**
+     * 获取数据库列表信息用于选择操作
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @RequestMapping("/post/ReportDataBaseController/getReportDataBaseListToSelect")
+    @ResponseBody
+    public void getReportDataBaseListToSelect(InputObject inputObject, OutputObject outputObject) throws Exception{
+        reportDataBaseService.getReportDataBaseListToSelect(inputObject, outputObject);
+    }
+
 }

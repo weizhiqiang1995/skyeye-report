@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * 
  * @ClassName: ReportDataBaseDao
- * @Description:
+ * @Description: 数据库数据交互层
  * @author: skyeye云系列--卫志强
  * @date: 2021/5/16 23:19
  *   
@@ -31,4 +31,6 @@ public interface ReportDataBaseDao {
     void updateReportDataBaseById(Map<String, Object> map) throws Exception;
 
     Map<String, Object> getReportDataBaseById(@Param("id") String id) throws Exception;
+
+    List<Map<String, Object>> getReportDataBaseListToSelect() throws Exception;
 }

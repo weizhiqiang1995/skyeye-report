@@ -13,6 +13,7 @@ layui.config({
         var index = parent.layer.getFrameIndex(window.name);
         var $ = layui.$;
         var radioTemplate = '{{#each rows}}<input type="radio" name="dataFromType" value="{{id}}" title="{{name}}" lay-filter="dataFromType" {{checked}} />{{/each}}';
+        var selOption = getFileContent('tpl/template/select-option.tpl');
         var dataFromTypeList = [];
         var xmlContent, jsonContent, sqlContent, restRequestBodyContent;
 
@@ -164,34 +165,48 @@ layui.config({
             // 加载字段解析信息
             $("#analysisHeader").html($("#analysisHeaderTemplate").html());
             $("#analysisTable").html("");
-            initEvent();
+            initEvent(val);
             form.render();
         }
 
-        function initEvent(){
+        function initEvent(dataFromType){
+            // 获取公共的配置信息
             var commonOptions = getCommonCodeMirrorOptions();
-            if(!isNull(document.getElementById("xmlData"))){
+            if(dataFromType == 1){
+                // XML数据源
                 xmlContent = CodeMirror.fromTextArea(document.getElementById("xmlData"), $.extend(true, commonOptions, {
                     mode: "xml",
-                    theme: "eclipse"
+                    theme: "default"
                 }));
-            }
-            if(!isNull(document.getElementById("jsonData"))){
+            } else if(dataFromType == 2){
+                // JSON数据源
                 jsonContent = CodeMirror.fromTextArea(document.getElementById("jsonData"), $.extend(true, commonOptions, {
                     mode: "xml",
-                    theme: "eclipse"
+                    theme: "default"
                 }));
-            }
-            if(!isNull(document.getElementById("sqlData"))){
-                sqlContent = CodeMirror.fromTextArea(document.getElementById("sqlData"), $.extend(true, commonOptions, {
-                    mode: "sql",
-                    theme: "eclipse"
-                }));
-            }
-            if(!isNull(document.getElementById("requestBody"))){
+            } else if(dataFromType == 3){
+                // Rest接口数据源
                 restRequestBodyContent = CodeMirror.fromTextArea(document.getElementById("requestBody"), $.extend(true, commonOptions, {
                     mode: "xml",
-                    theme: "eclipse"
+                    theme: "default"
+                }));
+            } else if(dataFromType == 4){
+                // SQL数据源
+                showGrid({
+                    id: "sqlDataBase",
+                    url: reqBasePath + "reportdatabase006",
+                    params: {},
+                    pagination: false,
+                    template: selOption,
+                    method: "GET",
+                    ajaxSendLoadBefore: function(hdb){
+                    },
+                    ajaxSendAfter:function(json){
+                    }
+                });
+                sqlContent = CodeMirror.fromTextArea(document.getElementById("sqlData"), $.extend(true, commonOptions, {
+                    mode: "text/x-sql",
+                    theme: "default"
                 }));
             }
         }
@@ -208,39 +223,38 @@ layui.config({
                 lineNumbers: true,  // 是否显示行号
                 styleActiveLine: true, //line选择是是否加亮
                 matchBrackets: true,
+                extraKeys:{
+                    "F7": function autoFormat(editor) {
+                        // 代码格式化
+                        var totalLines = editor.lineCount();
+                        editor.autoFormatRange({line:0, ch:0}, {line:totalLines});
+                    }
+                }
             };
         }
 
         /**
          * 字段解析
          */
-        $("body").on("click", "#fieldResolution", function() {
+        $("body").on("click", "#fieldResolution", function(e) {
             var dataFromType = $("input[name='dataFromType']:checked").val();
             var url = "";
-            var params = {};
+            var params = getResolutionInputParams(dataFromType, e);
+            if(params == null){
+                return false;
+            }
             if(dataFromType == 1){
                 // XML数据源
                 url = "reportcommon002";
-                params = {
-                    xmlText: xmlContent.getValue()
-                };
             } else if(dataFromType == 2){
                 // JSON数据源
                 url = "reportcommon003";
-                params = {
-                    jsonText: jsonContent.getValue()
-                };
             } else if(dataFromType == 3){
                 // Rest接口数据源
                 url = "";
-                params = {};
             } else if(dataFromType == 4){
                 // SQL数据源
                 url = "reportcommon004";
-                params = {
-                    sqlText: sqlContent.getValue(),
-                    dataBaseId: $("#sqlDataBase").val()
-                };
             }
             AjaxPostUtil.request({url:reqBasePath + url, params: params, type:'json', method: "POST", callback:function(json){
                 if(json.returnCode == 0){
@@ -251,6 +265,45 @@ layui.config({
                 }
             }});
         });
+
+        /**
+         * 字段解析时根据不同的数据源类型获取入参
+         *
+         * @param dataFromType 数据源类型
+         * @returns {boolean}
+         */
+        function getResolutionInputParams(dataFromType, e){
+            var params = {};
+            if(dataFromType == 1){
+                // XML数据源
+                params = {
+                    xmlText: xmlContent.getValue()
+                };
+            } else if(dataFromType == 2){
+                // JSON数据源
+                params = {
+                    jsonText: jsonContent.getValue()
+                };
+            } else if(dataFromType == 3){
+                // Rest接口数据源
+                params = {};
+            } else if(dataFromType == 4){
+                // SQL数据源
+                if(isNull($("#sqlDataBase").val())){
+                    winui.window.msg('请选择数据库', {icon: 2,time: 2000});
+                    return null;
+                }
+                if(isNull(sqlContent.getValue())){
+                    winui.window.msg('请填写sql语句', {icon: 2,time: 2000});
+                    return null;
+                }
+                params = {
+                    sqlText: sqlContent.getValue(),
+                    dataBaseId: $("#sqlDataBase").val()
+                };
+            }
+            return params;
+        }
 
         function getDataByDataFromType(dataFromType, json){
             if(dataFromType == 1){
@@ -267,6 +320,12 @@ layui.config({
             }
         }
 
+        /**
+         * 加载解析的字段
+         *
+         * @param dataFromType 数据源类型
+         * @param data 数据
+         */
         function loadFieldResolution(dataFromType, data){
             $.each(data, function (i, item){
                 addAnalysisRow();

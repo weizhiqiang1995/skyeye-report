@@ -38,4 +38,6 @@ public interface ReportDataBaseService {
      * @throws Exception
      */
     ReportDataSource getReportDataSource(String dataBaseId) throws Exception;
+
+    void getReportDataBaseListToSelect(InputObject inputObject, OutputObject outputObject) throws Exception;
 }

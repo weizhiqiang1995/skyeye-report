@@ -86,6 +86,8 @@
     <url id="reportdatabase005" path="/post/ReportDataBaseController/getReportDataBaseById" val="根据id查询数据库配置信息" allUse="2" method="GET" groupName="数据库配置信息">
         <property id="id" name="id" ref="required" var="数据库配置信息唯一id"/>
     </url>
+    <url id="reportdatabase006" path="/post/ReportDataBaseController/getReportDataBaseListToSelect" val="获取数据库列表信息用于选择操作" allUse="2" method="GET" groupName="数据库配置信息">
+    </url>
     <!-- 数据库配置结束 -->
 
     <!-- 数据来源开始 -->

@@ -129,4 +129,18 @@ public class ReportDataBaseServiceImpl implements ReportDataBaseService {
                 dataBase.get("poolClass").toString(),
                 options);
     }
+
+    /**
+     * 获取数据库列表信息用于选择操作
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @Override
+    public void getReportDataBaseListToSelect(InputObject inputObject, OutputObject outputObject) throws Exception {
+        List<Map<String, Object>> beans = reportDataBaseDao.getReportDataBaseListToSelect();
+        outputObject.setBeans(beans);
+        outputObject.settotal(beans.size());
+    }
 }
