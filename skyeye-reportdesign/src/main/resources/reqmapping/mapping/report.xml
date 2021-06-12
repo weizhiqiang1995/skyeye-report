@@ -99,6 +99,10 @@
     <url id="reportdatafrom002" path="/post/ReportDataFromController/insertReportDataFrom" val="保存数据来源" method="POST" allUse="1" groupName="数据来源">
         <property id="name" name="name" ref="required" var="数据来源名称"/>
         <property id="type" name="type" ref="required,num" var="数据来源类型"/>
+        <property id="analysisData" name="analysisData" ref="required" var="解析后的数据"/>
+        <property id="jsonContent" name="jsonContent" ref="" var="json字符串"/>
+        <property id="xmlContent" name="xmlContent" ref="" var="xml字符串"/>
+        <property id="sqlContent" name="sqlContent" ref="" var="sql字符串"/>
         <property id="remark" name="remark" ref="" var="备注"/>
     </url>
     <url id="reportdatafrom003" path="/post/ReportDataFromController/delReportDataFromById" val="根据Id删除数据来源" method="DELETE" allUse="1" groupName="数据来源">

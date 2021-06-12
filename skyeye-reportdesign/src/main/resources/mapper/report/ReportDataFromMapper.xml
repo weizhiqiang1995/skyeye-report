@@ -46,7 +46,7 @@
         SELECT
             COUNT(1)
         FROM report_data_from
-        WHERE name = #{name}
+        WHERE name = #{name} and type = #{type}
     </select>
 
     <delete id="delReportDataFromById">

@@ -4,18 +4,21 @@
 
 package com.skyeye.service.impl;
 
+import com.gexin.fastjson.JSONArray;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.skyeye.common.object.InputObject;
 import com.skyeye.common.object.OutputObject;
 import com.skyeye.common.util.ToolUtil;
-import com.skyeye.dao.ReportDataFromDao;
+import com.skyeye.constants.ReportConstants;
+import com.skyeye.dao.*;
 import com.skyeye.service.ReportDataFromService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  *
@@ -33,6 +36,18 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
     @Autowired
     private ReportDataFromDao reportDataFromDao;
 
+    @Autowired
+    private ReportDataFromJsonDao reportDataFromJsonDao;
+
+    @Autowired
+    private ReportDataFromXMLDao reportDataFromXMLDao;
+
+    @Autowired
+    private ReportDataFromXMLAnalysisDao reportDataFromXMLAnalysisDao;
+
+    @Autowired
+    private ReportDataFromJsonAnalysisDao reportDataFromJsonAnalysisDao;
+
     @Override
     public void getReportDataFromList(InputObject inputObject, OutputObject outputObject) throws Exception {
         Map<String, Object> inputParams = inputObject.getParams();
@@ -44,20 +59,77 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void insertReportDataFrom(InputObject inputObject, OutputObject outputObject) throws Exception {
         Map<String, Object> inputParams = inputObject.getParams();
-        inputParams.put("id", ToolUtil.getSurFaceId());
         String name = inputParams.get("name").toString();
+        Integer type = Integer.valueOf(inputParams.get("type").toString());
         // 校验数据源名称是否重名
-        if (!isDuplicateName(name)) {
+        if (!isDuplicateName(name, type)) {
+            String dataFromId = ToolUtil.getSurFaceId();
             inputParams.put("name", name);
-            inputParams.put("type", inputParams.get("type"));
+            inputParams.put("type", type);
+            inputParams.put("id", dataFromId);
             inputParams.put("remark", inputParams.get("remark"));
             inputParams.put("userId", inputObject.getLogParams().get("id"));
             inputParams.put("createTime", ToolUtil.getTimeAndToString());
             reportDataFromDao.insertReportDataFrom(inputParams);
+
+            // 根据type获取不同类型对应入参key
+            String key = ReportConstants.ReportDataFromEnums.getKeyByType(type);
+            // 构造数据源-子数据
+            Map<String, Object> subParams = new HashMap<>();
+            String jsonId = ToolUtil.getSurFaceId();
+            subParams.put("id",jsonId);
+            subParams.put("fromId", dataFromId);
+            subParams.put(key, inputParams.get(key).toString());
+
+            // 构造子数据源analysis数据
+            List<Map<String, Object>> subAnalysisParams = getSubAnalysisData(inputParams, type, jsonId);
+            // 根据type入不同的表
+            saveDataByType(type, subParams, subAnalysisParams);
         } else {
             outputObject.setreturnMessage("该数据源名称已存在.");
+        }
+    }
+
+    // 构造子数据源analysis数据
+    private List<Map<String, Object>> getSubAnalysisData(Map<String, Object> inputParams, Integer type, String jsonId) {
+        JSONArray objects = JSONArray.parseArray(inputParams.get("analysisData").toString());
+        List<Map> analysisDataList = objects.toJavaList(Map.class);
+        List<Map<String, Object>> subAnalysisParams = new ArrayList<>();
+        Map<String, Object> subAnalysisData;
+        for (Map<String, Object> obj : analysisDataList) {
+            subAnalysisData = new HashMap<>();
+            subAnalysisData.put("id", ToolUtil.getSurFaceId());
+            subAnalysisData.put("subId", jsonId);
+            subAnalysisData.put("key", obj.get("key"));
+            subAnalysisData.put("title", obj.get("title"));
+            subAnalysisData.put("remark", obj.get("remark"));
+            if (type.equals(4)) {
+                subAnalysisData.put("dataType", obj.get("dataType"));
+                subAnalysisData.put("dataLength", obj.get("dataLength"));
+                subAnalysisData.put("dataPrecision", obj.get("dataPrecision"));
+            }
+            subAnalysisParams.add(subAnalysisData);
+        }
+        return subAnalysisParams;
+    }
+
+    private void saveDataByType(Integer type, Map<String, Object> subParams, List<Map<String, Object>> subAnalysisParams) {
+        switch (type) {
+            case 1:
+                break;
+            case 2:
+                reportDataFromXMLDao.insertReportDataFromXML(subParams);
+                reportDataFromXMLAnalysisDao.insertSubXMLAnalysis(subAnalysisParams);
+                break;
+            case 3:
+                reportDataFromJsonDao.insertReportDataFromJson(subParams);
+                reportDataFromJsonAnalysisDao.insertSubJsonAnalysis(subAnalysisParams);
+                break;
+            case 4:
+                break;
         }
     }
 
@@ -71,7 +143,8 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
     public void updateReportDataFromById(InputObject inputObject, OutputObject outputObject) throws Exception {
         Map<String, Object> inputParams = inputObject.getParams();
         String name = inputParams.get("name").toString();
-        if (!isDuplicateName(name)) {
+        Integer type = Integer.valueOf(inputParams.get("type").toString());
+        if (!isDuplicateName(name, type)) {
             inputParams.put("userId", inputObject.getLogParams().get("id"));
             inputParams.put("createTime", ToolUtil.getTimeAndToString());
             reportDataFromDao.updateReportDataFromById(inputParams);
@@ -87,7 +160,7 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
         outputObject.setBean(resultMap);
     }
 
-    private boolean isDuplicateName(String name) throws Exception {
-        return reportDataFromDao.getDuplicateName(name) == 0 ? false : true;
+    private boolean isDuplicateName(String name, Integer type) throws Exception {
+        return reportDataFromDao.getDuplicateName(name, type) == 0 ? false : true;
     }
 }

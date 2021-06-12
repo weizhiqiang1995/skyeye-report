@@ -4,15 +4,16 @@
 
 package com.skyeye.dao;
 
-import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
 
 /**
  * 
- * @ClassName: ReportDataBaseDao
+ * @ClassName: ReportDataFromJsonAnalysisDao
  * @Description:
  * @author: skyeye云系列--卫志强
  * @date: 2021/6/03 23:19
@@ -20,17 +21,8 @@ import java.util.Map;
  * @Copyright: 2021 https://gitee.com/doc_wei01/skyeye-report Inc. All rights reserved.
  * 注意：本内容具体规则请参照readme执行，地址：https://gitee.com/doc_wei01/skyeye-report/blob/master/README.md
  */
-public interface ReportDataFromDao {
+public interface ReportDataFromXMLAnalysisDao {
 
-    List<Map<String, Object>> getReportDataFromList(Map<String, Object> map, PageBounds pageBounds) throws Exception;
+    void insertSubXMLAnalysis(@Param("list") List<Map<String, Object>> list);
 
-    void insertReportDataFrom(Map<String, Object> map);
-
-    int getDuplicateName(@Param("name") String name, @Param("type") Integer type) throws Exception;
-
-    void delReportDataFromById(@Param("id") String id) throws Exception;
-
-    void updateReportDataFromById(Map<String, Object> map) throws Exception;
-
-    Map<String, Object> getReportDataFromById(@Param("id") String id) throws Exception;
 }
