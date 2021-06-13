@@ -4,6 +4,8 @@
 
 package com.skyeye.dao;
 
+import org.apache.ibatis.annotations.Param;
+
 import java.util.Map;
 
 /**
@@ -19,5 +21,9 @@ import java.util.Map;
 public interface ReportDataFromXMLDao {
 
     void insertReportDataFromXML(Map<String, Object> map);
+
+    String selectXmlIdByFromId(@Param("fromId") String fromId);
+
+    void delReportDataFromXMLById(@Param("id") String id);
 
 }

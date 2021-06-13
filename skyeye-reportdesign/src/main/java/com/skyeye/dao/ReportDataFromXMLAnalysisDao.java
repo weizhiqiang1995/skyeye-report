@@ -23,4 +23,6 @@ public interface ReportDataFromXMLAnalysisDao {
 
     void insertSubXMLAnalysis(@Param("list") List<Map<String, Object>> list);
 
+    void delByXmlId(@Param("xmlId") String xmlId);
+
 }

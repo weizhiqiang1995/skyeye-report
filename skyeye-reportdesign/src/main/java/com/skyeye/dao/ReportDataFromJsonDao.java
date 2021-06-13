@@ -4,6 +4,8 @@
 
 package com.skyeye.dao;
 
+import org.apache.ibatis.annotations.Param;
+
 import java.util.Map;
 
 /**
@@ -20,4 +22,7 @@ public interface ReportDataFromJsonDao {
 
     void insertReportDataFromJson(Map<String, Object> map);
 
+    String selectIdByFromId(@Param("fromId") String fromId);
+
+    void delReportDataFromJsonById(@Param("id") String id);
 }

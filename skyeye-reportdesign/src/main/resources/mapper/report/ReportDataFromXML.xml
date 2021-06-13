@@ -9,4 +9,15 @@
             (#{id}, #{fromId}, #{xmlContent})
     </insert>
 
+    <select id="selectXmlIdByFromId" resultType="java.lang.String">
+        SELECT
+            id
+        FROM report_data_from_xml
+        WHERE from_id = #{fromId}
+    </select>
+
+    <delete id="delReportDataFromXMLById" parameterType="java.lang.String">
+        DELETE FROM report_data_from_xml
+        WHERE id = #{id}
+    </delete>
 </mapper>

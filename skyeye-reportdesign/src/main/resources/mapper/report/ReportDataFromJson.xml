@@ -9,4 +9,16 @@
             (#{id}, #{fromId}, #{jsonContent})
     </insert>
 
+    <select id="selectIdByFromId" resultType="java.lang.String">
+        SELECT
+            id
+        FROM report_data_from_json
+        WHERE from_id = #{fromId}
+    </select>
+
+    <delete id="delReportDataFromJsonById" parameterType="java.lang.String">
+        DELETE FROM report_data_from_json
+        WHERE id = #{id}
+    </delete>
+
 </mapper>

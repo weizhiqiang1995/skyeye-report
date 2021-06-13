@@ -150,9 +150,35 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
      * @throws Exception
      */
     @Override
+    @Transactional(value="transactionManager")
     public void delReportDataFromById(InputObject inputObject, OutputObject outputObject) throws Exception {
         Map<String, Object> inputParams = inputObject.getParams();
-        reportDataFromDao.delReportDataFromById(inputParams.get("id").toString());
+        String fromId = inputParams.get("id").toString();
+        // 根据dataFromId获取对应type
+        Map<String, Object> reportDataFromById = reportDataFromDao.getReportDataFromById(fromId);
+        if (reportDataFromById != null) {
+            int type = Integer.valueOf(reportDataFromById.get("type").toString());
+            // 根据fromId获取subId
+            delReportDataFromByType(fromId, type);
+        }
+    }
+
+    private void delReportDataFromByType(String fromId, int type) throws Exception {
+        String subId;
+        if (ReportConstants.DataFromTypeMation.XML.getType() == type) {
+            subId = reportDataFromXMLDao.selectXmlIdByFromId(fromId);
+            reportDataFromXMLAnalysisDao.delByXmlId(subId);
+            reportDataFromXMLDao.delReportDataFromXMLById(subId);
+        } else if (ReportConstants.DataFromTypeMation.JSON.getType() == type) {
+            subId = reportDataFromJsonDao.selectIdByFromId(fromId);
+            reportDataFromJsonAnalysisDao.delByJsonId(subId);
+            reportDataFromJsonDao.delReportDataFromJsonById(subId);
+        } else if (ReportConstants.DataFromTypeMation.REST_API.getType() == type) {
+
+        } else if (ReportConstants.DataFromTypeMation.SQL.getType() == type) {
+
+        }
+        reportDataFromDao.delReportDataFromById(fromId);
     }
 
     /**

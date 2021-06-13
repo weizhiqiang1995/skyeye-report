@@ -11,4 +11,8 @@
         </foreach>
     </insert>
 
+    <delete id="delByXmlId">
+        DELETE FROM report_data_from_xml_analysis
+        WHERE xml_id = #{xmlId}
+    </delete>
 </mapper>

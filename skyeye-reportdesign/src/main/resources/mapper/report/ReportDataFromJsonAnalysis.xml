@@ -3,7 +3,7 @@
 <mapper namespace="com.skyeye.dao.ReportDataFromJsonAnalysisDao">
 
     <insert id="insertSubJsonAnalysis" parameterType="java.util.Map">
-        INSERT INTO report_data_from_xml_analysis
+        INSERT INTO report_data_from_json_analysis
             (id, json_id, `key`, `name`, remark)
         VALUES
         <foreach collection="list" item="item" index="index" separator="," >
@@ -11,4 +11,8 @@
         </foreach>
     </insert>
 
+    <delete id="delByJsonId">
+        DELETE FROM report_data_from_json_analysis
+        WHERE json_id = #{jsonId}
+    </delete>
 </mapper>
