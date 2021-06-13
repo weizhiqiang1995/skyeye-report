@@ -41,6 +41,13 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 				right_bottom: true,
 			};
 
+			// 图表自定义属性
+			var echartsCustomOptions = {
+				"custom.dataBaseId": { "value": "", "edit": true, "desc": "数据来源", "title": "数据来源", "editor": "10", "editorChooseValue": "", "typeName": "数据源"},
+				"custom.move.x": { "value": "0", "edit": true, "desc": "鼠标拖动距离左侧的像素", "title": "X坐标", "editor": "2", "editorChooseValue": "", "typeName": "坐标"},
+				"custom.move.y": { "value": "0", "edit": true, "desc": "鼠标拖动距离顶部的像素", "title": "Y坐标", "editor": "2", "editorChooseValue": "", "typeName": "坐标"}
+			};
+
 			var f = {
 				box: function() {
 					var width = $(window).width();
@@ -172,6 +179,7 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 								newChart.resize();
 							});
 							// 加入页面属性
+							echartsMation.attr = $.extend(true, echartsCustomOptions, echartsMation.attr);
 							inPageEcharts[boxId] = $.extend(true, {}, echartsMation);
 							inPageEchartsObject[boxId] = newChart;
 						}
@@ -274,8 +282,7 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 										if (35 > eleWH.height - e.clientY + clientXY.y) {
 											return;
 										}
-										var top = e.clientY - 78;
-										top = top < 0 ? 0 : top;
+										var top = f.getTop(e, 0);
 										// ele拖拽后的高度为：初始height-拖拽后鼠标距离屏幕的距离 + 第一次按下时鼠标距离屏幕的距离
 										// 重新设置ele的top值为此时鼠标距离屏幕的y值
 										that.css({
@@ -288,13 +295,11 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 										if (50 > eleWH.width - e.clientX + clientXY.x) {
 											return;
 										}
-										var left = e.clientX - 18;
 										var maxLeft = skyeyeReportContent.width() - that.width();
-										left = left < 0 ? 0 : left;
-										left = left > maxLeft ? maxLeft : left;
+										var left = f.getLeft(e, 0, maxLeft);
 										// 重新设置ele的left值为此时鼠标距离屏幕的x值
 										that.css({
-											width: (eleWH.width - e.clientX + clientXY.x) + "px",
+											width: f.getWidth(eleWH, e, clientXY, skyeyeReportContent.width()) + "px",
 											left: left + "px"
 										});
 									}
@@ -306,41 +311,85 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 							}
 						}
 					}
-					// 添加移动事件
-					$("#" + id).on('mousedown', function (ee){
-						var id = ee.target.dataset.boxId;
-						f.setMoveEvent(ee, $("#" + id));
-					});
 					return div;
 				},
 
-				setMoveEvent: function (ee, that){
+				setMoveEvent: function (ee, box){
 					// 获取事件对象
 					var ee = ee || window.event;
-					// 鼠标按下时，鼠标相对于元素的x坐标
-					var x = ee.offsetX;
-					// 鼠标按下时，鼠标相对于元素的y坐标
-					var y = ee.offsetY;
-					var maxLeft = skyeyeReportContent.width() - that.width();
+					var maxLeft = skyeyeReportContent.width() - box.width();
 					// 鼠标按下移动时调用mousemove
 					document.onmousemove = e => {
-						// 元素ele移动的距离l
-						var left = e.clientX - x - 44;
-						// 元素ele移动的距离t
-						var top = e.clientY - y - 104;
-						left = left < 0 ? 0 : left;
-						top = top < 0 ? 0 : top;
-						left = left > maxLeft ? maxLeft : left;
-						that.css({
-							left: left + "px",
-							top: top + "px"
-						});
+						if(box.hasClass("active")){
+							// 元素ele移动的距离left
+							var left = f.getLeft(e, ee.offsetX, maxLeft);
+							// 元素ele移动的距离top
+							var top = f.getTop(e, ee.offsetY);
+							box.css({
+								left: left + "px",
+								top: top + "px"
+							});
+						}else{
+							f.setChooseReportItem(box);
+						}
 					}
 					// 当鼠标弹起时，清空onmousemove与onmouseup
 					document.onmouseup = () => {
 						document.onmousemove = null;
 						document.onmouseup = null;
 					}
+				},
+
+				/**
+				 * 获取拖拽的元素距离顶部的最终距离
+				 *
+				 * @param e 事件对象
+				 * @param y 鼠标按下时，鼠标相对于元素的y坐标
+				 * @returns {number|number}
+				 */
+				getTop: function (e, y){
+					var top = e.clientY - y - 104;
+					top = top < 0 ? 0 : top;
+					var chooseEcharts = skyeyeReportContent.find(".active").eq(0);
+					var boxId = chooseEcharts.data("boxId");
+					var moveYId = $("div[modelKey='custom.move.y'][boxId='" + boxId + "']").find("input").attr("id");
+					$("#" + moveYId).val(top);
+					dataValueChange(top, $("#" + moveYId));
+					return top;
+				},
+
+				/**
+				 * 获取拖拽的元素距离左侧的最终距离
+				 *
+				 * @param e 事件对象
+				 * @param x 标按下时，鼠标相对于元素的x坐标
+				 * @param maxLeft 允许的最大左边距
+				 * @returns {number|number}
+				 */
+				getLeft: function (e, x, maxLeft){
+					var left = e.clientX - x - 44;
+					left = left < 0 ? 0 : left;
+					left = left > maxLeft ? maxLeft : left;
+					var chooseEcharts = skyeyeReportContent.find(".active").eq(0);
+					var boxId = chooseEcharts.data("boxId");
+					var moveXId = $("div[modelKey='custom.move.x'][boxId='" + boxId + "']").find("input").attr("id");
+					$("#" + moveXId).val(left);
+					dataValueChange(left, $("#" + moveXId));
+					return left;
+				},
+
+				/**
+				 * 获取报表元素允许的宽度
+				 * @param eleWH 获取鼠标按下时ele的宽高
+				 * @param e 事件对象
+				 * @param clientXY 鼠标距离屏幕的left与top值
+				 * @param maxWidth 允许的最大宽度
+				 * @returns {*}
+				 */
+				getWidth: function (eleWH, e, clientXY, maxWidth){
+					var width = eleWH.width - e.clientX + clientXY.x;
+					width = width > maxWidth ? maxWidth : width;
+					return width;
 				},
 
 				// 快捷键
@@ -362,15 +411,7 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 					var notTriggerRemove = ["layui-colorpicker-main"];
 					// 图表点击事件
 					$("body").on('click', ".echarts-box", function(e){
-						f.removeEchartsEditMation();
-						// 被选中项
-						$(this).parent().find(".dian").show();
-						$(this).parent().css({
-							"border": "1px solid #0f0",
-							"z-index": 200
-						});
-						$(this).parent().addClass("active");
-						f.loadEchartsEditor();
+						f.setChooseReportItem($(this));
 						e.stopPropagation();
 					});
 
@@ -390,12 +431,32 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 					// 面板切换
 					$("body").on('click', '.layui-colla-title', function(e){
 						$(this).parent().find('.layui-colla-content').toggleClass('layui-show');
+						if($(this).parent().find('.layui-colla-content').hasClass('layui-show')){
+							$(this).find('.f-icon').removeClass('arrow-bottom').addClass("arrow-top");
+						}else{
+							$(this).find('.f-icon').removeClass('arrow-top').addClass("arrow-bottom");
+						}
 					});
 
 					// 编辑器点击防止触发父内容事件
 					$("body").on('click', ".form-box", function(e){
 						e.stopPropagation();
 					});
+				},
+
+				// 设置选中项
+				setChooseReportItem: function(_this){
+					if(!_this.parent().hasClass("active")){
+						f.removeEchartsEditMation();
+						// 被选中项
+						_this.parent().find(".dian").show();
+						_this.parent().css({
+							"border": "1px solid #0f0",
+							"z-index": 200
+						});
+						_this.parent().addClass("active");
+						f.loadEchartsEditor();
+					}
 				},
 
 				// 移除所有图表的编辑信息
@@ -421,7 +482,7 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 						var newArray = f.restAttrToArrayByTypeName(echartsMation.attr);
 						$('<div class="layui-collapse" id="showFormPanel"></div>').appendTo($("#showForm").get(0));
 						$.each(newArray, function(typeName, attr) {
-							var panelHTML = '<div class="layui-colla-item"><h2 class="layui-colla-title">' + typeName + '</h2><div class="layui-colla-content" id="' + typeName + '"></div>';
+							var panelHTML = '<div class="layui-colla-item"><h2 class="layui-colla-title"><em class="f-icon arrow-bottom"></em><span>' + typeName + '</span></h2><div class="layui-colla-content" id="' + typeName + '"></div>';
 							$(panelHTML).appendTo($("#showFormPanel").get(0));
 							$.each(attr, function (key, val) {
 								if (val.edit) {
@@ -444,18 +505,25 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 											var jsCon = '<script>layui.define(["jquery"], function(exports) {var jQuery = layui.jquery;(function($) {' + js + '})(jQuery);});</script>';
 											$("#" + typeName).append(jsCon);
 										}
+									}else{
+										f.loadEchartsEditorISDetail(key, val, boxId, indexNumber, typeName);
 									}
 								} else {
-									var formItem = editorType["100"];
-									var data = f.getFormItemData(key, val, boxId, indexNumber);
-									var html = getDataUseHandlebars('{{#bean}}' + formItem.html + '{{/bean}}', data);
-									$(html).appendTo($("#" + typeName).get(0));
+									f.loadEchartsEditorISDetail(key, val, boxId, indexNumber, typeName);
 								}
 								indexNumber++;
 							});
 						});
 						form.render();
 					}
+				},
+
+				// 加载编辑器‘详情’类型的展示
+				loadEchartsEditorISDetail: function (key, val, boxId, indexNumber, typeName){
+					var formItem = editorType["100"];
+					var data = f.getFormItemData(key, val, boxId, indexNumber);
+					var html = getDataUseHandlebars('{{#bean}}' + formItem.html + '{{/bean}}', data);
+					$(html).appendTo($("#" + typeName).get(0));
 				},
 
 				// 将echarts属性根据类型名称进行分组

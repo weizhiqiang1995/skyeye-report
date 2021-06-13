@@ -393,6 +393,25 @@ body {
 .layui-colla-title{
 	height: 35px;
 	line-height: 35px;
+	padding: 0 15px 0 15px;
+}
+
+.layui-colla-title .f-icon{
+	position: absolute;
+	line-height: 35px;
+	top: 13px;
+}
+
+.layui-colla-title .arrow-top{
+	border-bottom: 8px solid darkgray;
+}
+
+.layui-colla-title .arrow-bottom{
+	border-top: 8px solid darkgray;
+}
+
+.layui-colla-title span{
+	margin-left: 25px;
 }
 
 .layui-colla-content{
