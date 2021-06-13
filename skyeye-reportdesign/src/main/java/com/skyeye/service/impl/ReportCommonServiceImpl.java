@@ -247,6 +247,38 @@ public class ReportCommonServiceImpl implements ReportCommonService {
     }
 
     /**
+     * 解析Rest接口
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @Override
+    public void parseRestText(InputObject inputObject, OutputObject outputObject) throws Exception {
+        String restText = inputObject.getParams().get("restText").toString();
+        // url正则表达式
+        String restUrlRegex = "^([hH][tT]{2}[pP]:/{2}|[hH][tT]{2}[pP][sS]:/{2}|[fF][tT][pP]:/*)(([A-Za-z0-9-~]+).)+([A-Za-z0-9-~\\/])+(\\?{0,1}(([A-Za-z0-9-~]+\\={0,1})([A-Za-z0-9-~]*)\\&{0,1})*)$";
+        boolean isRestUrl = restText.matches(restUrlRegex);
+        if (isRestUrl) {
+            String[] split = restText.substring(restText.indexOf("?") + 1).split("&");
+            String tempStr;
+            Set<String> result = new HashSet<>();
+            Map<String, Object> resultMap = new HashMap<>();
+            for (int index = 0; index < split.length; index++) {
+                tempStr = split[index];
+                if (tempStr.contains("=")) {
+                    result.add(tempStr.split("=")[0]);
+                }
+            }
+            resultMap.put("nodeArray", result);
+            outputObject.setBean(resultMap);
+        } else {
+            LOGGER.info("该文本不符合url路径格式, 故无法解析. ");
+            outputObject.setreturnMessage("该文本不符合url路径格式, 故无法解析.");
+        }
+    }
+
+    /**
      * 获取数据源类型列表
      *
      * @param inputObject

@@ -102,6 +102,18 @@ public class ReportCommonController {
     }
 
     /**
+     * 解析Rest接口
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @RequestMapping("/post/ReportCommonController/parseRestText")
+    public void parseRestText(InputObject inputObject, OutputObject outputObject) throws Exception {
+        reportCommonService.parseRestText(inputObject, outputObject);
+    }
+
+    /**
      * 获取数据源类型列表
      *
      * @param inputObject

@@ -21,6 +21,9 @@
         <property id="sqlText" name="sqlText" ref="required" var="sql语句" />
         <property id="dataBaseId" name="dataBaseId" ref="required" var="数据源id" />
     </url>
+    <url id="reportcommon005" path="/post/ReportCommonController/parseRestText" val="解析Rest接口" allUse="2" method="POST" groupName="报表公共接口">
+        <property id="restText" name="restText" ref="required" var="rest格式文本" />
+    </url>
     <url id="reportcommon006" path="/post/ReportCommonController/queryDataBaseMationList" val="获取数据源类型" allUse="2" method="GET" groupName="报表公共接口">
     </url>
     <url id="reportcommon007" path="/post/ReportCommonController/queryPoolMationList" val="获取连接池类型" allUse="2" method="GET" groupName="报表公共接口">

@@ -79,6 +79,15 @@ public interface ReportCommonService {
     void parseSQLText(InputObject inputObject, OutputObject outputObject) throws Exception;
 
     /**
+     * 解析Rest接口
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    void parseRestText(InputObject inputObject, OutputObject outputObject) throws Exception;
+
+    /**
      * 获取数据源类型列表
      *
      * @param inputObject
