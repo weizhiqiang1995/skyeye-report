@@ -33,4 +33,6 @@ public interface ReportDataFromDao {
     void updateReportDataFromById(Map<String, Object> map) throws Exception;
 
     Map<String, Object> getReportDataFromById(@Param("id") String id) throws Exception;
+
+    List<Map<String, Object>> getReportDataFromChooseList(Map<String, Object> inputParams, PageBounds pageBounds) throws Exception;
 }

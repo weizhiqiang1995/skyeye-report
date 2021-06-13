@@ -98,6 +98,7 @@
         <property id="limit" name="limit" ref="required,num" var="分页参数,每页多少条数据" />
         <property id="page" name="page" ref="required,num" var="分页参数,第几页"/>
         <property id="name" name="name" ref="" var="数据来源名称"/>
+        <property id="type" name="type" ref="num" var="数据来源类型"/>
     </url>
     <url id="reportdatafrom002" path="/post/ReportDataFromController/insertReportDataFrom" val="保存数据来源" method="POST" allUse="1" groupName="数据来源">
         <property id="name" name="name" ref="required" var="数据来源名称"/>
@@ -119,6 +120,12 @@
     </url>
     <url id="reportdatafrom005" path="/post/ReportDataFromController/getReportDataFromById" val="根据Id查询数据来源" method="GET" allUse="2" groupName="数据来源">
         <property id="id" name="id" ref="required" var="数据来源Id"/>
+    </url>
+    <url id="reportdatafrom006" path="/post/ReportDataFromController/getReportDataFromChooseList" val="获取所有数据来源供其他地方选择" method="POST" allUse="2" groupName="数据来源">
+        <property id="limit" name="limit" ref="required,num" var="分页参数,每页多少条数据" />
+        <property id="page" name="page" ref="required,num" var="分页参数,第几页"/>
+        <property id="name" name="name" ref="" var="数据来源名称"/>
+        <property id="type" name="type" ref="num" var="数据来源类型"/>
     </url>
     <!-- 数据来源结束 -->
 

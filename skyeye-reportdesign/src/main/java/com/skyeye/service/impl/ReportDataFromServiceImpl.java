@@ -60,6 +60,9 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
         List<Map<String, Object>> beans = reportDataFromDao.getReportDataFromList(inputParams,
                 new PageBounds(Integer.parseInt(inputParams.get("page").toString()), Integer.parseInt(inputParams.get("limit").toString())));
         PageList<Map<String, Object>> beansPageList = (PageList<Map<String, Object>>) beans;
+        beans.forEach(bean -> {
+            bean.put("typeName", ReportConstants.DataFromTypeMation.getNameByType(Integer.parseInt(bean.get("type").toString())));
+        });
         outputObject.setBeans(beans);
         outputObject.settotal(beansPageList.getPaginator().getTotalCount());
     }
@@ -220,5 +223,25 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
 
     private boolean isDuplicateName(String name, Integer type, String id) throws Exception {
         return reportDataFromDao.getDuplicateName(name, type, id) == 0 ? false : true;
+    }
+
+    /**
+     * 获取所有数据来源列表
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @Override
+    public void getReportDataFromChooseList(InputObject inputObject, OutputObject outputObject) throws Exception {
+        Map<String, Object> inputParams = inputObject.getParams();
+        List<Map<String, Object>> beans = reportDataFromDao.getReportDataFromChooseList(inputParams,
+                new PageBounds(Integer.parseInt(inputParams.get("page").toString()), Integer.parseInt(inputParams.get("limit").toString())));
+        PageList<Map<String, Object>> beansPageList = (PageList<Map<String, Object>>) beans;
+        beans.forEach(bean -> {
+            bean.put("typeName", ReportConstants.DataFromTypeMation.getNameByType(Integer.parseInt(bean.get("type").toString())));
+        });
+        outputObject.setBeans(beans);
+        outputObject.settotal(beansPageList.getPaginator().getTotalCount());
     }
 }

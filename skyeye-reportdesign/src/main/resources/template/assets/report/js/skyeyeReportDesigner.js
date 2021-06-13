@@ -43,7 +43,7 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 
 			// 图表自定义属性
 			var echartsCustomOptions = {
-				"custom.dataBaseId": { "value": "", "edit": true, "desc": "数据来源", "title": "数据来源", "editor": "10", "editorChooseValue": "", "typeName": "数据源"},
+				"custom.dataBaseMation": { "value": "", "edit": true, "desc": "数据来源", "title": "数据来源", "editor": "99", "editorChooseValue": "", "typeName": "数据源"},
 				"custom.move.x": { "value": "0", "edit": true, "desc": "鼠标拖动距离左侧的像素", "title": "X坐标", "editor": "2", "editorChooseValue": "", "typeName": "坐标"},
 				"custom.move.y": { "value": "0", "edit": true, "desc": "鼠标拖动距离顶部的像素", "title": "Y坐标", "editor": "2", "editorChooseValue": "", "typeName": "坐标"}
 			};

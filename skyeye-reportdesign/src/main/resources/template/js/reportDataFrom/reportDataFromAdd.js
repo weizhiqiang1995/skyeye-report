@@ -60,7 +60,7 @@ layui.config({
                     return false;
                 }
                 params = $.extend(true, params, otherData);
-                AjaxPostUtil.request({url:reqBasePath + "reportimportmodel002", params: params, type:'json', method: "POST", callback:function(json){
+                AjaxPostUtil.request({url:reqBasePath + "reportdatafrom002", params: params, type:'json', method: "POST", callback:function(json){
                     if(json.returnCode == 0){
                         parent.layer.close(index);
                         parent.refreshCode = '0';

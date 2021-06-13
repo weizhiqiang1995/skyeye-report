@@ -63,4 +63,13 @@ public interface ReportDataFromService {
      * @throws Exception
      */
     void getReportDataFromById(InputObject inputObject, OutputObject outputObject) throws Exception;
+
+    /**
+     * 获取所有数据来源列表
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    void getReportDataFromChooseList(InputObject inputObject, OutputObject outputObject) throws Exception;
 }

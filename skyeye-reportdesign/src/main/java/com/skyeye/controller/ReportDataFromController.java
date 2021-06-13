@@ -92,4 +92,17 @@ public class ReportDataFromController {
     public void getReportDataFromById(InputObject inputObject, OutputObject outputObject) throws Exception {
         reportDataFromService.getReportDataFromById(inputObject, outputObject);
     }
+
+    /**
+     * 获取所有数据来源列表
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @RequestMapping("/post/ReportDataFromController/getReportDataFromChooseList")
+    @ResponseBody
+    public void getReportDataFromChooseList(InputObject inputObject, OutputObject outputObject) throws Exception{
+        reportDataFromService.getReportDataFromChooseList(inputObject, outputObject);
+    }
 }
