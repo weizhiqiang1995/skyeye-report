@@ -129,19 +129,16 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
     }
 
     private void saveDataByType(Integer type, Map<String, Object> subParams, List<Map<String, Object>> subAnalysisParams) {
-        switch (type) {
-            case 1:
-                reportDataFromXMLDao.insertReportDataFromXML(subParams);
-                reportDataFromXMLAnalysisDao.insertSubXMLAnalysis(subAnalysisParams);
-                break;
-            case 2:
-                reportDataFromJsonDao.insertReportDataFromJson(subParams);
-                reportDataFromJsonAnalysisDao.insertSubJsonAnalysis(subAnalysisParams);
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
+        if (ReportConstants.DataFromTypeMation.XML.getType() == type) {
+            reportDataFromXMLDao.insertReportDataFromXML(subParams);
+            reportDataFromXMLAnalysisDao.insertSubXMLAnalysis(subAnalysisParams);
+        } else if (ReportConstants.DataFromTypeMation.JSON.getType() == type) {
+            reportDataFromJsonDao.insertReportDataFromJson(subParams);
+            reportDataFromJsonAnalysisDao.insertSubJsonAnalysis(subAnalysisParams);
+        } else if (ReportConstants.DataFromTypeMation.REST_API.getType() == type) {
+
+        } else if (ReportConstants.DataFromTypeMation.SQL.getType() == type) {
+
         }
     }
 
