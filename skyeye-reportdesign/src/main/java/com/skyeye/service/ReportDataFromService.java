@@ -19,13 +19,48 @@ import com.skyeye.common.object.OutputObject;
  */
 public interface ReportDataFromService {
 
+    /**
+     * 获取所有数据来源列表
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
     void getReportDataFromList(InputObject inputObject, OutputObject outputObject) throws Exception;
 
+    /**
+     * 新增数据来源
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
     void insertReportDataFrom(InputObject inputObject, OutputObject outputObject) throws Exception;
 
+    /**
+     * 根据id删除数据来源信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
     void delReportDataFromById(InputObject inputObject, OutputObject outputObject) throws Exception;
 
+    /**
+     * 根据id更新数据来源
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
     void updateReportDataFromById(InputObject inputObject, OutputObject outputObject) throws Exception;
 
+    /**
+     * 根据id查询数据来源
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
     void getReportDataFromById(InputObject inputObject, OutputObject outputObject) throws Exception;
 }

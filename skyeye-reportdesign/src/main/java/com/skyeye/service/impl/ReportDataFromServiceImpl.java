@@ -15,7 +15,6 @@ import com.skyeye.dao.*;
 import com.skyeye.service.ReportDataFromService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
@@ -48,6 +47,13 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
     @Autowired
     private ReportDataFromJsonAnalysisDao reportDataFromJsonAnalysisDao;
 
+    /**
+     * 获取数据源列表信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
     @Override
     public void getReportDataFromList(InputObject inputObject, OutputObject outputObject) throws Exception {
         Map<String, Object> inputParams = inputObject.getParams();
@@ -58,8 +64,15 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
         outputObject.settotal(beansPageList.getPaginator().getTotalCount());
     }
 
+    /**
+     * 保存不同类别的数据源信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
     @Override
-    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    @Transactional(value="transactionManager")
     public void insertReportDataFrom(InputObject inputObject, OutputObject outputObject) throws Exception {
         Map<String, Object> inputParams = inputObject.getParams();
         String name = inputParams.get("name").toString();
@@ -70,13 +83,12 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
             inputParams.put("name", name);
             inputParams.put("type", type);
             inputParams.put("id", dataFromId);
-            inputParams.put("remark", inputParams.get("remark"));
             inputParams.put("userId", inputObject.getLogParams().get("id"));
             inputParams.put("createTime", ToolUtil.getTimeAndToString());
             reportDataFromDao.insertReportDataFrom(inputParams);
 
             // 根据type获取不同类型对应入参key
-            String key = ReportConstants.ReportDataFromEnums.getKeyByType(type);
+            String key = ReportConstants.DataFromTypeMation.getKeyByType(type);
             // 构造数据源-子数据
             Map<String, Object> subParams = new HashMap<>();
             String jsonId = ToolUtil.getSurFaceId();
@@ -106,7 +118,7 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
             subAnalysisData.put("key", obj.get("key"));
             subAnalysisData.put("title", obj.get("title"));
             subAnalysisData.put("remark", obj.get("remark"));
-            if (type.equals(4)) {
+            if (ReportConstants.DataFromTypeMation.SQL.getType() == type) {
                 subAnalysisData.put("dataType", obj.get("dataType"));
                 subAnalysisData.put("dataLength", obj.get("dataLength"));
                 subAnalysisData.put("dataPrecision", obj.get("dataPrecision"));
@@ -119,32 +131,47 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
     private void saveDataByType(Integer type, Map<String, Object> subParams, List<Map<String, Object>> subAnalysisParams) {
         switch (type) {
             case 1:
-                break;
-            case 2:
                 reportDataFromXMLDao.insertReportDataFromXML(subParams);
                 reportDataFromXMLAnalysisDao.insertSubXMLAnalysis(subAnalysisParams);
                 break;
-            case 3:
+            case 2:
                 reportDataFromJsonDao.insertReportDataFromJson(subParams);
                 reportDataFromJsonAnalysisDao.insertSubJsonAnalysis(subAnalysisParams);
+                break;
+            case 3:
                 break;
             case 4:
                 break;
         }
     }
 
+    /**
+     * 根据id删除数据源信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
     @Override
     public void delReportDataFromById(InputObject inputObject, OutputObject outputObject) throws Exception {
         Map<String, Object> inputParams = inputObject.getParams();
         reportDataFromDao.delReportDataFromById(inputParams.get("id").toString());
     }
 
+    /**
+     * 根据Id更新数据源信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
     @Override
     public void updateReportDataFromById(InputObject inputObject, OutputObject outputObject) throws Exception {
         Map<String, Object> inputParams = inputObject.getParams();
+        Map<String, Object> reportDataFromMap = reportDataFromDao.getReportDataFromById(inputParams.get("id").toString());
         String name = inputParams.get("name").toString();
         Integer type = Integer.valueOf(inputParams.get("type").toString());
-        if (!isDuplicateName(name, type)) {
+        if (name.equals(reportDataFromMap.get("name").toString()) || !isDuplicateName(name, type)) {
             inputParams.put("userId", inputObject.getLogParams().get("id"));
             inputParams.put("createTime", ToolUtil.getTimeAndToString());
             reportDataFromDao.updateReportDataFromById(inputParams);
@@ -153,6 +180,13 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
         }
     }
 
+    /**
+     * 根据Id获取数据源信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
     @Override
     public void getReportDataFromById(InputObject inputObject, OutputObject outputObject) throws Exception {
         Map<String, Object> inputParams = inputObject.getParams();

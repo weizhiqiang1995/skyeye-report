@@ -181,19 +181,21 @@ public class ReportConstants {
      * 数据源类型
      */
     public static enum DataFromTypeMation {
-        XML(1, "XML数据源", "tpl/reportDataFrom/dataFromTpl/xmlTemplate.tpl", true),
-        JSON(2, "JSON数据源", "tpl/reportDataFrom/dataFromTpl/jsonTemplate.tpl", false),
-        REST_API(3, "Rest接口数据源", "tpl/reportDataFrom/dataFromTpl/restTemplate.tpl", false),
-        SQL(4, "SQL数据源", "tpl/reportDataFrom/dataFromTpl/sqlTemplate.tpl", false);
+        XML(1, "XML数据源", "xmlContent", "tpl/reportDataFrom/dataFromTpl/xmlTemplate.tpl", true),
+        JSON(2, "JSON数据源", "jsonContent", "tpl/reportDataFrom/dataFromTpl/jsonTemplate.tpl", false),
+        REST_API(3, "Rest接口数据源", "restContent", "tpl/reportDataFrom/dataFromTpl/restTemplate.tpl", false),
+        SQL(4, "SQL数据源", "sqlContent", "tpl/reportDataFrom/dataFromTpl/sqlTemplate.tpl", false);
 
         private int type;
         private String name;
+        private String key;
         private String staticTplPath;
         private Boolean checked;
 
-        DataFromTypeMation(int type, String name, String staticTplPath, Boolean checked) {
+        DataFromTypeMation(int type, String name, String key, String staticTplPath, Boolean checked) {
             this.type = type;
             this.name = name;
+            this.key = key;
             this.staticTplPath = staticTplPath;
             this.checked = checked;
         }
@@ -222,6 +224,22 @@ public class ReportConstants {
             return null;
         }
 
+        /**
+         * 根据数据来源获取key
+         *
+         * @param type 数据来源
+         * @return 数据来源对应key
+         */
+        public static String getKeyByType(Integer type) {
+            DataFromTypeMation[] values = DataFromTypeMation.values();
+            for (DataFromTypeMation obj : values) {
+                if (obj.type == type) {
+                    return obj.key;
+                }
+            }
+            return "";
+        }
+
         public int getType() {
             return type;
         }
@@ -238,40 +256,4 @@ public class ReportConstants {
             return checked;
         }
     }
-
-    // 数据源-子信息类型对应的key
-    public enum ReportDataFromEnums {
-        DATAFROM_REST(1, "restContent"),
-        DATAFROM_XML(2, "xmlContent"),
-        DATAFROM_JSON(3, "jsonContent"),
-        DATAFROM_SQL(4, "sqlContent");
-
-        // 数据来源类型: 1.接口  2.xml  3.json  4.sql
-        private Integer type;
-
-        // 数据来源对应前端传递的key
-        private String key;
-
-        ReportDataFromEnums(Integer type, String key) {
-            this.type = type;
-            this.key = key;
-        }
-
-        /**
-         * 根据数据来源获取key
-         *
-         * @param type 数据来源
-         * @return 数据来源对应key
-         */
-        public static String getKeyByType(Integer type) {
-            ReportDataFromEnums[] values = ReportDataFromEnums.values();
-            for (ReportDataFromEnums obj : values) {
-                if (obj.type.equals(type)) {
-                    return obj.key;
-                }
-            }
-            return "";
-        }
-    }
-
 }

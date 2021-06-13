@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.skyeye.dao.ReportDataFromDao">
-
-    <sql id="base">
-        rdf.id,
-        rdf.name,
-        rdf.type,
-        rdf.remark,
-        rdf.create_id AS createId,
-        rdf.create_time AS createTime,
-        rdf.last_update_id AS lastUpdateId,
-        rdf.last_update_time AS lastUpdateTime
-    </sql>
-
     <select id="getReportDataFromList" resultType="java.util.Map">
         SELECT
             rdf.id,
@@ -66,7 +54,14 @@
 
     <select id="getReportDataFromById" resultType="java.util.Map">
         SELECT
-            <include refid="base"/>
+            rdf.id,
+            rdf.name,
+            rdf.type,
+            rdf.remark,
+            rdf.create_id AS createId,
+            rdf.create_time AS createTime,
+            rdf.last_update_id AS lastUpdateId,
+            rdf.last_update_time AS lastUpdateTime
         FROM report_data_from rdf
         WHERE id = #{id}
     </select>

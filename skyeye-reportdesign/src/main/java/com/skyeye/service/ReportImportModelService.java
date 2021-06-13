@@ -19,14 +19,48 @@ import com.skyeye.common.object.OutputObject;
  */
 public interface ReportImportModelService {
 
-    public void getReportImportModelList(InputObject inputObject, OutputObject outputObject) throws Exception;
+    /**
+     * 获取文件模型关系表格信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    void getReportImportModelList(InputObject inputObject, OutputObject outputObject) throws Exception;
 
+    /**
+     * 新增文件模型关系表格信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
     void insertReportImportModel(InputObject inputObject, OutputObject outputObject) throws Exception;
 
+    /**
+     * 根据id删除文件模型关系表格信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
     void delReportImportModelById(InputObject inputObject, OutputObject outputObject) throws Exception;
 
+    /**
+     * 根据id更新文件模型关系表格中fileName, modelId信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
     void updateReportImportModelById(InputObject inputObject, OutputObject outputObject) throws Exception;
 
+    /**
+     * 根据id查询文件模型关系信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
     void getReportImportModelById(InputObject inputObject, OutputObject outputObject) throws Exception;
-
 }

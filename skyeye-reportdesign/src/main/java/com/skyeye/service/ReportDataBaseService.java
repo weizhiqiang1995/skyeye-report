@@ -20,14 +20,49 @@ import com.skyeye.entity.ReportDataSource;
  */
 public interface ReportDataBaseService {
 
+    /**
+     * 获取数据库列表信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
     void getReportDataBaseList(InputObject inputObject, OutputObject outputObject) throws Exception;
 
+    /**
+     * 新增数据库配置信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
     void insertReportDataBase(InputObject inputObject, OutputObject outputObject) throws Exception;
 
+    /**
+     * 根据id删除数据库配置信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
     void delReportDataBaseById(InputObject inputObject, OutputObject outputObject) throws Exception;
 
+    /**
+     * 根据id更新数据库配置信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
     void updateReportDataBaseById(InputObject inputObject, OutputObject outputObject) throws Exception;
 
+    /**
+     * 根据id查询数据库配置信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
     void getReportDataBaseById(InputObject inputObject, OutputObject outputObject) throws Exception;
 
     /**

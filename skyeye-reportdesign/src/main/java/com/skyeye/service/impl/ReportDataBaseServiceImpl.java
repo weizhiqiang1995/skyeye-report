@@ -4,7 +4,6 @@
 
 package com.skyeye.service.impl;
 
-import com.gexin.fastjson.JSON;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.skyeye.common.object.InputObject;
@@ -39,6 +38,13 @@ public class ReportDataBaseServiceImpl implements ReportDataBaseService {
     @Autowired
     private ReportDataBaseDao reportDataBaseDao;
 
+    /**
+     * 获取数据库列表信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
     @Override
     public void getReportDataBaseList(InputObject inputObject, OutputObject outputObject) throws Exception {
         Map<String, Object> inputParams = inputObject.getParams();
@@ -55,6 +61,13 @@ public class ReportDataBaseServiceImpl implements ReportDataBaseService {
         outputObject.settotal(beansPageList.getPaginator().getTotalCount());
     }
 
+    /**
+     * 新增数据库配置信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
     @Override
     public void insertReportDataBase(InputObject inputObject, OutputObject outputObject) throws Exception {
         Map<String, Object> inputParams = inputObject.getParams();
@@ -73,12 +86,26 @@ public class ReportDataBaseServiceImpl implements ReportDataBaseService {
         inputParams.put("poolClass", ReportConstants.PoolMation.getPoolClassByType(poolClass));
     }
 
+    /**
+     * 根据id删除数据库配置信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
     @Override
     public void delReportDataBaseById(InputObject inputObject, OutputObject outputObject) throws Exception {
         Map<String, Object> inputParams = inputObject.getParams();
         reportDataBaseDao.delReportDataBaseById(String.valueOf(inputParams.get("id")));
     }
 
+    /**
+     * 根据id更新数据库配置信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
     @Override
     public void updateReportDataBaseById(InputObject inputObject, OutputObject outputObject) throws Exception {
         Map<String, Object> inputParams = inputObject.getParams();
@@ -88,6 +115,13 @@ public class ReportDataBaseServiceImpl implements ReportDataBaseService {
         reportDataBaseDao.updateReportDataBaseById(inputParams);
     }
 
+    /**
+     * 根据id查询数据库配置信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
     @Override
     public void getReportDataBaseById(InputObject inputObject, OutputObject outputObject) throws Exception {
         Map<String, Object> inputParams = inputObject.getParams();
