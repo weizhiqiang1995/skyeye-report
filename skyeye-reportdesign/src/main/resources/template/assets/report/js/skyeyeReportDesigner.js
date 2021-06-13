@@ -44,8 +44,8 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 			// 图表自定义属性
 			var echartsCustomOptions = {
 				"custom.dataBaseMation": { "value": "", "edit": true, "desc": "数据来源", "title": "数据来源", "editor": "99", "editorChooseValue": "", "typeName": "数据源"},
-				"custom.move.x": { "value": "0", "edit": true, "desc": "鼠标拖动距离左侧的像素", "title": "X坐标", "editor": "2", "editorChooseValue": "", "typeName": "坐标"},
-				"custom.move.y": { "value": "0", "edit": true, "desc": "鼠标拖动距离顶部的像素", "title": "Y坐标", "editor": "2", "editorChooseValue": "", "typeName": "坐标"}
+				"custom.move.x": { "value": "0", "edit": true, "desc": "鼠标拖动距离左侧的像素", "title": "X坐标", "editor": "98", "editorChooseValue": "", "typeName": "坐标"},
+				"custom.move.y": { "value": "0", "edit": true, "desc": "鼠标拖动距离顶部的像素", "title": "Y坐标", "editor": "98", "editorChooseValue": "", "typeName": "坐标"}
 			};
 
 			var f = {
@@ -482,7 +482,7 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 						var newArray = f.restAttrToArrayByTypeName(echartsMation.attr);
 						$('<div class="layui-collapse" id="showFormPanel"></div>').appendTo($("#showForm").get(0));
 						$.each(newArray, function(typeName, attr) {
-							var panelHTML = '<div class="layui-colla-item"><h2 class="layui-colla-title"><em class="f-icon arrow-bottom"></em><span>' + typeName + '</span></h2><div class="layui-colla-content" id="' + typeName + '"></div>';
+							var panelHTML = '<div class="layui-colla-item"><h2 class="layui-colla-title"><em class="f-icon arrow-bottom"></em><span>' + typeName + '</span></h2><div class="layui-colla-content layui-show" id="' + typeName + '"></div>';
 							$(panelHTML).appendTo($("#showFormPanel").get(0));
 							$.each(attr, function (key, val) {
 								if (val.edit) {
@@ -515,6 +515,17 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 							});
 						});
 						form.render();
+						// 表单提示语内容展示
+						$('*[lay-tips]').on('mouseenter', function(){
+							var content = $(this).attr('lay-tips');
+							this.index = layer.tips('<div style="font-size: 14px; color: #eee;">'+ content + '</div>', this, {
+								time: -1,
+								maxWidth: 280,
+								tips: [3, '#3A3D49']
+							});
+						}).on('mouseleave', function(){
+							layer.close(this.index);
+						});
 					}
 				},
 
@@ -562,6 +573,7 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 							defaultWidth: "layui-col-xs12",
 							labelContent: val.title,
 							context: value,
+							desc: val.desc,
 							editorChooseValue: editorChooseValue,
 							indexNumber: indexNumber // 第几个组件
 						}
