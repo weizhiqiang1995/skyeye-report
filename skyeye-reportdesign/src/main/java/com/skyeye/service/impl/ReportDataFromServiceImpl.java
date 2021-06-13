@@ -78,7 +78,7 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
         String name = inputParams.get("name").toString();
         Integer type = Integer.valueOf(inputParams.get("type").toString());
         // 校验数据源名称是否重名
-        if (!isDuplicateName(name, type)) {
+        if (!isDuplicateName(name, type, null)) {
             String dataFromId = ToolUtil.getSurFaceId();
             inputParams.put("name", name);
             inputParams.put("type", type);
@@ -170,8 +170,9 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
         Map<String, Object> inputParams = inputObject.getParams();
         Map<String, Object> reportDataFromMap = reportDataFromDao.getReportDataFromById(inputParams.get("id").toString());
         String name = inputParams.get("name").toString();
+        String id = inputParams.get("id").toString();
         Integer type = Integer.valueOf(inputParams.get("type").toString());
-        if (name.equals(reportDataFromMap.get("name").toString()) || !isDuplicateName(name, type)) {
+        if (!isDuplicateName(name, type, id)) {
             inputParams.put("userId", inputObject.getLogParams().get("id"));
             inputParams.put("createTime", ToolUtil.getTimeAndToString());
             reportDataFromDao.updateReportDataFromById(inputParams);
@@ -194,7 +195,7 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
         outputObject.setBean(resultMap);
     }
 
-    private boolean isDuplicateName(String name, Integer type) throws Exception {
-        return reportDataFromDao.getDuplicateName(name, type) == 0 ? false : true;
+    private boolean isDuplicateName(String name, Integer type, String id) throws Exception {
+        return reportDataFromDao.getDuplicateName(name, type, id) == 0 ? false : true;
     }
 }

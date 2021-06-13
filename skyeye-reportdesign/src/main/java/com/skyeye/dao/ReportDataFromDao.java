@@ -26,7 +26,7 @@ public interface ReportDataFromDao {
 
     void insertReportDataFrom(Map<String, Object> map);
 
-    int getDuplicateName(@Param("name") String name, @Param("type") Integer type) throws Exception;
+    int getDuplicateName(@Param("name") String name, @Param("type") Integer type, @Param("id") String id) throws Exception;
 
     void delReportDataFromById(@Param("id") String id) throws Exception;
 

@@ -34,7 +34,11 @@
         SELECT
             COUNT(1)
         FROM report_data_from
-        WHERE name = #{name} and type = #{type}
+        WHERE name = #{name}
+        AND type = #{type}
+        <if test="id != '' and id != null">
+            AND id != #{id}
+        </if>
     </select>
 
     <delete id="delReportDataFromById">
