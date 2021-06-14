@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.skyeye.dao.ReportDataFromSQLDao">
+
+    <insert id="insertReportDataFromSQL" parameterType="java.util.Map">
+        INSERT INTO report_data_from_sql
+            (id, from_id, sql_content, data_base_id)
+        VALUES
+            (#{id}, #{fromId}, #{sqlContent}, #{dataBaseId})
+    </insert>
+
+    <select id="selectSqlIdByFromId" resultType="java.lang.String">
+        SELECT
+            id
+        FROM report_data_from_sql
+        WHERE from_id = #{fromId}
+    </select>
+
+    <select id="selectReportDataFromSQLByFromId" resultType="java.util.Map">
+        SELECT
+            id,
+            sql_content sqlContent,
+            data_base_id dataBaseId
+        FROM report_data_from_sql
+        WHERE from_id = #{fromId}
+    </select>
+
+    <delete id="delReportDataFromSQLById" parameterType="java.lang.String">
+        DELETE FROM report_data_from_sql
+        WHERE id = #{id}
+    </delete>
+
+    <update id="updateReportDataFromSQLById" parameterType="java.util.Map">
+        UPDATE report_data_from_sql
+        SET sql_content = #{sqlContent}
+        WHERE id = #{id}
+    </update>
+</mapper>

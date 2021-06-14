@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.skyeye.dao.ReportDataFromSQLAnalysisDao">
+
+    <insert id="insertSubSQLAnalysis" parameterType="java.util.Map">
+        INSERT INTO report_data_from_sql_analysis
+        (id, sql_id, `key`, title, data_type, data_length, data_precision, remark)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.id}, #{item.subId}, #{item.key}, #{item.title}, #{item.dataType}, #{item.dataLength}, #{item.dataPrecision}, #{item.remark})
+        </foreach>
+    </insert>
+
+    <delete id="delBySqlId">
+        DELETE FROM report_data_from_sql_analysis
+        WHERE sql_id = #{sqlId}
+    </delete>
+
+    <select id="getSQLAnalysisBySqlId" resultType="java.util.Map">
+        SELECT
+            `key`,
+            title,
+            data_type dataType,
+            data_length dataLength,
+            data_precision dataPrecision,
+            remark
+        FROM report_data_from_sql_analysis
+        WHERE sql_id = #{sqlId}
+    </select>
+</mapper>

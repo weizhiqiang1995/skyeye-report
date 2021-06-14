@@ -54,6 +54,12 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
     @Autowired
     private ReportDataFromRestAnalysisDao reportDataFromRestAnalysisDao;
 
+    @Autowired
+    private ReportDataFromSQLDao reportDataFromSQLDao;
+
+    @Autowired
+    private ReportDataFromSQLAnalysisDao reportDataFromSQLAnalysisDao;
+
     /**
      * 获取数据源列表信息
      *
@@ -109,7 +115,7 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
             // 构造子数据源analysis数据
             List<Map<String, Object>> subAnalysisParams = getSubAnalysisData(inputParams, type, subId);
             // 根据type入不同的表
-            saveDataByType(type, subParams, subAnalysisParams);
+            saveDataByType(inputParams, type, subParams, subAnalysisParams);
         } else {
             outputObject.setreturnMessage("该数据源名称已存在.");
         }
@@ -138,7 +144,7 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
         return subAnalysisParams;
     }
 
-    private void saveDataByType(Integer type, Map<String, Object> subParams, List<Map<String, Object>> subAnalysisParams) {
+    private void saveDataByType(Map<String, Object> inputParams, Integer type, Map<String, Object> subParams, List<Map<String, Object>> subAnalysisParams) {
         if (ReportConstants.DataFromTypeMation.XML.getType() == type) {
             reportDataFromXMLDao.insertReportDataFromXML(subParams);
             reportDataFromXMLAnalysisDao.insertSubXMLAnalysis(subAnalysisParams);
@@ -148,7 +154,9 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
         } else if (ReportConstants.DataFromTypeMation.REST_API.getType() == type) {
 
         } else if (ReportConstants.DataFromTypeMation.SQL.getType() == type) {
-
+            subParams.put("dataBaseId", inputParams.get("sqlDataBaseId"));
+            reportDataFromSQLDao.insertReportDataFromSQL(subParams);
+            reportDataFromSQLAnalysisDao.insertSubSQLAnalysis(subAnalysisParams);
         }
     }
 
@@ -186,7 +194,9 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
         } else if (ReportConstants.DataFromTypeMation.REST_API.getType() == type) {
 
         } else if (ReportConstants.DataFromTypeMation.SQL.getType() == type) {
-
+            subId = reportDataFromSQLDao.selectSqlIdByFromId(fromId);
+            reportDataFromSQLDao.delReportDataFromSQLById(subId);
+            reportDataFromSQLAnalysisDao.delBySqlId(subId);
         }
         reportDataFromDao.delReportDataFromById(fromId);
     }
@@ -255,7 +265,11 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
         } else if (ReportConstants.DataFromTypeMation.REST_API.getType() == type) {
 
         } else if (ReportConstants.DataFromTypeMation.SQL.getType() == type) {
-
+            subId = reportDataFromSQLDao.selectSqlIdByFromId(fromId);
+            subParams.put("id", subId);
+            reportDataFromSQLAnalysisDao.delBySqlId(subId);
+            reportDataFromSQLDao.updateReportDataFromSQLById(subParams);
+            reportDataFromSQLAnalysisDao.insertSubSQLAnalysis(getSubAnalysisData(inputParams, type, subId));
         }
     }
 
@@ -298,7 +312,10 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
             resultMap.put("restRequestBody", subReportDataFromMap.get("requestBody"));
             analysisData = reportDataFromRestAnalysisDao.getRestAnalysisByRestId(subReportDataFromMap.get("id").toString());
         } else if (ReportConstants.DataFromTypeMation.SQL.getType() == type) {
-
+            subReportDataFromMap = reportDataFromSQLDao.selectReportDataFromSQLByFromId(fromId);
+            resultMap.put(key, subReportDataFromMap.get(key));
+            resultMap.put("sqlDataBaseId", subReportDataFromMap.get("dataBaseId"));
+            analysisData = reportDataFromSQLAnalysisDao.getSQLAnalysisBySqlId(subReportDataFromMap.get("id").toString());
         }
         resultMap.put("typeName", ReportConstants.DataFromTypeMation.getNameByType(type));
         resultMap.put("staticTplPath", ReportConstants.DataFromTypeMation.getStaticTplPathByType(type));
