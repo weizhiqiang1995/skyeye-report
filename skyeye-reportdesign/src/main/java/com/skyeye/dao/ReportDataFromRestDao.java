@@ -24,6 +24,8 @@ public interface ReportDataFromRestDao {
 
     String selectIdByFromId(@Param("fromId") String fromId);
 
+    Map<String, Object> selectReportDataFromRestByFromId(@Param("fromId") String fromId);
+
     void delReportDataFromRestById(@Param("id") String id);
 
     void updateReportDataFromRestById(Map<String, Object> map);

@@ -24,6 +24,8 @@ public interface ReportDataFromXMLDao {
 
     String selectXmlIdByFromId(@Param("fromId") String fromId);
 
+    Map<String, Object> selectReportDataFromXMLByFromId(@Param("fromId") String fromId);
+
     void delReportDataFromXMLById(@Param("id") String id);
 
     void updateReportDataFromXMLById(Map<String, Object> map);

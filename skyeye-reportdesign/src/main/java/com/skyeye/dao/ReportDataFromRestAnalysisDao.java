@@ -23,6 +23,8 @@ public interface ReportDataFromRestAnalysisDao {
 
     void insertSubRestAnalysis(List<Map<String, Object>> list);
 
-    void delByJsonId(@Param("jsonId") String jsonId);
+    void delByRestId(@Param("restId") String restId);
+
+    List<Map<String, Object>> getRestAnalysisByRestId(@Param("restId") String restId);
 
 }

@@ -16,6 +16,17 @@
         WHERE from_id = #{fromId}
     </select>
 
+    <select id="selectReportDataFromRestByFromId" resultType="java.util.Map">
+        SELECT
+            id,
+            rest_url restUrl,
+            method,
+            header,
+            request_body requestBody
+        FROM report_data_from_rest
+        WHERE from_id = #{fromId}
+    </select>
+
     <delete id="delReportDataFromRestById" parameterType="java.lang.String">
         DELETE FROM report_data_from_rest
         WHERE id = #{id}

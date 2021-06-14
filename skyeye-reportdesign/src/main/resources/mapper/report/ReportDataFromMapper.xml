@@ -52,7 +52,6 @@
         UPDATE report_data_from
         SET
             name = #{name},
-            type = #{type},
             remark = #{remark},
             last_update_id = #{userId},
             last_update_time = #{createTime}

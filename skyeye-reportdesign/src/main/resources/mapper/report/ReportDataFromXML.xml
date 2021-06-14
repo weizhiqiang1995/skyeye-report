@@ -16,6 +16,14 @@
         WHERE from_id = #{fromId}
     </select>
 
+    <select id="selectReportDataFromXMLByFromId" resultType="java.util.Map">
+        SELECT
+            id,
+            xml_content xmlContent
+        FROM report_data_from_xml
+        WHERE from_id = #{fromId}
+    </select>
+
     <delete id="delReportDataFromXMLById" parameterType="java.lang.String">
         DELETE FROM report_data_from_xml
         WHERE id = #{id}

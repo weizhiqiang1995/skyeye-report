@@ -5,6 +5,7 @@
 package com.skyeye.service.impl;
 
 import com.gexin.fastjson.JSONArray;
+import com.gexin.fastjson.JSONObject;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.skyeye.common.object.InputObject;
@@ -268,8 +269,43 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
     @Override
     public void getReportDataFromById(InputObject inputObject, OutputObject outputObject) throws Exception {
         Map<String, Object> inputParams = inputObject.getParams();
-        Map<String, Object> resultMap = reportDataFromDao.getReportDataFromById(inputParams.get("id").toString());
+        String fromId = inputParams.get("id").toString();
+        Map<String, Object> reportDataFromMap = reportDataFromDao.getReportDataFromById(fromId);
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("id", fromId);
+        resultMap.put("name", reportDataFromMap.get("name"));
+        resultMap.put("remark", reportDataFromMap.get("remark"));
+
+        getSubReportDataFromByType(resultMap, fromId, Integer.valueOf(reportDataFromMap.get("type").toString()));
         outputObject.setBean(resultMap);
+    }
+
+    // 构造回显数据
+    private void getSubReportDataFromByType(Map<String, Object> resultMap, String fromId, int type) throws Exception {
+        String key = ReportConstants.DataFromTypeMation.getKeyByType(type);
+        String analysisData = null;
+        Map<String, Object> subReportDataFromMap;
+        if (ReportConstants.DataFromTypeMation.XML.getType() == type) {
+            subReportDataFromMap = reportDataFromXMLDao.selectReportDataFromXMLByFromId(fromId);
+            resultMap.put(key, subReportDataFromMap.get(key));
+            analysisData = JSONObject.toJSONString(reportDataFromXMLAnalysisDao.getXMLAnalysisByXmlId(subReportDataFromMap.get("id").toString()));
+        } else if (ReportConstants.DataFromTypeMation.JSON.getType() == type) {
+            subReportDataFromMap = reportDataFromJsonDao.selectReportDataFromJsonByFromId(fromId);
+            resultMap.put(key, subReportDataFromMap.get(key));
+            analysisData = JSONObject.toJSONString(reportDataFromJsonAnalysisDao.getJsonAnalysisByJsonId(subReportDataFromMap.get("id").toString()));
+        } else if (ReportConstants.DataFromTypeMation.REST_API.getType() == type) {
+            subReportDataFromMap = reportDataFromRestDao.selectReportDataFromRestByFromId(fromId);
+            resultMap.put("restUrl", subReportDataFromMap.get("restUrl"));
+            resultMap.put("restMethod", subReportDataFromMap.get("method"));
+            resultMap.put("restHeader", subReportDataFromMap.get("header"));
+            resultMap.put("restRequestBody", subReportDataFromMap.get("requestBody"));
+            analysisData = JSONObject.toJSONString(reportDataFromRestAnalysisDao.getRestAnalysisByRestId(subReportDataFromMap.get("id").toString()));
+        } else if (ReportConstants.DataFromTypeMation.SQL.getType() == type) {
+
+        }
+        resultMap.put("type", type);
+        resultMap.put("analysisData", analysisData);
     }
 
     private boolean isDuplicateName(String name, Integer type, String id) throws Exception {

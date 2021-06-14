@@ -16,6 +16,14 @@
         WHERE from_id = #{fromId}
     </select>
 
+    <select id="selectReportDataFromJsonByFromId" resultType="java.util.Map">
+        SELECT
+            id,
+            json_content jsonContent
+        FROM report_data_from_json
+        WHERE from_id = #{fromId}
+    </select>
+
     <delete id="delReportDataFromJsonById" parameterType="java.lang.String">
         DELETE FROM report_data_from_json
         WHERE id = #{id}

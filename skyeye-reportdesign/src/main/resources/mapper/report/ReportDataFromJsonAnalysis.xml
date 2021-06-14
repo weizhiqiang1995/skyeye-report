@@ -15,4 +15,13 @@
         DELETE FROM report_data_from_json_analysis
         WHERE json_id = #{jsonId}
     </delete>
+
+    <select id="getJsonAnalysisByJsonId" resultType="java.util.Map">
+        SELECT
+            `key`,
+            `name`,
+            remark
+        FROM report_data_from_json_analysis
+        WHERE json_id = #{jsonId}
+    </select>
 </mapper>

@@ -25,4 +25,6 @@ public interface ReportDataFromJsonAnalysisDao {
 
     void delByJsonId(@Param("jsonId") String jsonId);
 
+    List<Map<String, Object>> getJsonAnalysisByJsonId(@Param("jsonId") String jsonId);
+
 }

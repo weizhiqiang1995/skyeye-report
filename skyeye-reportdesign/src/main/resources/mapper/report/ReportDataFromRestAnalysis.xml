@@ -11,8 +11,17 @@
         </foreach>
     </insert>
 
-    <delete id="delByJsonId">
+    <delete id="delByRestId">
         DELETE FROM report_data_from_rest_analysis
         WHERE rest_id = #{restId}
     </delete>
+
+    <select id="getRestAnalysisByRestId" resultType="java.util.Map">
+        SELECT
+            `key`,
+            `name`,
+            remark
+        FROM report_data_from_rest_analysis
+        WHERE rest_id = #{restId}
+    </select>
 </mapper>

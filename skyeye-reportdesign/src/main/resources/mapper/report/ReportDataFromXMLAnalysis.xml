@@ -15,4 +15,13 @@
         DELETE FROM report_data_from_xml_analysis
         WHERE xml_id = #{xmlId}
     </delete>
+
+    <select id="getXMLAnalysisByXmlId" resultType="java.util.Map">
+        SELECT
+            `key`,
+            `name`,
+            remark
+        FROM report_data_from_xml_analysis
+        WHERE xml_id = #{xmlId}
+    </select>
 </mapper>

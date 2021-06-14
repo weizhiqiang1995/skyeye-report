@@ -25,4 +25,6 @@ public interface ReportDataFromXMLAnalysisDao {
 
     void delByXmlId(@Param("xmlId") String xmlId);
 
+    List<Map<String, Object>> getXMLAnalysisByXmlId(@Param("xmlId") String xmlId);
+
 }
