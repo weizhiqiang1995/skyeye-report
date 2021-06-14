@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.skyeye.dao.ReportDataFromRestDao">
+
+    <insert id="insertReportDataFromRest" parameterType="java.util.Map">
+        INSERT INTO report_data_from_rest
+            (id, from_id, rest_url, method, header, request_body)
+        VALUES
+            (#{id}, #{fromId}, #{restUrl}, #{method}, #{header}, #{requestBody})
+    </insert>
+
+    <select id="selectIdByFromId" resultType="java.lang.String">
+        SELECT
+            id
+        FROM report_data_from_rest
+        WHERE from_id = #{fromId}
+    </select>
+
+    <delete id="delReportDataFromRestById" parameterType="java.lang.String">
+        DELETE FROM report_data_from_rest
+        WHERE id = #{id}
+    </delete>
+
+    <update id="updateReportDataFromRestById" parameterType="java.util.Map">
+        UPDATE report_data_from_rest
+        SET
+            rest_url = #{restUrl},
+            method = #{method},
+            header = #{header},
+            request_body = #{requestBody}
+        WHERE id = #{id}
+    </update>
+</mapper>

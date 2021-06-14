@@ -25,4 +25,6 @@ public interface ReportDataFromJsonDao {
     String selectIdByFromId(@Param("fromId") String fromId);
 
     void delReportDataFromJsonById(@Param("id") String id);
+
+    void updateReportDataFromJsonById(Map<String, Object> map);
 }

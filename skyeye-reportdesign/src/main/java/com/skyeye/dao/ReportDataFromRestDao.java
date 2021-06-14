@@ -18,14 +18,13 @@ import java.util.Map;
  * @Copyright: 2021 https://gitee.com/doc_wei01/skyeye-report Inc. All rights reserved.
  * 注意：本内容具体规则请参照readme执行，地址：https://gitee.com/doc_wei01/skyeye-report/blob/master/README.md
  */
-public interface ReportDataFromXMLDao {
+public interface ReportDataFromRestDao {
 
-    void insertReportDataFromXML(Map<String, Object> map);
+    void insertReportDataFromRest(Map<String, Object> map);
 
-    String selectXmlIdByFromId(@Param("fromId") String fromId);
+    String selectIdByFromId(@Param("fromId") String fromId);
 
-    void delReportDataFromXMLById(@Param("id") String id);
+    void delReportDataFromRestById(@Param("id") String id);
 
-    void updateReportDataFromXMLById(Map<String, Object> map);
-
+    void updateReportDataFromRestById(Map<String, Object> map);
 }

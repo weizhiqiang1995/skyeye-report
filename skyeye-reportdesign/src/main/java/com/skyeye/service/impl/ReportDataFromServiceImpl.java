@@ -39,13 +39,19 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
     private ReportDataFromJsonDao reportDataFromJsonDao;
 
     @Autowired
+    private ReportDataFromJsonAnalysisDao reportDataFromJsonAnalysisDao;
+
+    @Autowired
     private ReportDataFromXMLDao reportDataFromXMLDao;
 
     @Autowired
     private ReportDataFromXMLAnalysisDao reportDataFromXMLAnalysisDao;
 
     @Autowired
-    private ReportDataFromJsonAnalysisDao reportDataFromJsonAnalysisDao;
+    private ReportDataFromRestDao reportDataFromRestDao;
+
+    @Autowired
+    private ReportDataFromRestAnalysisDao reportDataFromRestAnalysisDao;
 
     /**
      * 获取数据源列表信息
@@ -94,13 +100,13 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
             String key = ReportConstants.DataFromTypeMation.getKeyByType(type);
             // 构造数据源-子数据
             Map<String, Object> subParams = new HashMap<>();
-            String jsonId = ToolUtil.getSurFaceId();
-            subParams.put("id",jsonId);
+            String subId = ToolUtil.getSurFaceId();
+            subParams.put("id", subId);
             subParams.put("fromId", dataFromId);
             subParams.put(key, inputParams.get(key).toString());
 
             // 构造子数据源analysis数据
-            List<Map<String, Object>> subAnalysisParams = getSubAnalysisData(inputParams, type, jsonId);
+            List<Map<String, Object>> subAnalysisParams = getSubAnalysisData(inputParams, type, subId);
             // 根据type入不同的表
             saveDataByType(type, subParams, subAnalysisParams);
         } else {
@@ -109,7 +115,7 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
     }
 
     // 构造子数据源analysis数据
-    private List<Map<String, Object>> getSubAnalysisData(Map<String, Object> inputParams, Integer type, String jsonId) {
+    private List<Map<String, Object>> getSubAnalysisData(Map<String, Object> inputParams, Integer type, String subId) {
         JSONArray objects = JSONArray.parseArray(inputParams.get("analysisData").toString());
         List<Map> analysisDataList = objects.toJavaList(Map.class);
         List<Map<String, Object>> subAnalysisParams = new ArrayList<>();
@@ -117,7 +123,7 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
         for (Map<String, Object> obj : analysisDataList) {
             subAnalysisData = new HashMap<>();
             subAnalysisData.put("id", ToolUtil.getSurFaceId());
-            subAnalysisData.put("subId", jsonId);
+            subAnalysisData.put("subId", subId);
             subAnalysisData.put("key", obj.get("key"));
             subAnalysisData.put("title", obj.get("title"));
             subAnalysisData.put("remark", obj.get("remark"));
@@ -158,9 +164,9 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
         Map<String, Object> inputParams = inputObject.getParams();
         String fromId = inputParams.get("id").toString();
         // 根据dataFromId获取对应type
-        Map<String, Object> reportDataFromById = reportDataFromDao.getReportDataFromById(fromId);
-        if (reportDataFromById != null) {
-            int type = Integer.valueOf(reportDataFromById.get("type").toString());
+        Map<String, Object> reportDataFromMap = reportDataFromDao.getReportDataFromById(fromId);
+        if (reportDataFromMap != null) {
+            int type = Integer.valueOf(reportDataFromMap.get("type").toString());
             // 根据fromId获取subId
             delReportDataFromByType(fromId, type);
         }
@@ -192,18 +198,63 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
      * @throws Exception
      */
     @Override
+    @Transactional(value="transactionManager")
     public void updateReportDataFromById(InputObject inputObject, OutputObject outputObject) throws Exception {
         Map<String, Object> inputParams = inputObject.getParams();
-        Map<String, Object> reportDataFromMap = reportDataFromDao.getReportDataFromById(inputParams.get("id").toString());
         String name = inputParams.get("name").toString();
         String id = inputParams.get("id").toString();
         Integer type = Integer.valueOf(inputParams.get("type").toString());
         if (!isDuplicateName(name, type, id)) {
+            // 根据type获取不同类型对应入参key
+            String key = ReportConstants.DataFromTypeMation.getKeyByType(type);
+            // 更新子信息表及analysis字段信息表
+            updateSubReportDataFromByType(inputParams, id, type, key);
+
             inputParams.put("userId", inputObject.getLogParams().get("id"));
             inputParams.put("createTime", ToolUtil.getTimeAndToString());
             reportDataFromDao.updateReportDataFromById(inputParams);
+            outputObject.setBean(initResultParams(inputParams, type, key));
         } else {
             outputObject.setreturnMessage("该数据源名称已存在.");
+        }
+    }
+
+    // 构造回显数据
+    private Map<String, Object> initResultParams(Map<String, Object> inputParams, Integer type, String key) {
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("id", inputParams.get("id"));
+        resultMap.put("type", type);
+        resultMap.put("name", inputParams.get("name"));
+        resultMap.put("remark", inputParams.get("remark"));
+        resultMap.put("analysisData", inputParams.get("analysisData"));
+        if (ReportConstants.DataFromTypeMation.XML.getType() == type
+                || ReportConstants.DataFromTypeMation.JSON.getType() == type) {
+            resultMap.put(key, inputParams.get(key));
+        }
+        return resultMap;
+    }
+
+    private void updateSubReportDataFromByType(Map<String, Object> inputParams, String fromId, int type, String key) {
+        // 构造数据源-子数据
+        Map<String, Object> subParams = new HashMap<>();
+        subParams.put(key, inputParams.get(key).toString());
+        String subId;
+        if (ReportConstants.DataFromTypeMation.XML.getType() == type) {
+            subId = reportDataFromXMLDao.selectXmlIdByFromId(fromId);
+            subParams.put("id", subId);
+            reportDataFromXMLAnalysisDao.delByXmlId(subId);
+            reportDataFromXMLDao.updateReportDataFromXMLById(subParams);
+            reportDataFromXMLAnalysisDao.insertSubXMLAnalysis(getSubAnalysisData(inputParams, type, subId));
+        } else if (ReportConstants.DataFromTypeMation.JSON.getType() == type) {
+            subId = reportDataFromJsonDao.selectIdByFromId(fromId);
+            subParams.put("id", subId);
+            reportDataFromJsonAnalysisDao.delByJsonId(subId);
+            reportDataFromJsonDao.updateReportDataFromJsonById(subParams);
+            reportDataFromJsonAnalysisDao.insertSubJsonAnalysis(getSubAnalysisData(inputParams, type, subId));
+        } else if (ReportConstants.DataFromTypeMation.REST_API.getType() == type) {
+
+        } else if (ReportConstants.DataFromTypeMation.SQL.getType() == type) {
+
         }
     }
 

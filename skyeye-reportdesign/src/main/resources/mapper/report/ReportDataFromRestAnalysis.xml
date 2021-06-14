@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.skyeye.dao.ReportDataFromRestAnalysisDao">
+
+    <insert id="insertSubRestAnalysis" parameterType="java.util.Map">
+        INSERT INTO report_data_from_rest_analysis
+            (id, rest_id, `key`, `name`, remark)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.id}, #{item.subId}, #{item.key}, #{item.title}, #{item.remark})
+        </foreach>
+    </insert>
+
+    <delete id="delByJsonId">
+        DELETE FROM report_data_from_rest_analysis
+        WHERE rest_id = #{restId}
+    </delete>
+</mapper>

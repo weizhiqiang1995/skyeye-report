@@ -20,4 +20,10 @@
         DELETE FROM report_data_from_xml
         WHERE id = #{id}
     </delete>
+
+    <update id="updateReportDataFromXMLById" parameterType="java.util.Map">
+        UPDATE report_data_from_xml
+        SET xml_content = #{xmlContent}
+        WHERE id = #{id}
+    </update>
 </mapper>

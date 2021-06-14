@@ -116,6 +116,10 @@
         <property id="id" name="id" ref="required" var="数据来源Id"/>
         <property id="name" name="name" ref="required" var="数据来源名称"/>
         <property id="type" name="type" ref="required,num" var="数据来源类型"/>
+        <property id="analysisData" name="analysisData" ref="required" var="解析后的数据"/>
+        <property id="jsonContent" name="jsonContent" ref="" var="json字符串"/>
+        <property id="xmlContent" name="xmlContent" ref="" var="xml字符串"/>
+        <property id="sqlContent" name="sqlContent" ref="" var="sql字符串"/>
         <property id="remark" name="remark" ref="" var="备注"/>
     </url>
     <url id="reportdatafrom005" path="/post/ReportDataFromController/getReportDataFromById" val="根据Id查询数据来源" method="GET" allUse="2" groupName="数据来源">

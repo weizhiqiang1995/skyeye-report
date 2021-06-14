@@ -21,4 +21,9 @@
         WHERE id = #{id}
     </delete>
 
+    <update id="updateReportDataFromJsonById" parameterType="java.util.Map">
+        UPDATE report_data_from_json
+        SET json_content = #{jsonContent}
+        WHERE id = #{id}
+    </update>
 </mapper>
