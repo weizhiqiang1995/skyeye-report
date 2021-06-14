@@ -224,6 +224,15 @@ public class ReportConstants {
             return null;
         }
 
+        public static String getStaticTplPathByType(int type) {
+            for (DataFromTypeMation bean : DataFromTypeMation.values()) {
+                if (bean.getType() == type) {
+                    return bean.getStaticTplPath();
+                }
+            }
+            return null;
+        }
+
         /**
          * 根据数据来源获取key
          *

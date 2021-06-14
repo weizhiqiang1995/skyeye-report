@@ -63,11 +63,7 @@
             rdf.id,
             rdf.name,
             rdf.type,
-            rdf.remark,
-            rdf.create_id AS createId,
-            rdf.create_time AS createTime,
-            rdf.last_update_id AS lastUpdateId,
-            rdf.last_update_time AS lastUpdateTime
+            rdf.remark
         FROM report_data_from rdf
         WHERE id = #{id}
     </select>

@@ -7,7 +7,7 @@ layui.config({
     version: skyeyeVersion
 }).extend({
     window: 'js/winui.window'
-}).define(['window', 'jquery', 'winui', 'codemirror', 'xml', 'sql',], function (exports) {
+}).define(['window', 'jquery', 'winui', 'codemirror', 'xml', 'sql'], function (exports) {
     winui.renderColor();
     layui.use(['form'], function (form) {
         var index = parent.layer.getFrameIndex(window.name);
@@ -327,6 +327,7 @@ layui.config({
          * @param data 数据
          */
         function loadFieldResolution(dataFromType, data){
+            $("#analysisTable").html("");
             $.each(data, function (i, item){
                 addAnalysisRow();
                 $("#key" + (rowNum - 1)).val(item);
