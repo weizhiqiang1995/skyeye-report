@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.skyeye.dao.ReportModelDao">
+
+    <insert id="insertReportModel" parameterType="java.util.Map">
+        INSERT INTO report_model
+            (id, history_id, model_code_id, `name`, default_width, default_height, min_width, min_height, default_bg_color, bg_transparency,
+             logo_path, software_version, state)
+        VALUES
+            (#{id}, #{historyId}, #{modelCode}, #{Name}, #{defaultWidth}, #{defaultHeight}, #{minWidth}, #{minHeight}, #{defaultBgColor}, #{bgTransparency},
+             #{logoPath}, #{softwareVersion}, #{state})
+    </insert>
+
+    <select id="queryMaxVersionReportModelByModelCode" resultType="java.util.Map">
+        SELECT
+            a.id,
+            a.history_id historyId,
+            a.model_code_id modelCode,
+            a.`name`,
+            a.default_width defaultWidth,
+            a.default_height defaultHeight,
+            a.min_width minWidth,
+            a.min_height minHeight,
+            a.default_bg_color defaultBgColor,
+            a.bg_transparency bgTransparency,
+            a.logo_path logoPath,
+            a.software_version softwareVersion,
+            a.state
+        FROM
+            report_model a
+        WHERE a.model_code_id = #{modelCode}
+        AND a.state = '1'
+        ORDER BY a.software_version DESC
+        LIMIT 1
+    </select>
+
+    <select id="queryMaxVersionReportModelById" resultType="java.util.Map">
+        SELECT
+            a.id,
+            a.history_id historyId,
+            a.model_code_id modelCode,
+            a.`name`,
+            a.default_width defaultWidth,
+            a.default_height defaultHeight,
+            a.min_width minWidth,
+            a.min_height minHeight,
+            a.default_bg_color defaultBgColor,
+            a.bg_transparency bgTransparency,
+            a.logo_path logoPath,
+            a.software_version softwareVersion,
+            a.state
+        FROM
+            report_model a
+        WHERE a.id = #{modelId}
+        AND a.state = '1'
+        ORDER BY a.software_version DESC
+        LIMIT 1
+    </select>
+
+</mapper>
