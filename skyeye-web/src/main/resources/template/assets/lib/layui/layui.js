@@ -475,6 +475,7 @@ function isNull(str){
 
 		var app = (cssname || href).replace(/\.|\//g, ''),
 			id = link.id = 'layuicss-' + app,
+			STAUTS_NAME = 'creating',
 			timeout = 0;
 
 		link.rel = 'stylesheet';
