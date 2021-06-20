@@ -2144,3 +2144,838 @@ function getStateNameByState(state, stateName){
 	}
 	return stateName;
 }
+
+// ajax请求
+var AjaxPostUtil = {
+	// 基础选项
+	options: {
+		// 默认提交的方法,get post
+		method: "post",
+		// 请求的路径 required
+		url: "",
+		// 请求的参数
+		params: {},
+		// 默认异步
+		async: true,
+		// 返回的内容的类型,text,xml,json
+		type: 'text',
+		// 回调函数 required
+		callback: function() {}
+	},
+
+	// 创建XMLHttpRequest对象
+	createRequest: function() {
+		var xmlhttp;
+		try {
+			// IE6以上版本
+			xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+		} catch(e) {
+			try {
+				// IE6以下版本
+				xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+			} catch(e) {
+				try {
+					xmlhttp = new XMLHttpRequest();
+					if(xmlhttp.overrideMimeType) {
+						xmlhttp.overrideMimeType("text/xml");
+					}
+				} catch(e) {
+					alert("您的浏览器不支持Ajax");
+				}
+			}
+		}
+		return xmlhttp;
+	},
+	// 设置基础选项
+	setOptions: function(newOptions) {
+		for(var pro in newOptions) {
+			this.options[pro] = newOptions[pro];
+		}
+	},
+	// 格式化请求参数
+	formateParameters: function() {
+		var paramsArray = [];
+		var params = this.options.params;
+		for(var pro in params) {
+			var paramValue = params[pro];
+			paramsArray.push(pro + "=" + paramValue);
+		}
+		paramsArray.push("userToken=" + getCookie('userToken'));
+		paramsArray.push("loginPCIp=" + returnCitySN["cip"]);
+		return paramsArray.join("&");
+	},
+
+	// 状态改变的处理
+	readystatechange: function(xmlhttp) {
+		// 获取返回值
+		var returnValue;
+		if(xmlhttp.readyState == 4 && (xmlhttp.status == 200 || xmlhttp.status == 0)) {
+			//移除请求遮罩层
+			layui.$("body").find(".mask-req-str").remove();
+			var sessionstatus = xmlhttp.getResponseHeader("SESSIONSTATUS");
+			var requestmation = xmlhttp.getResponseHeader("REQUESTMATION");
+			if (sessionstatus == "TIMEOUT") {//超时跳转
+				var win = window;
+				while (win != win.top){
+					win = win.top;
+				}
+				win.location.href = reqBasePath + "/tpl/index/login.html";//XMLHttpRequest.getResponseHeader("CONTEXTPATH");
+			}else if(sessionstatus == "NOAUTHPOINT"){
+				returnValue = eval('(' + '{"returnMessage":"您不具备该权限。","returnCode":-9999,"total":0,"rows":"","bean":""}' + ')');
+			}
+			switch(this.options.type) {
+				case "xml":
+					returnValue = xmlhttp.responseXML;
+					break;
+				case "json":
+					var jsonText = xmlhttp.responseText;
+					if(requestmation == 'DOWNLOAD'){
+						returnValue = eval('(' + '{"returnMessage":"成功","returnCode":0,"total":0,"rows":"","bean":""}' + ')');
+					}else{
+						if(jsonText) {
+							returnValue = eval("(" + jsonText + ")");
+						}
+					}
+					break;
+				default:
+					returnValue = xmlhttp.responseText;
+					break;
+			}
+			if(returnValue) {
+				this.options.callback.call(this, returnValue);
+			} else {
+				this.options.callback.call(this);
+			}
+		}
+	},
+
+	// 发送Ajax请求
+	request: function(options) {
+		$("body").append(maskReqStr);
+		var ajaxObj = this;
+		// 设置参数
+		ajaxObj.setOptions.call(ajaxObj, options);
+		// 创建XMLHttpRequest对象
+		var xmlhttp = ajaxObj.createRequest.call(ajaxObj);
+		// 设置回调函数
+		xmlhttp.onreadystatechange = function() {
+			ajaxObj.readystatechange.call(ajaxObj, xmlhttp);
+		};
+		// 格式化参数
+		var formateParams = ajaxObj.formateParameters.call(ajaxObj);
+		// 请求的方式
+		var method = ajaxObj.options.method;
+		var url = ajaxObj.options.url;
+		if("GET" === method.toUpperCase()) {
+			url += "?" + formateParams;
+		}else if("DELETE" === method.toUpperCase()){
+			url += "?_method=" + method.toUpperCase();
+		}
+		// 建立连接
+		/**
+		 * 同步：提交请求->等待服务器处理->处理完毕返回 这个期间客户端浏览器不能干任何事
+		 * 异步: 请求通过事件触发->服务器处理（这是浏览器仍然可以作其他事情）->处理完毕
+		 */
+		xmlhttp.open(method, url, ajaxObj.options.async);//异步
+		if("GET" === method.toUpperCase()) {
+			xmlhttp.send(null);
+		} else if("POST" === method.toUpperCase() || "PUT" === method.toUpperCase()) {
+			// 如果是POST提交，设置请求头信息
+			xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+			xmlhttp.send(formateParams);
+		} else if("DELETE" === method.toUpperCase()){
+			// 如果是POST提交，设置请求头信息
+			xmlhttp.setRequestHeader("Content-Type", "application/json");
+			xmlhttp.send(formateParams);
+		}
+	}
+};
+
+function returnModel(lang){
+	var mode = '';
+	switch (lang) {
+		case 'Java':
+			mode = 'text/x-java';
+			break;
+		case 'C/C++':
+			mode = 'text/x-c++src';
+			break;
+		case 'Objective-C':
+			mode = '';
+			break;
+		case 'Scala':
+			mode = 'text/x-scala';
+			break;
+		case 'Kotlin':
+			mode = 'text/x-kotlin';
+			break;
+		case 'Ceylon':
+			mode = 'text/x-ceylon';
+			break;
+		case 'xml':
+			mode = 'xml';
+			break;
+		case 'html':
+			mode = 'xml';
+			break;
+		case 'css':
+			mode = 'text/css';
+			break;
+		case 'htmlmixed':
+			mode = 'htmlmixed';
+			break;
+		case 'htmlhh':
+			mode = 'htmlmixed';
+			break;
+		case 'javascript':
+			mode = 'text/javascript';
+			break;
+		case 'nginx':
+			mode = 'text/x-nginx-conf';
+			break;
+		case 'solr':
+			mode = 'text/x-solr';
+			break;
+		case 'sql':
+			mode = 'text/x-sql';
+			break;
+		case 'vue':
+			mode = 'text/x-vue';
+			break;
+	}
+	return mode;
+}
+
+/**
+ * 替换代码生成器模板内容
+ * @param str
+ */
+function replaceModelContent(str, ControllerPackageName, ServicePackageName, ServiceImplPackageName,
+							 DaoPackageName, tableZhName, tableFirstISlowerName, tableISlowerName, tableBzName){
+	str = str.replace(/[$]{{controllerPackage}}/g, ControllerPackageName);
+	str = str.replace(/[$]{{servicePackage}}/g, ServicePackageName);
+	str = str.replace(/[$]{{serviceImplPackage}}/g, ServiceImplPackageName);
+	str = str.replace(/[$]{{daoPackage}}/g, DaoPackageName);
+	str = str.replace(/[$]{{tableName}}/g, tableZhName);
+	str = str.replace(/[$]{{objectName}}/g, tableFirstISlowerName);
+	str = str.replace(/[$]{{urlName}}/g, tableISlowerName);
+	str = str.replace(/[$]{{notesName}}/g, tableBzName);
+	return str;
+}
+
+function show(_object, url) {
+	if (imageType.indexOf(url.substring(url.lastIndexOf(".") + 1).toLowerCase()) < 0) {
+		window.open(url);
+		return false;
+	}
+
+	var imgs = [];
+	if(layui.$.isPlainObject(_object)){
+		imgs = _object.find("input[type='hidden'][name='upload']").val().split(",");
+	}else{
+		imgs = layui.$(_object).find("input[type='hidden'][name='upload']").val().split(",");
+	}
+	showPicDisk(imgs);
+}
+
+/**
+ * 展示图片,支持多张图片切换展示
+ * @param {} imgs
+ */
+function showPicDisk(imgs){
+	var data = [];
+	layui.$.each(imgs, function (k, v) {
+		var suffix = v.substring(v.lastIndexOf(".") + 1);
+		if (imageType.indexOf(suffix.toLowerCase()) > -1) {
+			var json = {
+				"alt": "",
+				"pid": k, //图片id
+				"src": v, //原图地址
+				"thumb": "" //缩略图地址
+			}
+			data.push(json);
+		}
+	})
+
+	layer.photos({
+		photos: {
+			"title": "", //相册标题
+			"id": 123, //相册id
+			"start": 0, //初始显示的图片序号，默认0
+			"data": data
+		}, //格式见API文档手册页
+		anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机
+	});
+}
+
+/**
+ * 时间戳格式化函数
+ * @param  {string} format    格式
+ * @param  {int}    timestamp 要格式化的时间 默认为当前时间
+ * @return {string}           格式化的时间字符串
+ */
+function date(format, timestamp){
+	var a, jsdate=((timestamp) ? new Date(timestamp*1000) : new Date());
+	var pad = function(n, c){
+		if((n = n + "").length < c){
+			return new Array(++c - n.length).join("0") + n;
+		} else {
+			return n;
+		}
+	};
+	var txt_weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+	var txt_ordin = {1:"st", 2:"nd", 3:"rd", 21:"st", 22:"nd", 23:"rd", 31:"st"};
+	var txt_months = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+	var f = {
+		d: function(){return pad(f.j(), 2)},
+		D: function(){return f.l().substr(0,3)},
+		j: function(){return jsdate.getDate()},
+		l: function(){return txt_weekdays[f.w()]},
+		N: function(){return f.w() + 1},
+		S: function(){return txt_ordin[f.j()] ? txt_ordin[f.j()] : 'th'},
+		w: function(){return jsdate.getDay()},
+		z: function(){return (jsdate - new Date(jsdate.getFullYear() + "/1/1")) / 864e5 >> 0},
+		W: function(){
+			var a = f.z(), b = 364 + f.L() - a;
+			var nd2, nd = (new Date(jsdate.getFullYear() + "/1/1").getDay() || 7) - 1;
+			if(b <= 2 && ((jsdate.getDay() || 7) - 1) <= 2 - b){
+				return 1;
+			} else{
+				if(a <= 2 && nd >= 4 && a >= (6 - nd)){
+					nd2 = new Date(jsdate.getFullYear() - 1 + "/12/31");
+					return date("W", Math.round(nd2.getTime()/1000));
+				} else{
+					return (1 + (nd <= 3 ? ((a + nd) / 7) : (a - (7 - nd)) / 7) >> 0);
+				}
+			}
+		},
+		F: function(){return txt_months[f.n()]},
+		m: function(){return pad(f.n(), 2)},
+		M: function(){return f.F().substr(0,3)},
+		n: function(){return jsdate.getMonth() + 1},
+		t: function(){
+			var n;
+			if( (n = jsdate.getMonth() + 1) == 2 ){
+				return 28 + f.L();
+			} else{
+				if( n & 1 && n < 8 || !(n & 1) && n > 7 ){
+					return 31;
+				} else{
+					return 30;
+				}
+			}
+		},
+		L: function(){var y = f.Y();return (!(y & 3) && (y % 1e2 || !(y % 4e2))) ? 1 : 0},
+		Y: function(){return jsdate.getFullYear()},
+		y: function(){return (jsdate.getFullYear() + "").slice(2)},
+		a: function(){return jsdate.getHours() > 11 ? "pm" : "am"},
+		A: function(){return f.a().toUpperCase()},
+		B: function(){
+			var off = (jsdate.getTimezoneOffset() + 60)*60;
+			var theSeconds = (jsdate.getHours() * 3600) + (jsdate.getMinutes() * 60) + jsdate.getSeconds() + off;
+			var beat = Math.floor(theSeconds/86.4);
+			if (beat > 1000) beat -= 1000;
+			if (beat < 0) beat += 1000;
+			if ((String(beat)).length == 1) beat = "00"+beat;
+			if ((String(beat)).length == 2) beat = "0"+beat;
+			return beat;
+		},
+		g: function(){return jsdate.getHours() % 12 || 12},
+		G: function(){return jsdate.getHours()},
+		h: function(){return pad(f.g(), 2)},
+		H: function(){return pad(jsdate.getHours(), 2)},
+		i: function(){return pad(jsdate.getMinutes(), 2)},
+		s: function(){return pad(jsdate.getSeconds(), 2)},
+		O: function(){
+			var t = pad(Math.abs(jsdate.getTimezoneOffset()/60*100), 4);
+			if (jsdate.getTimezoneOffset() > 0) t = "-" + t; else t = "+" + t;
+			return t;
+		},
+		P: function(){var O = f.O();return (O.substr(0, 3) + ":" + O.substr(3, 2))},
+		c: function(){return f.Y() + "-" + f.m() + "-" + f.d() + "T" + f.h() + ":" + f.i() + ":" + f.s() + f.P()},
+		U: function(){return Math.round(jsdate.getTime()/1000)}
+	};
+
+	return format.replace(/[\\]?([a-zA-Z])/g, function(t, s){
+		if( t!=s ){
+			ret = s;
+		} else if( f[s] ){
+			ret = f[s]();
+		} else{
+			ret = s;
+		}
+		return ret;
+	});
+}
+
+/**
+ * 获取当前时间
+ * @returns {String}
+ */
+function getFormatDate(){
+	var nowDate = new Date();
+	var year = nowDate.getFullYear();
+	var month = nowDate.getMonth() + 1 < 10 ? "0" + (nowDate.getMonth() + 1) : nowDate.getMonth() + 1;
+	var date = nowDate.getDate() < 10 ? "0" + nowDate.getDate() : nowDate.getDate();
+	var hour = nowDate.getHours()< 10 ? "0" + nowDate.getHours() : nowDate.getHours();
+	var minute = nowDate.getMinutes()< 10 ? "0" + nowDate.getMinutes() : nowDate.getMinutes();
+	var second = nowDate.getSeconds()< 10 ? "0" + nowDate.getSeconds() : nowDate.getSeconds();
+	return year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second;
+}
+
+/**
+ * 获取随机值
+ * @return {}
+ */
+function getRandomValueToString(){
+	return Date.parse(new Date()) + "" + getRandom(999);
+}
+
+/**
+ * 生成指定位数的随机整数
+ * @param {} n
+ * @return {}
+ */
+function getRandom(n){
+	return Math.floor(Math.random() * n + 1);
+}
+
+/**
+ * 获取当前的年月日
+ * @returns {String}
+ */
+function getYMDFormatDate(){
+	var nowDate = new Date();
+	var year = nowDate.getFullYear();
+	var month = nowDate.getMonth() + 1 < 10 ? "0" + (nowDate.getMonth() + 1) : nowDate.getMonth() + 1;
+	var date = nowDate.getDate() < 10 ? "0" + nowDate.getDate() : nowDate.getDate();
+	return year + "-" + month + "-" + date;
+}
+
+/**
+ * 获取当前的时分秒
+ * @returns {String}
+ */
+function getHMSFormatDate(){
+	var nowDate = new Date();
+	var hour = nowDate.getHours()< 10 ? "0" + nowDate.getHours() : nowDate.getHours();
+	var minute = nowDate.getMinutes()< 10 ? "0" + nowDate.getMinutes() : nowDate.getMinutes();
+	var second = nowDate.getSeconds()< 10 ? "0" + nowDate.getSeconds() : nowDate.getSeconds();
+	return hour + ":" + minute + ":" + second;
+}
+
+/**
+ * 获取当前时间30天之前的日期
+ * @returns
+ */
+function getThirdDayToDate(){
+	var myDate = new Date();
+	//获取三十天前日期
+	var lw = new Date(myDate - 1000 * 60 * 60 * 24 * 30);//最后一个数字30可改，30天的意思
+	var lastY = lw.getFullYear();
+	var lastM = lw.getMonth() + 1;
+	var lastD = lw.getDate();
+	return lastY + "-" + (lastM < 10 ? "0" + lastM : lastM) + "-" + (lastD < 10 ? "0" + lastD : lastD);//三十天之前日期
+}
+
+/**
+ * 比较时间大小-时分秒
+ * @param a
+ * @param b
+ */
+function compare_hms(a, b){
+	var c = new Date(a);
+	var d = new Date(b);
+	var i = c.getHours() * 60 * 60 + c.getMinutes() * 60 + c.getSeconds();
+	var n = d.getHours() * 60 * 60 + d.getMinutes() * 60 + d.getSeconds();
+	if(i > n){
+		return true;
+	}else if(i < n){
+		return false;
+	}else{
+		return true;
+	}
+}
+
+/**
+ * 比较时间大小-时分秒，格式为HH:mm:ss,参数a大于参数b返回true
+ * @param a
+ * @param b
+ */
+function compare_HHmmss(a, b){
+	var array1 = a.split(":");
+	var total1 = array1[0] * 3600 + array1[1] * 60 + array1[2];
+	var array2 = b.split(":");
+	var total2 = array2[0] * 3600 + array2[1] * 60 + array2[2];
+	return total1 - total2 > 0 ? true : false;
+}
+
+/**
+ * 年月日时分秒转时分
+ * @param a
+ * @returns {String}
+ */
+function hms2hm(a){
+	var d = new Date(Date.parse(a.replace(/-/g, "/")));
+	var i = d.getHours() + ":" + d.getMinutes();
+	return i;
+}
+
+/**
+ * 根据年月日获取周几
+ * @param a
+ * @returns {String}
+ */
+function getMyDay(date){
+	var week;
+	if(date.getDay()==0) week="周日"
+	if(date.getDay()==1) week="周一"
+	if(date.getDay()==2) week="周二"
+	if(date.getDay()==3) week="周三"
+	if(date.getDay()==4) week="周四"
+	if(date.getDay()==5) week="周五"
+	if(date.getDay()==6) week="周六"
+	return week;
+}
+
+/**
+ * 获取今天是周几
+ * @returns {String}
+ */
+function getThisWeekDay(){
+	var date = new Date();
+	if(date.getDay() == 0){
+		return 7
+	}
+	return date.getDay();
+}
+
+
+/*
+ *   功能:实现VBScript的DateAdd功能.
+ *   参数:interval,字符串表达式，表示要添加的时间间隔.
+ *   参数:number,数值表达式，表示要添加的时间间隔的个数.
+ *   参数:date,时间对象.
+ *   返回:新的时间对象.
+ *   var now = new Date();
+ *   var newDate = DateAdd( "d", 5, now);
+ *---------------   DateAdd(interval,number,date)   -----------------
+ */
+function DateAdd(interval, number, date) {
+	switch (interval) {
+		case "y": {
+			date.setFullYear(date.getFullYear() + number);
+			return date;
+			break;
+		}
+		case "q": {
+			date.setMonth(date.getMonth() + number * 3);
+			return date;
+			break;
+		}
+		case "m": {
+			date.setMonth(date.getMonth() + number);
+			return date;
+			break;
+		}
+		case "w": {
+			date.setDate(date.getDate() + number * 7);
+			return date;
+			break;
+		}
+		case "d": {
+			date.setDate(date.getDate() + number);
+			return date;
+			break;
+		}
+		case "h": {
+			date.setHours(date.getHours() + number);
+			return date;
+			break;
+		}
+		case "m": {
+			date.setMinutes(date.getMinutes() + number);
+			return date;
+			break;
+		}
+		case "s": {
+			date.setSeconds(date.getSeconds() + number);
+			return date;
+			break;
+		}
+		default: {
+			date.setDate(date.getDate() + number);
+			return date;
+			break;
+		}
+	}
+}
+
+Date.prototype.format = function(format) {
+	/*
+	 * 使用例子:format="yyyy-MM-dd hh:mm:ss";
+	 */
+	var o = {
+		"M+": this.getMonth() + 1, // month
+		"d+": this.getDate(), // day
+		"h+": this.getHours(), // hour
+		"m+": this.getMinutes(), // minute
+		"s+": this.getSeconds(), // second
+		"q+": Math.floor((this.getMonth() + 3) / 3), // quarter
+		"S": this.getMilliseconds()
+		// millisecond
+	}
+
+	if(/(y+)/.test(format)) {
+		format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 -
+			RegExp.$1.length));
+	}
+
+	for(var k in o) {
+		if(new RegExp("(" + k + ")").test(format)) {
+			format = format.replace(RegExp.$1, RegExp.$1.length == 1 ?
+				o[k] :
+				("00" + o[k]).substr(("" + o[k]).length));
+		}
+	}
+	return format;
+}
+
+/**
+ * 获取两个日期之间的日期，不包括头和尾
+ * @param begin
+ * @param end
+ */
+function getAll(begin, end) {
+	var ab = begin.split("-");
+	var ae = end.split("-");
+	var db = new Date();
+	db.setUTCFullYear(ab[0], ab[1] - 1, ab[2]);
+	var de = new Date();
+	de.setUTCFullYear(ae[0], ae[1] - 1, ae[2]);
+	var unixDb = db.getTime();
+	var unixDe = de.getTime();
+	var thisArray = new Array();
+	for(var k = unixDb + 24 * 60 * 60 * 1000; k < unixDe;) {
+		thisArray.push((new Date(parseInt(k))).format('yyyy-MM-dd'));
+		k = k + 24 * 60 * 60 * 1000;
+	}
+	return thisArray;
+}
+
+/**
+ * 获取长度为len的随机字符串
+ * @param len
+ * @returns {String}
+ */
+function _getRandomString(len) {
+	len = len || 32;
+	var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678'; // 默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1
+	var maxPos = $chars.length;
+	var pwd = '';
+	for (i = 0; i < len; i++) {
+		pwd += $chars.charAt(Math.floor(Math.random() * maxPos));
+	}
+	return pwd;
+}
+
+/**
+ * 全屏
+ */
+function fullScreen() {
+	var docElm = document.documentElement;
+	//W3C
+	if(docElm.requestFullscreen) {
+		docElm.requestFullscreen();
+	}
+	//FireFox
+	else if(docElm.mozRequestFullScreen) {
+		docElm.mozRequestFullScreen();
+	}
+	//Chrome等
+	else if(docElm.webkitRequestFullScreen) {
+		docElm.webkitRequestFullScreen();
+	}
+	//IE11
+	else if(docElm.msRequestFullscreen) {
+		document.body.msRequestFullscreen();
+	}
+}
+
+/**
+ * 禁用全屏
+ */
+function exitFullScreen(){
+	if (document.fullscreenElement) {
+		if(document.exitFullscreen) {
+			document.exitFullscreen();
+		} else if(document.mozCancelFullScreen) {
+			document.mozCancelFullScreen();
+		} else if(document.webkitCancelFullScreen) {
+			document.webkitCancelFullScreen();
+		} else if(document.msExitFullscreen) {
+			document.msExitFullscreen();
+		}
+	}
+}
+
+/**
+ * 判断是否是url
+ * @param URL
+ * @returns {Boolean}
+ */
+function checkURL(URL) {
+	var reg= /(https?|http|ftp|file):\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/g;
+	URL = URL.match(reg);
+	if(isNull(URL) || URL.length == 0){
+		return false;
+	}else{
+		return true;
+	}
+}
+
+/**
+ * 获取 blob
+ * @param  {String} url 目标文件地址
+ * @return {cb}
+ */
+function getBlob(url,cb) {
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', url, true);
+	xhr.responseType = 'blob';
+	xhr.onload = function() {
+		if (xhr.status === 200) {
+			cb(xhr.response);
+		}
+	};
+	xhr.send();
+}
+
+/**
+ * 保存
+ * @param  {Blob} blob
+ * @param  {String} filename 想要保存的文件名称
+ */
+function saveAs(blob, filename) {
+	if (window.navigator.msSaveOrOpenBlob) {
+		navigator.msSaveBlob(blob, filename);
+	} else {
+		var link = document.createElement('a');
+		var body = document.querySelector('body');
+		link.href = window.URL.createObjectURL(blob);
+		link.download = filename;
+		// fix Firefox
+		link.style.display = 'none';
+		body.appendChild(link);
+		link.click();
+		body.removeChild(link);
+		window.URL.revokeObjectURL(link.href);
+	};
+}
+
+/**
+ * 下载
+ * @param  {String} url 目标文件地址
+ * @param  {String} filename 想要保存的文件名称
+ */
+function download(url, filename) {
+	getBlob(url, function(blob) {
+		saveAs(blob, filename);
+	});
+};
+
+//下载图片
+function downloadImage(path,imgName) {
+	var _OBJECT_URL;
+	var request = new XMLHttpRequest();
+	request.addEventListener('readystatechange', function (e) {
+		if (request.readyState == 4) {
+			_OBJECT_URL = URL.createObjectURL(request.response);
+			var $a = $("<a></a>").attr("href", _OBJECT_URL).attr("download", imgName);
+			$a[0].click();
+		}
+	});
+	request.responseType = 'blob';
+	request.open('get', path);
+	request.send();
+}
+
+// 判断是否是json
+function isJsonFormat(str) {
+	try {
+		layui.$.parseJSON(str);
+	} catch(e) {
+		return false;
+	}
+	return true;
+}
+
+/**
+ * 判断str在strs中是否存在，strs的数据格式为'folder-item,select'
+ * @param strs
+ * @param str
+ */
+function judgeStrInStrs(strs, str){
+	if(!isNull(strs) && !isNull(str)){
+		var ss = strs.split(',');
+		var strIndex = -1;
+		layui.$.each(ss, function(i, item){
+			if(str === item){
+				strIndex = i;
+				return false;
+			}
+		});
+		return strIndex;
+	}
+	return 0;
+}
+
+/**
+ * 对象数组根据某个字段进行排序
+ * @param order 'desc':'降序', 'asc':'升序'
+ * @param sortBy 排序字段
+ */
+function getSortFun(order, sortBy) {
+	var ordAlpah = (order == 'asc') ? '>' : '<';
+	var sortFun = new Function('a', 'b', 'return a.' + sortBy + ordAlpah + 'b.' + sortBy + '?1:-1');
+	return sortFun;
+}
+
+/**
+ * 判断字符串是否是json字符串
+ * @param str
+ */
+function isJSON(str) {
+	if (typeof str == 'string') {
+		try {
+			var obj = JSON.parse(str);
+			if(typeof obj == 'object' && obj ){
+				return true;
+			}else{
+				return false;
+			}
+		} catch(e) {
+			return false;
+		}
+	}else{
+		return false;
+	}
+}
+
+/**
+ * 取出字符串str中以startCode开始，以endCode结束的所有字符串
+ * @param str
+ * @param startCode
+ * @param endCode
+ */
+function strMatchAllByTwo(str, startCode, endCode){
+	if(str.length > 0){
+		var arr = [];
+		var firstStart = str.indexOf(startCode);
+		var firstEnd = str.indexOf(endCode);
+		arr.push(str.substr(firstStart + startCode.length, firstEnd - firstStart - endCode.length));
+		return arr.concat(strMatchAllByTwo(str.substr(firstEnd + endCode.length), startCode, endCode));
+	}else{
+		return [];
+	}
+}
