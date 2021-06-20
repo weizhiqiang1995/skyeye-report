@@ -81,4 +81,14 @@
         FROM report_import_model rim
         WHERE rim.id = #{id}
     </select>
+
+    <select id="getReportImportModelByFileName" resultType="java.util.Map">
+        SELECT
+            rim.id,
+            rim.file_name fileName,
+            rim.model_id modelId
+        FROM report_import_model rim
+        WHERE rim.file_name = #{fileName}
+    </select>
+
 </mapper>

@@ -30,6 +30,14 @@ public interface ReportImportHistoryService {
      * @return 模型上传导入历史对象
      * @throws Exception
      */
-    Map<String, Object> insertReportImportHistory(String fileName, String fileSize, String userId) throws Exception;
+    Map<String, Object> insertReportImportHistory(String fileName, Long fileSize, String userId) throws Exception;
 
+    /**
+     * 模型上传导入
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    void importReportImportModel(InputObject inputObject, OutputObject outputObject) throws Exception;
 }

@@ -75,7 +75,7 @@ public class ToolUtil {
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * 
 	     * @Title: getUrlParams
@@ -1163,11 +1163,11 @@ public class ToolUtil {
 		}
 		return beans;
 	}
-	
+
 	/**
 	 * 文件复制
-	 * @param source
-	 * @param target
+	 * @param source 源文件
+	 * @param target 拷贝后的文件地址
 	 * @throws Exception
 	 */
 	public static void NIOCopyFile(String source, String target) throws Exception {

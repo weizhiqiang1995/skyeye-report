@@ -39,4 +39,17 @@ public class ReportImportHistoryController {
         reportImportHistoryService.queryReportImportHistoryList(inputObject, outputObject);
     }
 
+    /**
+     * 模型上传导入
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @RequestMapping("/post/ReportImportHistoryController/importReportImportModel")
+    @ResponseBody
+    public void importReportImportModel(InputObject inputObject, OutputObject outputObject) throws Exception{
+        reportImportHistoryService.importReportImportModel(inputObject, outputObject);
+    }
+
 }

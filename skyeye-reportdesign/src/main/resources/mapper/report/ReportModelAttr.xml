@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.skyeye.dao.ReportModelAttrDao">
+
+    <insert id="insertReportModelAttr" parameterType="java.util.Map">
+        INSERT INTO report_model_attr
+        (id, model_id, attr_code, type_name, `name`, remark, default_value, edit,
+         editor_type, optional_value)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.id}, #{item.modelId}, #{item.attrCode}, #{item.typeName}, #{item.name}, #{item.remark}, #{item.defaultValue}, #{item.edit},
+             #{item.editorType}, #{item.optionalValue})
+        </foreach>
+    </insert>
+
+    <select id="getReportModelAttrByModelId" resultType="java.util.Map">
+        SELECT
+            a.id,
+            a.model_id modelId,
+            a.attr_code attrCode,
+            a.type_name typeName,
+            a.name name,
+            a.remark,
+            a.default_value defaultValue,
+            a.edit,
+            a.editor_type editorType,
+            a.optional_value optionalValue
+        FROM
+             report_model_attr a
+        WHERE a.model_id = #{modelId}
+    </select>
+
+</mapper>

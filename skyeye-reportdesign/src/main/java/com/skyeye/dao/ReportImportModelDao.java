@@ -35,4 +35,6 @@ public interface ReportImportModelDao {
     void updateReportImportModelById(Map<String, Object> map) throws Exception;
 
     Map<String, Object> getReportImportModelById(@Param("id") String id) throws Exception;
+
+    Map<String, Object> getReportImportModelByFileName(@Param("fileName") String fileName) throws Exception;
 }

@@ -140,6 +140,8 @@
         <property id="page" name="page" ref="required,num" var="分页参数,第几页"/>
         <property id="fileName" name="fileName" ref="" var="文件名称"/>
     </url>
+    <url id="reportimporthistory002" path="/post/ReportImportHistoryController/importReportImportModel" val="模型上传导入" method="POST" allUse="1" groupName="模型上传导入历史">
+    </url>
     <!-- 模型上传导入历史结束 -->
 
 

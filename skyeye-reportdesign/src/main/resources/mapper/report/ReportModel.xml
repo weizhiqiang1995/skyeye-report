@@ -7,7 +7,7 @@
             (id, history_id, model_code_id, `name`, default_width, default_height, min_width, min_height, default_bg_color, bg_transparency,
              logo_path, software_version, state)
         VALUES
-            (#{id}, #{historyId}, #{modelCode}, #{Name}, #{defaultWidth}, #{defaultHeight}, #{minWidth}, #{minHeight}, #{defaultBgColor}, #{bgTransparency},
+            (#{id}, #{historyId}, #{modelCode}, #{name}, #{defaultWidth}, #{defaultHeight}, #{minWidth}, #{minHeight}, #{defaultBgColor}, #{bgTransparency},
              #{logoPath}, #{softwareVersion}, #{state})
     </insert>
 
