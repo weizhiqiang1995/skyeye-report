@@ -134,5 +134,13 @@
     </url>
     <!-- 数据来源结束 -->
 
+    <!-- 模型上传导入历史开始 -->
+    <url id="reportimporthistory001" path="/post/ReportImportHistoryController/queryReportImportHistoryList" val="获取所有模型上传导入历史列表" method="POST" allUse="1" groupName="模型上传导入历史">
+        <property id="limit" name="limit" ref="required,num" var="分页参数,每页多少条数据" />
+        <property id="page" name="page" ref="required,num" var="分页参数,第几页"/>
+        <property id="fileName" name="fileName" ref="" var="文件名称"/>
+    </url>
+    <!-- 模型上传导入历史结束 -->
+
 
 </controller>
