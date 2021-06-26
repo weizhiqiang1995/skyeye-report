@@ -7,6 +7,8 @@ package com.skyeye.service;
 import com.skyeye.common.object.InputObject;
 import com.skyeye.common.object.OutputObject;
 
+import java.util.Map;
+
 /**
  *
  * @ClassName: ReportDataBaseService
@@ -72,4 +74,13 @@ public interface ReportDataFromService {
      * @throws Exception
      */
     void getReportDataFromChooseList(InputObject inputObject, OutputObject outputObject) throws Exception;
+
+    /**
+     * 根据数据来源id获取该数据来源下的所有数据并组装成map
+     *
+     * @param fromId 数据来源id
+     * @return 该数据来源下的所有数据并组装成map
+     * @throws Exception
+     */
+    Map<String, Object> getReportDataFromMapByFromId(String fromId) throws Exception;
 }

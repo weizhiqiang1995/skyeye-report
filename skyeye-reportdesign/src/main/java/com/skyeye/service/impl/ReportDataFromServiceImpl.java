@@ -14,6 +14,7 @@ import com.skyeye.common.util.ToolUtil;
 import com.skyeye.constants.ReportConstants;
 import com.skyeye.dao.*;
 import com.skyeye.service.ReportDataFromService;
+import com.skyeye.util.AnalysisDataToMapUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -345,4 +346,46 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
         outputObject.setBeans(beans);
         outputObject.settotal(beansPageList.getPaginator().getTotalCount());
     }
+
+    /**
+     * 根据数据来源id获取该数据来源下的所有数据并组装成map
+     *
+     * @param fromId 数据来源id
+     * @return 该数据来源下的所有数据并组装成map
+     * @throws Exception
+     */
+    @Override
+    public Map<String, Object> getReportDataFromMapByFromId(String fromId) throws Exception {
+        String jsonContent = getJsonStrByFromId(fromId);
+        Map<String, Object> result = new HashMap<>();
+        AnalysisDataToMapUtil.getMapByJson("", jsonContent, null, result);
+        return result;
+    }
+
+    /**
+     * 根据数据来源id获取数据并转换成json串
+     *
+     * @param fromId 数据来源id
+     * @return 获取数据并转换成json串
+     */
+    private String getJsonStrByFromId(String fromId) throws Exception {
+        // 根据dataFromId获取对应type
+        Map<String, Object> reportDataFromMap = reportDataFromDao.getReportDataFromById(fromId);
+        if (reportDataFromMap != null) {
+            int type = Integer.valueOf(reportDataFromMap.get("type").toString());
+            if (ReportConstants.DataFromTypeMation.XML.getType() == type) {
+
+            } else if (ReportConstants.DataFromTypeMation.JSON.getType() == type) {
+                Map<String, Object> subReportDataFromMap = reportDataFromJsonDao.selectReportDataFromJsonByFromId(fromId);
+                return subReportDataFromMap.get("jsonContent").toString();
+            } else if (ReportConstants.DataFromTypeMation.REST_API.getType() == type) {
+
+            } else if (ReportConstants.DataFromTypeMation.SQL.getType() == type) {
+
+            }
+        }
+        return "{}";
+    }
+
+
 }
