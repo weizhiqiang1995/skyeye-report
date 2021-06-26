@@ -34,6 +34,13 @@
     "js": "var colorpicker = layui.colorpicker; {{#each context}}colorpicker.render({elem: '#{{boxId}}{{indexNumber}}-colorBtn{{@index}}', color: '{{this}}', alpha: true, format: 'rgb', change: function(color){$('#{{boxId}}{{indexNumber}}-color{{@index}}').val(color); dataValueChange(color, $('#{{boxId}}{{indexNumber}}-colorBtn{{@index}}'));}, done: function(color){$('#{{boxId}}{{indexNumber}}-color{{@index}}').val(color); dataValueChange(color, $('#{{boxId}}{{indexNumber}}-colorBtn{{@index}}'));}});{{/each}}",
     "showValueTemplate": ""
   },
+  "9": {
+    "key": "dynamicData",
+    "name": "动态数据",
+    "html": "<div class='layui-form-item {{defaultWidth}}' controlType='dynamicData' modelKey='{{modelKey}}' boxId='{{boxId}}'><label class='layui-form-label'><i class='layui-icon layui-icon-tips' lay-tips='{{desc}}'></i>{{labelContent}}：</label><div class='layui-input-block'><select lay-search id='dynamicData{{boxId}}{{indexNumber}}' name='dynamicData{{boxId}}{{indexNumber}}' lay-filter='dynamicData{{boxId}}{{indexNumber}}'>{{{showValueTemplate}}}</select></div></div>",
+    "js": "$('#dynamicData{{boxId}}{{indexNumber}}').val('{{pointValue}}');form.on('select(dynamicData{{boxId}}{{indexNumber}})', function(data) { var val = data.value; dataValueChange(val, $(this)); });",
+    "showValueTemplate": "<option value=''>请选择</option>{{#each rows}}<option value='{{key}}'>{{key}}--{{name}}</option>{{/each}}"
+  },
   "98": {
     "key": "readOnlyinput",
     "name": "只读的输入框",
@@ -45,7 +52,7 @@
     "key": "dataBaseFrom",
     "name": "数据源选择",
     "html": "<div class='layui-form-item {{defaultWidth}}' controlType='dataBaseFrom' modelKey='{{modelKey}}' boxId='{{boxId}}'><label class='layui-form-label'><i class='layui-icon layui-icon-tips' lay-tips='{{desc}}'></i>{{labelContent}}：</label><div class='layui-input-block'><input type='text' id='input{{boxId}}{{indexNumber}}' name='input{{boxId}}{{indexNumber}}' class='layui-input' value='{{context.name}}' readonly='readonly'/><i class='fa fa-plus-circle input-icon' id='choose{{boxId}}{{indexNumber}}'></i></div></div>",
-    "js": "$('body').on('click', '#choose{{boxId}}{{indexNumber}}', function(e){_openNewWindows({url:'../../tpl/reportDataFrom/reportDataFromChooseList.html', title:'选择数据源',pageId:'dataBaseFrom',area:['90vw','90vh'],callBack:function(refreshCode){if(refreshCode=='0'){$('#input{{boxId}}{{indexNumber}}').val(dataBaseMation.name); dataValueChange(dataBaseMation, $('#input{{boxId}}{{indexNumber}}'));}else if(refreshCode=='-9999'){winui.window.msg(systemLanguage['com.skyeye.operationFailed'][languageType],{icon:2,time:2000});}}});});",
+    "js": "$('body').on('click', '#choose{{boxId}}{{indexNumber}}', function(e){_openNewWindows({url:'../../tpl/reportDataFrom/reportDataFromChooseList.html', title:'选择数据源',pageId:'dataBaseFrom',area:['90vw','90vh'],callBack:function(refreshCode){if(refreshCode=='0'){$('#input{{boxId}}{{indexNumber}}').val(dataBaseMation.name); dataValueChange(dataBaseMation, $('#input{{boxId}}{{indexNumber}}')); }else if(refreshCode=='-9999'){winui.window.msg(systemLanguage['com.skyeye.operationFailed'][languageType],{icon:2,time:2000});}}});});",
     "showValueTemplate": ""
   },
   "100": {

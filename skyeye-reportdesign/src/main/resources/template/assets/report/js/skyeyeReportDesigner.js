@@ -3,6 +3,9 @@ var form;
 // 已经添加上的echarts图表
 var inPageEcharts = {};
 var inPageEchartsObject = {};
+
+// 支持的编辑器类型
+var editorType = {};
 layui.define(["jquery", 'form', 'element'], function(exports) {
 	var jQuery = layui.jquery;
 	form = layui.form;
@@ -26,8 +29,6 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 			params = $.extend({}, defaults, params);
 
 			var flag = $("#skyeyeScaleBox").size() === 0 ? true : false;
-			// 支持的编辑器类型
-			var editorType = {};
 
 			// box拖拽的八个点
 			var editoptions = {
@@ -556,14 +557,7 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 
 				// 将echarts的数据格式转化为form表单的数据格式
 				getFormItemData: function(key, val, boxId, indexNumber){
-					var editorChooseValue = []
-					if(isJSON(val.editorChooseValue)){
-						editorChooseValue = JSON.parse(val.editorChooseValue);
-						$.each(editorChooseValue, function(i, item){
-							item["boxId"] = boxId;
-							item["indexNumber"] = indexNumber;
-						});
-					}
+					var editorChooseValue = f.getEditorChooseValue(val, boxId, indexNumber);
 					var value = val.value;
 					if(isJSON(val.value)){
 						value = JSON.parse(val.value);
@@ -575,11 +569,30 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 							defaultWidth: "layui-col-xs12",
 							labelContent: val.title,
 							context: value,
+							pointValue: val.pointValue,
 							desc: val.desc,
 							editorChooseValue: editorChooseValue,
 							indexNumber: indexNumber // 第几个组件
 						}
 					};
+				},
+
+				getEditorChooseValue: function (val, boxId, indexNumber) {
+					if (val.editor == "9") {
+						val.editorChooseValue = inPageEcharts[boxId].attr["custom.dataBaseMation"].value.analysisData;
+					}
+					var editorChooseValue = []
+					if (isJSON(val.editorChooseValue)) {
+						editorChooseValue = JSON.parse(val.editorChooseValue);
+					} else if (typeof val.editorChooseValue == 'object'
+						&& (JSON.stringify(val.editorChooseValue).indexOf('{') == 0 || JSON.stringify(val.editorChooseValue).indexOf('[') == 0)) {
+						editorChooseValue = val.editorChooseValue;
+					}
+					$.each(editorChooseValue, function (i, item) {
+						item["boxId"] = boxId;
+						item["indexNumber"] = indexNumber;
+					});
+					return editorChooseValue;
 				},
 
 				// 添加一个新的form表单
@@ -671,7 +684,13 @@ function dataValueChange(value, _this){
 	value = getValueByControlType(controlType, value, _this.parents('.layui-form-item'));
 	layui.$.each(inPageEcharts[boxId].attr, function(key, val){
 		if(modelKey == key){
-			val.value = getVal(value);
+			if(controlType == 'dynamicData'){
+				// 动态数据
+				val.pointValue = value;
+				val.editorChooseValue = inPageEcharts[boxId].attr["custom.dataBaseMation"].value.analysisData;
+			}else{
+				val.value = getVal(value);
+			}
 		}
 	});
 	var echartsMation = inPageEcharts[boxId];
@@ -679,6 +698,7 @@ function dataValueChange(value, _this){
 	// 加载图表
 	var newChart = inPageEchartsObject[boxId];
 	newChart.setOption(option);
+	afterRunBack(controlType, value);
 }
 
 function getValueByControlType(controlType, value, parentBox){
@@ -691,6 +711,14 @@ function getValueByControlType(controlType, value, parentBox){
 		value = array;
 	}
 	return value;
+}
+
+function afterRunBack(controlType, value){
+	if(controlType == 'dataBaseFrom'){
+		// 动态数据
+		$('[controlType="dynamicData"]').find('select').html(getDataUseHandlebars(editorType["9"].showValueTemplate, {rows: value.analysisData}));
+		form.render('select');
+	}
 }
 
 // 获取echarts的配置信息

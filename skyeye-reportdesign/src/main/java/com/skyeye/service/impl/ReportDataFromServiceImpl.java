@@ -15,6 +15,8 @@ import com.skyeye.constants.ReportConstants;
 import com.skyeye.dao.*;
 import com.skyeye.service.ReportDataFromService;
 import com.skyeye.util.AnalysisDataToMapUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +35,8 @@ import java.util.*;
  */
 @Service
 public class ReportDataFromServiceImpl implements ReportDataFromService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReportDataFromServiceImpl.class);
 
     @Autowired
     private ReportDataFromDao reportDataFromDao;
@@ -341,7 +345,11 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
                 new PageBounds(Integer.parseInt(inputParams.get("page").toString()), Integer.parseInt(inputParams.get("limit").toString())));
         PageList<Map<String, Object>> beansPageList = (PageList<Map<String, Object>>) beans;
         beans.forEach(bean -> {
-            bean.put("typeName", ReportConstants.DataFromTypeMation.getNameByType(Integer.parseInt(bean.get("type").toString())));
+            try {
+                getSubReportDataFromByType(bean, bean.get("id").toString(), Integer.valueOf(bean.get("type").toString()));
+            } catch (Exception ee) {
+                LOGGER.warn("getReportDataFromChooseList > getSubReportDataFromByType failed.", ee);
+            }
         });
         outputObject.setBeans(beans);
         outputObject.settotal(beansPageList.getPaginator().getTotalCount());

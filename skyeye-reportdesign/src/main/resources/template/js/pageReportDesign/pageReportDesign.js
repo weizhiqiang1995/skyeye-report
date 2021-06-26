@@ -67,10 +67,10 @@ layui.config({
                     },
                     "xAxis.data": {
                         "value": ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                        "edit": false,
+                        "edit": true,
                         "desc": "X坐标轴数据",
                         "title": "X坐标轴数据",
-                        "editor": "",
+                        "editor": "9",
                         "editorChooseValue": "",
                         "typeName": "X轴"
                     },
@@ -94,10 +94,10 @@ layui.config({
                     },
                     "series.data": {
                         "value": [150, 230, 224, 218, 135, 147, 260],
-                        "edit": false,
+                        "edit": true,
                         "desc": "Y坐标轴数据",
                         "title": "Y坐标轴数据",
-                        "editor": "",
+                        "editor": "9",
                         "editorChooseValue": "",
                         "typeName": "Y轴"
                     },
