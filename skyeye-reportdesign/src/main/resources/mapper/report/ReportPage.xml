@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.skyeye.dao.ReportPageDao">
+
+    <select id="getReportPageList" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT
+            a.id,
+            rd.name_ch nameCh,
+            rd.name_en nameEn,
+            b.user_name createName,
+            CONVERT(a.create_time, char) createTime,
+            c.user_name lastUpdateName,
+            CONVERT(a.last_update_time, char) lastUpdateTime
+        FROM
+            report_page a
+            LEFT JOIN sys_eve_user_staff b ON a.create_id = b.user_id
+            LEFT JOIN sys_eve_user_staff c ON a.last_update_id = c.user_id
+        WHERE 1 = 1
+        <if test="name != '' and name != null">
+            AND (a.name_ch LIKE '%${name}%' OR a.name_en LIKE '%${name}%')
+        </if>
+        ORDER BY a.create_time DESC
+    </select>
+
+    <insert id="insertReportPageMation" parameterType="java.util.Map">
+        INSERT INTO report_page
+        (id, name_ch, name_en, create_id, create_time, last_update_id, last_update_time)
+        VALUES
+        (#{id}, #{nameCh}, #{nameEn}, #{createId}, #{createTime}, #{createId}, #{createTime})
+    </insert>
+
+    <select id="queryReportPageMationById" resultType="java.util.Map">
+        SELECT
+            a.id,
+            rd.name_ch nameCh,
+            rd.name_en nameEn,
+            b.user_name createName,
+            CONVERT(a.create_time, char) createTime,
+            c.user_name lastUpdateName,
+            CONVERT(a.last_update_time, char) lastUpdateTime
+        FROM
+            report_page a
+            LEFT JOIN sys_eve_user_staff b ON a.create_id = b.user_id
+            LEFT JOIN sys_eve_user_staff c ON a.last_update_id = c.user_id
+        WHERE a.id = #{id}
+    </select>
+
+    <update id="editReportPageMationById" parameterType="java.util.Map">
+        UPDATE
+            report_page
+        SET
+            name_ch = #{nameCh},
+            name_en = #{nameEn},
+            last_update_id = #{lastUpdateId},
+            last_update_time = #{lastUpdateTime}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteReportPageMationById">
+        DELETE
+        FROM
+             report_database
+        WHERE id = #{id}
+    </delete>
+
+</mapper>

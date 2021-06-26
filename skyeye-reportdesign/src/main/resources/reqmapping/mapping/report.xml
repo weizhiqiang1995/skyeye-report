@@ -144,5 +144,27 @@
     </url>
     <!-- 模型上传导入历史结束 -->
 
+    <!-- 报表页面开始 -->
+    <url id="reportpage001" path="/post/ReportPageController/getReportPageList" val="获取报表页面信息" method="POST" allUse="1" groupName="报表页面">
+        <property id="limit" name="limit" ref="required,num" var="分页参数,每页多少条数据" />
+        <property id="page" name="page" ref="required,num" var="分页参数,第几页"/>
+        <property id="name" name="name" ref="" var="名称"/>
+    </url>
+    <url id="reportpage002" path="/post/ReportPageController/insertReportPageMation" val="新增报表页面信息" method="POST" allUse="1" groupName="报表页面">
+        <property id="nameCh" name="nameCh" ref="required" var="页面中文名称" />
+        <property id="nameEn" name="nameEn" ref="required" var="页面英文名称"/>
+    </url>
+    <url id="reportpage003" path="/post/ReportPageController/queryReportPageMationToEditById" val="获取报表页面信息用于编辑" method="GET" allUse="2" groupName="报表页面">
+        <property id="rowId" name="id" ref="required" var="报表页面id" />
+    </url>
+    <url id="reportpage004" path="/post/ReportPageController/editReportPageMationById" val="编辑报表页面信息" method="PUT" allUse="1" groupName="报表页面">
+        <property id="rowId" name="id" ref="required" var="报表页面id" />
+        <property id="nameCh" name="nameCh" ref="required" var="页面中文名称" />
+        <property id="nameEn" name="nameEn" ref="required" var="页面英文名称"/>
+    </url>
+    <url id="reportpage005" path="/post/ReportPageController/deleteReportPageMationById" val="删除报表页面信息" method="DELETE" allUse="1" groupName="报表页面">
+        <property id="rowId" name="id" ref="required" var="报表页面id" />
+    </url>
+    <!-- 报表页面结束 -->
 
 </controller>
