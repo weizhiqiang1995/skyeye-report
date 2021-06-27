@@ -52,4 +52,17 @@ public class ReportImportHistoryController {
         reportImportHistoryService.importReportImportModel(inputObject, outputObject);
     }
 
+    /**
+     * 获取所有版本最大的echarts模型信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @RequestMapping("/post/ReportImportHistoryController/queryAllMaxVersionReportModel")
+    @ResponseBody
+    public void queryAllMaxVersionReportModel(InputObject inputObject, OutputObject outputObject) throws Exception{
+        reportImportHistoryService.queryAllMaxVersionReportModel(inputObject, outputObject);
+    }
+
 }

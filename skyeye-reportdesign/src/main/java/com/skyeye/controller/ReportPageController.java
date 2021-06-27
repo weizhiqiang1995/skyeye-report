@@ -93,4 +93,30 @@ public class ReportPageController {
         reportPageService.deleteReportPageMationById(inputObject, outputObject);
     }
 
+    /**
+     * 获取报表页面包含的模型信息用于编辑
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @RequestMapping("/post/ReportPageController/queryReportPageContentMationToEditById")
+    @ResponseBody
+    public void queryReportPageContentMationToEditById(InputObject inputObject, OutputObject outputObject) throws Exception{
+        reportPageService.queryReportPageContentMationToEditById(inputObject, outputObject);
+    }
+
+    /**
+     * 编辑报表页面包含的模型信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @RequestMapping("/post/ReportPageController/editReportPageContentMationById")
+    @ResponseBody
+    public void editReportPageContentMationById(InputObject inputObject, OutputObject outputObject) throws Exception{
+        reportPageService.editReportPageContentMationById(inputObject, outputObject);
+    }
+
 }

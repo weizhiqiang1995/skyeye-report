@@ -23,7 +23,7 @@ body {
 	_position: absolute;
 	z-index: 990;
 	overflow: auto;
-	width: calc(100% - 70px);
+	width: calc(100% - 420px);
 	height: calc(100% - 130px);
 	border: 1px solid RGB(130, 214, 195);
 	–webkit-user-select: none;
@@ -165,7 +165,7 @@ body {
 	width: 35px;
 	height: 35px;
 	display: block;
-	font-size: 25px;
+	font-size: 21px;
 	line-height: 35px;
 }
 
@@ -175,7 +175,7 @@ body {
 	height: 60px;
 	display: block;
 	font-size: 25px;
-	line-height: 35px;
+	line-height: 40px;
 }
 
 .hd-main .navs .def-nav .icon,
@@ -344,13 +344,13 @@ body {
 }
 
 .cape_right1 {
-	right: 22px;
+	right: 372px;
 	top: 100px;
 	height: 30px;
 }
 
 .cape_right1_top {
-	right: 22px;
+	right: 372px;
 	top: 100px;
 	width: 30px;
 }
@@ -368,13 +368,13 @@ body {
 }
 
 .cape_right2 {
-	right: 22px;
+	right: 372px;
 	bottom: 22px;
 	height: 30px;
 }
 
 .cape_right2_bottom {
-	right: 22px;
+	right: 372px;
 	bottom: 22px;
 	width: 30px;
 }
@@ -418,6 +418,12 @@ body {
 	height: auto;
 	position: relative;
 	padding: 5px 0px;
+}
+
+.save-btn{
+	position: absolute;
+	right: 0px;
+	height: 60px !important;
 }
 
 

@@ -57,4 +57,16 @@
         LIMIT 1
     </select>
 
+    <select id="queryAllMaxVersionReportModel" resultType="java.util.Map">
+        SELECT
+            a.id,
+            a.`name` title,
+            a.logo_path image,
+            MAX(a.software_version) version
+        FROM
+            report_model a
+        WHERE a.state = 1
+        GROUP BY a.model_code_id
+    </select>
+
 </mapper>

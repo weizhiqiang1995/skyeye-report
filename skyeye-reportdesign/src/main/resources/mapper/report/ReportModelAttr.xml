@@ -30,4 +30,21 @@
         WHERE a.model_id = #{modelId}
     </select>
 
+    <select id="getReportModelAttrToEditorByModelId" resultType="java.util.Map">
+        SELECT
+            a.id,
+            a.model_id modelId,
+            a.attr_code attrCode,
+            a.type_name typeName,
+            a.name title,
+            a.remark `desc`,
+            IFNULL(a.default_value, "") `value`,
+            a.edit,
+            a.editor_type editor,
+            a.optional_value editorChooseValue
+        FROM
+            report_model_attr a
+        WHERE a.model_id = #{modelId}
+    </select>
+
 </mapper>

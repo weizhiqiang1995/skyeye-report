@@ -1,3 +1,6 @@
+
+var rowId;
+
 layui.config({
     base: basePath,
     version: skyeyeVersion
@@ -10,114 +13,33 @@ layui.config({
     var $ = layui.$,
         form = layui.form;
 
+    rowId = GetUrlParam("rowId");
+
+    var echartsModel = {};
+    AjaxPostUtil.request({url:reqBasePath + "reportimporthistory003", params: {}, type:'json', method: "GET", callback:function(json){
+        if(json.returnCode == 0){
+            echartsModel = json.rows;
+        }else{
+            winui.window.msg(json.returnMessage, {icon: 2,time: 2000});
+        }
+    }, async: false});
+
+    var initData = {};
+    AjaxPostUtil.request({url:reqBasePath + "reportpage006", params: {rowId: rowId}, type:'json', method: "GET", callback:function(json){
+        if(json.returnCode == 0){
+            initData = JSON.parse(json.bean.content);
+        }else{
+            winui.window.msg(json.returnMessage, {icon: 2,time: 2000});
+        }
+    }, async: false});
+
     $.skyeyeReportDesigner({
         mouseLineColor: "blue",
+        initData: initData,
         headerMenuJson: [{
             "icon": " fa fa-area-chart fa-fw",
             "title": "图表",
-            "children": [{
-                "id": "111",
-                "image": "../../assets/report/images/base1.png",
-                "title": "基础折线图",
-                "attr": {
-                    "color": {
-                        "value": ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'],
-                        "edit": true,
-                        "desc": "折线图线条颜色",
-                        "title": "线条颜色",
-                        "editor": "5",
-                        "editorChooseValue": "",
-                        "typeName": "基础配置"
-                    },
-                    "title.text": {
-                        "value": "折线图",
-                        "edit": true,
-                        "desc": "主标题文本，支持使用 \\n 换行。",
-                        "title": "主标题",
-                        "editor": "2",
-                        "editorChooseValue": "",
-                        "typeName": "标题配置"
-                    },
-                    "title.textStyle.color": {
-                        "value": "rgba(27, 26, 26, 1)",
-                        "edit": true,
-                        "desc": "主标题文字颜色",
-                        "title": "主标题文字颜色",
-                        "editor": "3",
-                        "editorChooseValue": "",
-                        "typeName": "标题配置"
-                    },
-                    "title.textStyle.fontSize": {
-                        "value": "30",
-                        "edit": true,
-                        "desc": "主标题文字大小",
-                        "title": "主标题文字大小",
-                        "editor": "4",
-                        "editorChooseValue": "",
-                        "typeName": "标题配置"
-                    },
-                    "xAxis.type": {
-                        "value": "category",
-                        "edit": false,
-                        "desc": "category 类目轴，适用于离散的类目数据。为该类型时类目数据可自动从 series.data 或 dataset.source 中取，或者可通过 xAxis.data 设置类目数据。",
-                        "title": "X坐标轴类型",
-                        "editor": "",
-                        "editorChooseValue": "",
-                        "typeName": "X轴"
-                    },
-                    "xAxis.data": {
-                        "value": ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                        "edit": true,
-                        "desc": "X坐标轴数据",
-                        "title": "X坐标轴数据",
-                        "editor": "9",
-                        "editorChooseValue": "",
-                        "typeName": "X轴"
-                    },
-                    "xAxis.splitLine.show": {
-                        "value": "true",
-                        "edit": true,
-                        "desc": "是否显示分隔线。默认数值轴显示，类目轴不显示。",
-                        "title": "是否显示分隔线",
-                        "editor": "1",
-                        "editorChooseValue": "[{\"id\": \"true\",  \"name\": \"是\"}, {\"id\": \"false\",  \"name\": \"否\"}]",
-                        "typeName": "X轴"
-                    },
-                    "yAxis.type": {
-                        "value": "value",
-                        "edit": false,
-                        "desc": "category 类目轴，适用于离散的类目数据。为该类型时类目数据可自动从 series.data 或 dataset.source 中取，或者可通过 yAxis.data 设置类目数据。",
-                        "title": "Y坐标轴类型",
-                        "editor": "",
-                        "editorChooseValue": "",
-                        "typeName": "Y轴"
-                    },
-                    "series.data": {
-                        "value": [150, 230, 224, 218, 135, 147, 260],
-                        "edit": true,
-                        "desc": "Y坐标轴数据",
-                        "title": "Y坐标轴数据",
-                        "editor": "9",
-                        "editorChooseValue": "",
-                        "typeName": "Y轴"
-                    },
-                    "series.type": {
-                        "value": "line",
-                        "edit": false,
-                        "desc": "报表类型为折线",
-                        "title": "报表类型",
-                        "editor": "",
-                        "editorChooseValue": "",
-                        "typeName": "报表类型"
-                    }
-                }
-            }, {
-                "image": "../../assets/report/images/base2.png",
-                "title": "基础平滑折线图",
-            }, {
-                "image": "../../assets/report/images/base3.png",
-                "title": "基础面积图",
-            }]
+            "children": echartsModel
         }, {
             "icon": " fa fa-table fa-fw",
             "title": "表格",
@@ -128,6 +50,11 @@ layui.config({
                 "icon": " fa fa-list-alt fa-fw",
                 "title": "复杂表格",
             }]
+        }, {
+            "icon": " fa fa-fw fa-save",
+            "title": "保存",
+            "class": "save-btn",
+            "id": "save"
         }]
     });
 

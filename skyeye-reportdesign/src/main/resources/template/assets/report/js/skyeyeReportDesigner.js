@@ -16,6 +16,7 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 				'rulerColor': "RGB(135, 221, 252)", // 标尺颜色
 				'rulerFontColor': "burlywood", // 标尺字体颜色
 				'headerBgColor': 'burlywood', // 菜单栏背景颜色
+				'initData': {}, // 初始化数据
 				'headerMenuJson': [], // 菜单栏
 				// excel配置
 				excelConfig: {
@@ -44,9 +45,9 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 
 			// 图表自定义属性
 			var echartsCustomOptions = {
-				"custom.dataBaseMation": { "value": "", "edit": true, "desc": "数据来源", "title": "数据来源", "editor": "99", "editorChooseValue": "", "typeName": "数据源"},
-				"custom.move.x": { "value": "0", "edit": true, "desc": "鼠标拖动距离左侧的像素", "title": "X坐标", "editor": "98", "editorChooseValue": "", "typeName": "坐标"},
-				"custom.move.y": { "value": "0", "edit": true, "desc": "鼠标拖动距离顶部的像素", "title": "Y坐标", "editor": "98", "editorChooseValue": "", "typeName": "坐标"}
+				"custom.dataBaseMation": { "value": "", "edit": 1, "desc": "数据来源", "title": "数据来源", "editor": "99", "editorChooseValue": "", "typeName": "数据源"},
+				"custom.move.x": { "value": "0", "edit": 1, "desc": "鼠标拖动距离左侧的像素", "title": "X坐标", "editor": "98", "editorChooseValue": "", "typeName": "坐标"},
+				"custom.move.y": { "value": "0", "edit": 1, "desc": "鼠标拖动距离顶部的像素", "title": "Y坐标", "editor": "98", "editorChooseValue": "", "typeName": "坐标"}
 			};
 
 			var f = {
@@ -107,8 +108,10 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 				loadHeader: function(){
 					var str = "";
 					$.each(params.headerMenuJson, function(i, item) {
+						var customClass = f.isNull(item.class) ? "" : item.class;
+						var customId = f.isNull(item.id) ? "" : "id='" + item.id + "'";
 						if(f.isNull(item.children)){
-							str += '<a class="def-nav" href="">' +
+							str += '<a class="def-nav ' + customClass + '" href="javascript:;" ' + customId + '>' +
 								'<i class="icon ' + item.icon + '"></i>' +
 								'<span>' + item.title + '</span>' +
 								'</a>';
@@ -167,24 +170,30 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 					skyeyeHeader.find(".disk").click(function () {
 						var modelId = $(this).attr("rowId");
 						var echartsMation = f.getEchartsMationById(modelId);
-						if(!f.isNull(echartsMation)){
-							var option = getEchartsOptions(echartsMation);
-							// 获取boxId
-							var boxId = modelId + getRandomValueToString();
-							// 获取echarts图表id
-							var echartsId = f.getEchartsBox(boxId, modelId);
-							// 加载图表
-							var newChart = echarts.init(document.getElementById(echartsId));
-							newChart.setOption(option);
-							$("#" + echartsId).resize(function () {
-								newChart.resize();
-							});
-							// 加入页面属性
-							echartsMation.attr = $.extend(true, echartsCustomOptions, echartsMation.attr);
-							inPageEcharts[boxId] = $.extend(true, {}, echartsMation);
-							inPageEchartsObject[boxId] = newChart;
-						}
+						f.addNewModel(modelId, echartsMation);
 					});
+				},
+
+				addNewModel: function(modelId, echartsMation){
+					if(!f.isNull(echartsMation)){
+						var option = getEchartsOptions(echartsMation);
+						// 获取boxId
+						var boxId = modelId + getRandomValueToString();
+						// 获取echarts图表id
+						var echartsId = f.getEchartsBox(boxId, modelId);
+						// 加载图表
+						var newChart = echarts.init(document.getElementById(echartsId));
+						newChart.setOption(option);
+						$("#" + echartsId).resize(function () {
+							newChart.resize();
+						});
+						// 加入页面属性
+						echartsMation.attr = $.extend(true, echartsCustomOptions, echartsMation.attr);
+						inPageEcharts[boxId] = $.extend(true, {}, echartsMation);
+						inPageEchartsObject[boxId] = newChart;
+						return boxId;
+					}
+					return "";
 				},
 
 				// 根据id获取echarts信息
@@ -443,6 +452,33 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 					$("body").on('click', ".form-box", function(e){
 						e.stopPropagation();
 					});
+
+					// 保存
+					$("body").on('click', "#save", function(e){
+						var eachartsList = new Array();
+						$.each(skyeyeReportContent.find(".kuang"), function(i, item){
+							var boxId = $(item).data("boxId");
+							var echartsMation = inPageEcharts[boxId];
+							eachartsList.push({
+								modelId: $(item).data("modelId"),
+								attrMation: echartsMation,
+								width: $(item).width(),
+								height: $(item).height()
+							});
+						});
+						var params = {
+							contentWidth: skyeyeReportContent.width(),
+							contentHeight: skyeyeReportContent.height(),
+							modelList: eachartsList
+						};
+						AjaxPostUtil.request({url:reqBasePath + "reportpage007", params: {rowId: rowId, content: JSON.stringify(params)}, type:'json', method: "POST", callback:function(json){
+							if(json.returnCode == 0){
+								winui.window.msg(systemLanguage["com.skyeye.successfulOperation"][languageType], {icon: 1,time: 2000});
+							}else{
+								winui.window.msg(json.returnMessage, {icon: 2,time: 2000});
+							}
+						}});
+					});
 				},
 
 				// 设置选中项
@@ -486,7 +522,7 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 							var panelHTML = '<div class="layui-colla-item"><h2 class="layui-colla-title"><em class="f-icon arrow-bottom"></em><span>' + typeName + '</span></h2><div class="layui-colla-content layui-show" id="' + typeName + '"></div>';
 							$(panelHTML).appendTo($("#showFormPanel").get(0));
 							$.each(attr, function (key, val) {
-								if (val.edit) {
+								if (val.edit == 1) {
 									// 可以编辑
 									var formItem = editorType[val.editor];
 									if (!f.isNull(formItem)) {
@@ -626,6 +662,22 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 					return capeResult;
 				},
 
+				initData: function(){
+					var modelList = params.initData.modelList;
+					if(!f.isNull(modelList)){
+						$.each(modelList, function(i, item) {
+							var boxId = f.addNewModel(item.modelId, item.attrMation);
+							$("#" + boxId).css({
+								left: item.attrMation.attr["custom.move.x"].value + "px",
+								top: item.attrMation.attr["custom.move.y"].value + "px",
+								width: item.width,
+								height: item.height
+							});
+						});
+					}
+					f.removeEchartsEditMation();
+				},
+
 				// 初始化执行
 				init: function() {
 					f.box();
@@ -635,6 +687,8 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 					f.initExcelEvent();
 					// 加载编辑器类型
 					f.initEditorType();
+					// 初始化数据
+					f.initData();
 				}
 			};
 
@@ -725,7 +779,8 @@ function afterRunBack(controlType, value){
 function getEchartsOptions(echartsMation){
 	var echartsJson = {};
 	layui.$.each(echartsMation.attr, function(key, val) {
-		echartsJson = layui.$.extend(true, echartsJson, calcKeyHasPointToJson(key, val.value));
+		var value = val.value;
+		echartsJson = layui.$.extend(true, echartsJson, calcKeyHasPointToJson(key, value));
 	});
 	return echartsJson;
 }

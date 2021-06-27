@@ -63,4 +63,23 @@
         WHERE id = #{id}
     </delete>
 
+    <select id="queryReportPageContentMationToEditById" resultType="java.util.Map">
+        SELECT
+            a.id,
+            a.content
+        FROM
+            report_page a
+        WHERE a.id = #{id}
+    </select>
+
+    <update id="editReportPageContentMationById" parameterType="java.util.Map">
+        UPDATE
+            report_page
+        SET
+            content = #{content},
+            last_update_id = #{lastUpdateId},
+            last_update_time = #{lastUpdateTime}
+        WHERE id = #{id}
+    </update>
+
 </mapper>

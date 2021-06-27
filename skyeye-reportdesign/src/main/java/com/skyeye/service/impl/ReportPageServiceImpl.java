@@ -9,11 +9,11 @@ import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.skyeye.common.object.InputObject;
 import com.skyeye.common.object.OutputObject;
 import com.skyeye.common.util.ToolUtil;
-import com.skyeye.constants.ReportConstants;
 import com.skyeye.dao.ReportPageDao;
 import com.skyeye.service.ReportPageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -59,6 +59,7 @@ public class ReportPageServiceImpl implements ReportPageService {
      * @throws Exception
      */
     @Override
+    @Transactional(value = "transactionManager")
     public void insertReportPageMation(InputObject inputObject, OutputObject outputObject) throws Exception {
         Map<String, Object> params = inputObject.getParams();
         params.put("id", ToolUtil.getSurFaceId());
@@ -91,6 +92,7 @@ public class ReportPageServiceImpl implements ReportPageService {
      * @throws Exception
      */
     @Override
+    @Transactional(value = "transactionManager")
     public void editReportPageMationById(InputObject inputObject, OutputObject outputObject) throws Exception {
         Map<String, Object> params = inputObject.getParams();
         params.put("lastUpdateId", inputObject.getLogParams().get("id"));
@@ -106,9 +108,43 @@ public class ReportPageServiceImpl implements ReportPageService {
      * @throws Exception
      */
     @Override
+    @Transactional(value = "transactionManager")
     public void deleteReportPageMationById(InputObject inputObject, OutputObject outputObject) throws Exception {
         Map<String, Object> params = inputObject.getParams();
         String id = params.get("id").toString();
         reportPageDao.deleteReportPageMationById(id);
     }
+
+    /**
+     * 获取报表页面包含的模型信息用于编辑
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @Override
+    public void queryReportPageContentMationToEditById(InputObject inputObject, OutputObject outputObject) throws Exception {
+        Map<String, Object> params = inputObject.getParams();
+        String id = params.get("id").toString();
+        Map<String, Object> bean = reportPageDao.queryReportPageContentMationToEditById(id);
+        outputObject.setBean(bean);
+        outputObject.settotal(1);
+    }
+
+    /**
+     * 编辑报表页面包含的模型信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @Override
+    @Transactional(value = "transactionManager")
+    public void editReportPageContentMationById(InputObject inputObject, OutputObject outputObject) throws Exception {
+        Map<String, Object> params = inputObject.getParams();
+        params.put("lastUpdateId", inputObject.getLogParams().get("id"));
+        params.put("lastUpdateTime", ToolUtil.getTimeAndToString());
+        reportPageDao.editReportPageContentMationById(params);
+    }
+
 }

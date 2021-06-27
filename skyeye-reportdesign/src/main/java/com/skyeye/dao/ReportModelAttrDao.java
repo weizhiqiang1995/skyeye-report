@@ -30,4 +30,13 @@ public interface ReportModelAttrDao {
      */
     List<Map<String, Object>> getReportModelAttrByModelId(@Param("modelId") String modelId) throws Exception;
 
+    /**
+     * 根据模型id获取模型属性用于编辑器
+     *
+     * @param modelId 模型id
+     * @return 模型属性
+     * @throws Exception
+     */
+    List<Map<String, Object>> getReportModelAttrToEditorByModelId(@Param("modelId") String modelId) throws Exception;
+
 }

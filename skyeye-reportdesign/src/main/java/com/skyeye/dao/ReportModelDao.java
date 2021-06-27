@@ -6,6 +6,7 @@ package com.skyeye.dao;
 
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,4 +39,11 @@ public interface ReportModelDao {
      */
     Map<String, Object> queryMaxVersionReportModelById(@Param("modelId") String modelId) throws Exception;
 
+    /**
+     * 获取所有版本最大的echarts模型信息
+     *
+     * @return 所有版本最大的echarts模型信息
+     * @throws Exception
+     */
+    List<Map<String, Object>> queryAllMaxVersionReportModel() throws Exception;
 }

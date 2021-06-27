@@ -28,4 +28,8 @@ public interface ReportPageService {
     void editReportPageMationById(InputObject inputObject, OutputObject outputObject) throws Exception;
 
     void deleteReportPageMationById(InputObject inputObject, OutputObject outputObject) throws Exception;
+
+    void queryReportPageContentMationToEditById(InputObject inputObject, OutputObject outputObject) throws Exception;
+
+    void editReportPageContentMationById(InputObject inputObject, OutputObject outputObject) throws Exception;
 }

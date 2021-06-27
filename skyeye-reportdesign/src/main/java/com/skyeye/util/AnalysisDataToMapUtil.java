@@ -85,7 +85,13 @@ public class AnalysisDataToMapUtil {
         return jsonStrType;
     }
 
-    private static boolean isJsonStringArray(String content){
+    /**
+     * 判断json串是否是字符串数组
+     *
+     * @param content json串
+     * @return true：是;false：否
+     */
+    public static boolean isJsonStringArray(String content){
         if(isJsonArray(content)){
             JSONArray json = JSONArray.fromObject(content);
             if(json.isEmpty()){

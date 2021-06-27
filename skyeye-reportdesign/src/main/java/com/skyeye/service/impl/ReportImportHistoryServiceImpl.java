@@ -16,6 +16,7 @@ import com.skyeye.common.object.PutObject;
 import com.skyeye.common.util.ToolUtil;
 import com.skyeye.dao.ReportImportHistoryDao;
 import com.skyeye.dao.ReportImportModelDao;
+import com.skyeye.dao.ReportModelAttrDao;
 import com.skyeye.dao.ReportModelDao;
 import com.skyeye.entity.ReportModel;
 import com.skyeye.entity.ReportModelAttr;
@@ -23,6 +24,8 @@ import com.skyeye.exception.CustomException;
 import com.skyeye.service.ReportImportHistoryService;
 import com.skyeye.service.ReportModelAttrService;
 import com.skyeye.service.ReportModelService;
+import com.skyeye.util.AnalysisDataToMapUtil;
+import net.sf.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +41,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @ClassName: ReportImportHistoryServiceImpl
@@ -66,6 +70,9 @@ public class ReportImportHistoryServiceImpl implements ReportImportHistoryServic
 
     @Autowired
     private ReportModelAttrService reportModelAttrService;
+
+    @Autowired
+    private ReportModelAttrDao reportModelAttrDao;
 
     @Value("${IMAGES_PATH}")
     private String tPath;
@@ -205,6 +212,35 @@ public class ReportImportHistoryServiceImpl implements ReportImportHistoryServic
             pack.mkdirs();
         }
         return "/upload/report/" + String.valueOf(System.currentTimeMillis()) + ".png";
+    }
+
+    /**
+     * 获取所有版本最大的echarts模型信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @Override
+    public void queryAllMaxVersionReportModel(InputObject inputObject, OutputObject outputObject) throws Exception {
+        List<Map<String, Object>> beans = reportModelDao.queryAllMaxVersionReportModel();
+        beans.forEach(bean -> {
+            try {
+                List<Map<String, Object>> attrs = reportModelAttrDao.getReportModelAttrToEditorByModelId(bean.get("id").toString());
+                attrs.forEach(attr -> {
+                    String value = attr.get("value").toString();
+                    if(AnalysisDataToMapUtil.isJsonStringArray(value)){
+                        attr.put("value", JSONArray.fromObject(value));
+                    }
+                });
+                Map<String, Map<String, Object>> attrsMap = attrs.stream().collect(Collectors.toMap(item -> item.get("attrCode").toString(), item -> item));
+                bean.put("attr", attrsMap);
+            } catch (Exception ee) {
+                LOGGER.warn("queryAllMaxVersionReportModel -> reportModelAttrDao.getReportModelAttrToEditorByModelId failed.", ee);
+            }
+        });
+        outputObject.setBeans(beans);
+        outputObject.settotal(beans.size());
     }
 
 }

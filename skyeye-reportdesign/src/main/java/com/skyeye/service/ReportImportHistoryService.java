@@ -40,4 +40,13 @@ public interface ReportImportHistoryService {
      * @throws Exception
      */
     void importReportImportModel(InputObject inputObject, OutputObject outputObject) throws Exception;
+
+    /**
+     * 获取所有版本最大的echarts模型信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    void queryAllMaxVersionReportModel(InputObject inputObject, OutputObject outputObject) throws Exception;
 }

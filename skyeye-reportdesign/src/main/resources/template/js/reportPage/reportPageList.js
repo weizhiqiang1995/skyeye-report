@@ -46,6 +46,8 @@ layui.config({
             edit(data);
         }else if (layEvent === 'delet') { //删除
             delet(data);
+        }else if (layEvent === 'design') { //设计
+            design(data);
         }
     });
 
@@ -97,6 +99,24 @@ layui.config({
             title: systemLanguage["com.skyeye.editPageTitle"][languageType],
             pageId: "reportPageEdit",
             area: ['90vw', '90vh'],
+            callBack: function(refreshCode){
+                if (refreshCode == '0') {
+                    winui.window.msg(systemLanguage["com.skyeye.successfulOperation"][languageType], {icon: 1,time: 2000});
+                    loadTable();
+                } else if (refreshCode == '-9999') {
+                    winui.window.msg(systemLanguage["com.skyeye.operationFailed"][languageType], {icon: 2,time: 2000});
+                }
+            }
+        });
+    }
+
+    // 设计
+    function design(data){
+        parent._openNewWindows({
+            url: "../../tpl/pageReportDesign/pageReportDesign.html?rowId=" + data.id,
+            title: '报表设计',
+            pageId: "pageReportDesign",
+            area: ['100vw', '100vh'],
             callBack: function(refreshCode){
                 if (refreshCode == '0') {
                     winui.window.msg(systemLanguage["com.skyeye.successfulOperation"][languageType], {icon: 1,time: 2000});
