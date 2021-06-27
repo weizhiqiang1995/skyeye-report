@@ -30,5 +30,5 @@ public interface ReportPageDao {
 
     int editReportPageMationById(Map<String, Object> params) throws Exception;
 
-    int deleteReportPageMationById(String id) throws Exception;
+    int deleteReportPageMationById(@Param("id") String id) throws Exception;
 }

@@ -5,8 +5,8 @@
     <select id="getReportPageList" parameterType="java.util.Map" resultType="java.util.Map">
         SELECT
             a.id,
-            rd.name_ch nameCh,
-            rd.name_en nameEn,
+            a.name_ch nameCh,
+            a.name_en nameEn,
             b.user_name createName,
             CONVERT(a.create_time, char) createTime,
             c.user_name lastUpdateName,
@@ -32,8 +32,8 @@
     <select id="queryReportPageMationById" resultType="java.util.Map">
         SELECT
             a.id,
-            rd.name_ch nameCh,
-            rd.name_en nameEn,
+            a.name_ch nameCh,
+            a.name_en nameEn,
             b.user_name createName,
             CONVERT(a.create_time, char) createTime,
             c.user_name lastUpdateName,
@@ -59,7 +59,7 @@
     <delete id="deleteReportPageMationById">
         DELETE
         FROM
-             report_database
+            report_page
         WHERE id = #{id}
     </delete>
 
