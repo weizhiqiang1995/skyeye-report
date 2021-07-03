@@ -62,11 +62,11 @@
             a.id,
             a.`name` title,
             a.logo_path image,
-            MAX(a.software_version) version
+            a.software_version version
         FROM
-            report_model a
-        WHERE a.state = 1
-        GROUP BY a.model_code_id
+            (SELECT b.* FROM report_model b WHERE b.state = 1 ORDER BY b.software_version DESC LIMIT 10000) a
+        GROUP BY
+            a.model_code_id
     </select>
 
 </mapper>
