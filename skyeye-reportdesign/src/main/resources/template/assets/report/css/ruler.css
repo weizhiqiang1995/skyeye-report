@@ -138,7 +138,7 @@ body {
 }
 
 .hd-main .navs .app-url .child-menu {
-	display: flex;
+	display: flow-root;
 }
 
 .hd-main .navs .app-url .child-menu a,

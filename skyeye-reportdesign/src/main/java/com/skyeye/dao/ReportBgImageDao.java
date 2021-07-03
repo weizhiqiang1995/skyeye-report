@@ -27,4 +27,6 @@ public interface ReportBgImageDao {
     Map<String, Object> queryReportBgImageMationById(@Param("id") String id) throws Exception;
 
     void deleteReportBgImageMationById(@Param("id") String id) throws Exception;
+
+    List<Map<String, Object>> getAllReportBgImageList(Map<String, Object> inputParams) throws Exception;
 }

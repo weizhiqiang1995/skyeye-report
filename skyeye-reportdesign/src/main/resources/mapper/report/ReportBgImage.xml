@@ -36,4 +36,14 @@
         WHERE id = #{id}
     </delete>
 
+    <select id="getAllReportBgImageList" resultType="java.util.Map">
+        SELECT
+            a.id,
+            a.title,
+            a.image_path imagePath
+        FROM
+            report_bg_image a
+        ORDER BY a.create_time DESC
+    </select>
+
 </mapper>

@@ -65,4 +65,17 @@ public class ReportBgImageController {
         reportBgImageService.deleteReportBgImageMationById(inputObject, outputObject);
     }
 
+    /**
+     * 获取所有背景图片列表信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @RequestMapping("/post/ReportBgImageController/getAllReportBgImageList")
+    @ResponseBody
+    public void getAllReportBgImageList(InputObject inputObject, OutputObject outputObject) throws Exception{
+        reportBgImageService.getAllReportBgImageList(inputObject, outputObject);
+    }
+
 }

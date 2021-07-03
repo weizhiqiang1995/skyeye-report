@@ -22,4 +22,6 @@ public interface ReportBgImageService {
     void insertReportBgImageMation(InputObject inputObject, OutputObject outputObject) throws Exception;
 
     void deleteReportBgImageMationById(InputObject inputObject, OutputObject outputObject) throws Exception;
+
+    void getAllReportBgImageList(InputObject inputObject, OutputObject outputObject) throws Exception;
 }

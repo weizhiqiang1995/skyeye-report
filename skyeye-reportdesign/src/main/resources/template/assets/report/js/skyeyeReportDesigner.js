@@ -116,31 +116,13 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 								'<span>' + item.title + '</span>' +
 								'</a>';
 						}else{
-							str += '<div class="def-nav has-pulldown-special">' +
-								'<a class="pulldown-nav" href="javascript:void(0);">' +
-								'<em class="f-icon arrow-bottom"></em>' +
-								'<i class="icon' + item.icon + '"></i>' +
-								'<span>' + item.title + '</span>' +
-								'</a>' +
-								'<div class="pulldown app-url">' +
-								'<div class="child-menu">';
-							$.each(item.children, function(j, bean) {
-								if(f.isNull(bean.icon)){
-									str += '<a class="li disk layui-col-xs3" href="javascript:void(0);" rowId="' + bean.id + '">' +
-										'<img class="image" src="' + bean.image + '"/>' +
-										'<span class="text">' + bean.title + '</span>' +
-										'</a>';
-								}else{
-									str += '<a class="li disk layui-col-xs3" href="javascript:void(0);" rowId="' + bean.id + '">' +
-										'<i class="icon' + bean.icon + '"></i>' +
-										'<span class="text">' + bean.title + '</span>' +
-										'</a>';
-								}
-							});
-							str += '</div>' +
-								'</div>' +
-								'</div>';
-
+							if(item.id == 'echartsModel'){
+								str = f.getEchartsHtml(item, str);
+							} else if(item.id == 'bgImages'){
+								str = f.getBgImageHtml(item, str);
+							} else{
+								str = f.getEchartsHtml(item, str);
+							}
 						}
 						str += '<span class="separate"></span>';
 					});
@@ -162,15 +144,76 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 						$(this).find(".pulldown-nav").find(".f-icon").addClass("arrow-bottom");
 						$(this).find(".pulldown-nav").find(".f-icon").removeClass("arrow-top");
 					});
-					f.setEchartsClickEvent();
+					f.setHeaderMenuClickEvent();
+				},
+
+				// 标题按钮--有子按钮时，父按钮公共部分
+				getCommonParentHeader: function (str, item) {
+					str += '<div class="def-nav has-pulldown-special">' +
+						'<a class="pulldown-nav" href="javascript:void(0);">' +
+						'<em class="f-icon arrow-bottom"></em>' +
+						'<i class="icon' + item.icon + '"></i>' +
+						'<span>' + item.title + '</span>' +
+						'</a>' +
+						'<div class="pulldown app-url">' +
+						'<div class="child-menu">';
+					return str;
+				},
+
+				// 标题按钮--echarts模型获取html
+				getEchartsHtml: function(item, str) {
+					str = f.getCommonParentHeader(str, item);
+					$.each(item.children, function (j, bean) {
+						if (f.isNull(bean.icon)) {
+							str += '<a class="li disk layui-col-xs3" href="javascript:void(0);" rowId="' + bean.id + '">' +
+								'<img class="image" src="' + bean.image + '"/>' +
+								'<span class="text">' + bean.title + '</span>' +
+								'</a>';
+						} else {
+							str += '<a class="li disk layui-col-xs3" href="javascript:void(0);" rowId="' + bean.id + '">' +
+								'<i class="icon' + bean.icon + '"></i>' +
+								'<span class="text">' + bean.title + '</span>' +
+								'</a>';
+						}
+					});
+					str += '</div>' +
+						'</div>' +
+						'</div>';
+					return str;
+				},
+
+				// 标题按钮--背景图片模型获取html
+				getBgImageHtml: function(item, str) {
+					str = f.getCommonParentHeader(str, item);
+					$.each(item.children, function (j, bean) {
+						str += '<a class="li bgImage layui-col-xs3" href="javascript:void(0);" rowId="' + bean.id + '">' +
+							'<img class="image" src="' + bean.imagePath + '"/>' +
+							'<span class="text">' + bean.title + '</span>' +
+							'</a>';
+					});
+					str += '</div>' +
+						'</div>' +
+						'</div>';
+					return str;
 				},
 
 				// echarts报表点击事件
-				setEchartsClickEvent: function (){
+				setHeaderMenuClickEvent: function (){
+
+					// echarts模型点击事件
 					skyeyeHeader.find(".disk").click(function () {
 						var modelId = $(this).attr("rowId");
 						var echartsMation = f.getEchartsMationById(modelId);
 						f.addNewModel(modelId, echartsMation);
+					});
+
+					// 背景图片点击事件
+					skyeyeHeader.find(".bgImage").click(function () {
+						var bgImageSrc = $(this).find("img").attr("src");
+						skyeyeReportContent.css({
+							"background-image": "url(" + bgImageSrc + ")",
+							"background-size": skyeyeReportContent.width() + "px " + skyeyeReportContent.height() + "px"
+						});
 					});
 				},
 
@@ -469,6 +512,7 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 						var params = {
 							contentWidth: skyeyeReportContent.width(),
 							contentHeight: skyeyeReportContent.height(),
+							bgImage: skyeyeReportContent.css("backgroundImage").replace('url(','').replace(')', ''),
 							modelList: eachartsList
 						};
 						AjaxPostUtil.request({url:reqBasePath + "reportpage007", params: {rowId: rowId, content: JSON.stringify(params)}, type:'json', method: "POST", callback:function(json){
@@ -664,15 +708,23 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 
 				initData: function(){
 					var modelList = params.initData.modelList;
+					var widthScale = getScale(params.initData.contentWidth, skyeyeReportContent.width());
+					var heightScale = getScale(params.initData.contentHeight, skyeyeReportContent.height());
 					if(!f.isNull(modelList)){
 						$.each(modelList, function(i, item) {
 							var boxId = f.addNewModel(item.modelId, item.attrMation);
 							$("#" + boxId).css({
-								left: item.attrMation.attr["custom.move.x"].value + "px",
-								top: item.attrMation.attr["custom.move.y"].value + "px",
-								width: item.width,
-								height: item.height
+								left: multiplication(item.attrMation.attr["custom.move.x"].value, widthScale) + "px",
+								top: multiplication(item.attrMation.attr["custom.move.y"].value, heightScale) + "px",
+								width: multiplication(item.width, widthScale),
+								height: multiplication(item.height, heightScale)
 							});
+						});
+					}
+					if(!f.isNull(params.initData.bgImage)){
+						skyeyeReportContent.css({
+							"background-image": "url(" + params.initData.bgImage + ")",
+							"background-size": skyeyeReportContent.width() + "px " + skyeyeReportContent.height() + "px"
 						});
 					}
 					f.removeEchartsEditMation();
@@ -803,4 +855,20 @@ function getVal(value){
 		return false;
 	}
 	return value;
+}
+
+/**
+ * 获取比例
+ *
+ * @param oldSize 上一个版本打开的宽度/高度
+ * @param newContentSize 当前打开的宽度/高度
+ * @returns {*}
+ */
+function getScale(oldSize, newContentSize){
+	var a1 = parseFloat(isNull(newContentSize) ? 0 : newContentSize);
+	var a2 = parseFloat(isNull(oldSize) ? 0 : oldSize);
+	if(a2 == 0){
+		return 0;
+	}
+	return (a1 / a2).toFixed(6);
 }

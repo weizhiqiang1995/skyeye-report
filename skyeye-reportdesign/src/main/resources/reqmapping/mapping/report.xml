@@ -188,6 +188,8 @@
     <url id="reportbgimage003" path="/post/ReportBgImageController/deleteReportBgImageMationById" val="删除背景图片信息" method="DELETE" allUse="1" groupName="报表基础背景图片设置">
         <property id="rowId" name="id" ref="required" var="基础背景图片id" />
     </url>
+    <url id="reportbgimage004" path="/post/ReportBgImageController/getAllReportBgImageList" val="获取所有背景图片列表信息" method="GET" allUse="2" groupName="报表基础背景图片设置">
+    </url>
     <!-- 报表基础背景图片设置结束 -->
 
 </controller>

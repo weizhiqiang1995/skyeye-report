@@ -87,4 +87,20 @@ public class ReportBgImageServiceImpl implements ReportBgImageService {
             reportBgImageDao.deleteReportBgImageMationById(rowId);
         }
     }
+
+    /**
+     * 获取所有背景图片列表信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @Override
+    public void getAllReportBgImageList(InputObject inputObject, OutputObject outputObject) throws Exception {
+        Map<String, Object> inputParams = inputObject.getParams();
+        List<Map<String, Object>> beans = reportBgImageDao.getAllReportBgImageList(inputParams);
+        outputObject.setBeans(beans);
+        outputObject.settotal(beans.size());
+    }
+
 }
