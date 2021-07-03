@@ -121,6 +121,9 @@ public class CommonServiceImpl implements CommonService{
 			case 12://菜单logo图片
 				basePath = tPath + "\\upload\\menulogo";
 				break;
+			case 18://报表基础设置背景图
+				basePath = tPath + "\\upload\\reportBgImage";
+				break;
 			default:
 				basePath = tPath;
 				break;
@@ -178,6 +181,9 @@ public class CommonServiceImpl implements CommonService{
 						break;
 					case 12://菜单logo图片
 						newFileName = "/images/upload/menulogo/" + newFileName ;
+						break;
+					case 18://报表基础设置背景图
+						newFileName = "/images/upload/reportBgImage/" + newFileName ;
 						break;
 					default:
 						break;

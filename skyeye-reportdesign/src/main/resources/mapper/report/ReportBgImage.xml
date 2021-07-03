@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.skyeye.dao.ReportBgImageDao">
+
+    <select id="getReportBgImageList" resultType="java.util.Map">
+        SELECT
+            a.id,
+            a.title,
+            a.image_path imagePath
+        FROM
+            report_bg_image a
+        ORDER BY a.create_time DESC
+    </select>
+
+    <insert id="insertReportBgImageMation" parameterType="java.util.Map">
+        INSERT INTO report_bg_image
+        (id, title, image_path, create_id, create_time)
+        VALUES
+        (#{id}, #{title}, #{imagePath}, #{createId}, #{createTime})
+    </insert>
+
+    <select id="queryReportBgImageMationById" resultType="java.util.Map">
+        SELECT
+            a.id,
+            a.title,
+            a.image_path imagePath
+        FROM
+            report_bg_image a
+        WHERE a.id = #{id}
+    </select>
+
+    <delete id="deleteReportBgImageMationById">
+        DELETE
+        FROM
+             report_bg_image
+        WHERE id = #{id}
+    </delete>
+
+</mapper>

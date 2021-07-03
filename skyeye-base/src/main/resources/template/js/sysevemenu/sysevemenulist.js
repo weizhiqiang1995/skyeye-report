@@ -117,7 +117,7 @@ layui.config({
 		        }},
 		        { field: 'createTime', title: '创建时间', width: 180 },
 		        { field: 'userName', title: '创建人', width: 150 },
-		        { title: '操作', fixed: 'right', align: 'center', width: 240, toolbar: '#tableBar'}
+		        { title: '操作', fixed: 'right', align: 'center', width: 300, toolbar: '#tableBar'}
 		    ]]
 		});
 		
