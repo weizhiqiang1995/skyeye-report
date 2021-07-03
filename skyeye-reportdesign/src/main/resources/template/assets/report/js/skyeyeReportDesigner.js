@@ -47,7 +47,9 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 			var echartsCustomOptions = {
 				"custom.dataBaseMation": { "value": "", "edit": 1, "desc": "数据来源", "title": "数据来源", "editor": "99", "editorChooseValue": "", "typeName": "数据源"},
 				"custom.move.x": { "value": "0", "edit": 1, "desc": "鼠标拖动距离左侧的像素", "title": "X坐标", "editor": "98", "editorChooseValue": "", "typeName": "坐标"},
-				"custom.move.y": { "value": "0", "edit": 1, "desc": "鼠标拖动距离顶部的像素", "title": "Y坐标", "editor": "98", "editorChooseValue": "", "typeName": "坐标"}
+				"custom.move.y": { "value": "0", "edit": 1, "desc": "鼠标拖动距离顶部的像素", "title": "Y坐标", "editor": "98", "editorChooseValue": "", "typeName": "坐标"},
+				"custom.box.background": { "value": "rgba(255, 255, 255, 1)", "edit": 1, "desc": "盒子背景", "title": "盒子背景颜色", "editor": "3", "editorChooseValue": "", "typeName": "盒子"},
+				"custom.box.border-color": { "value": "rgba(255, 255, 255, 1)", "edit": 1, "desc": "盒子边框", "title": "盒子边框颜色", "editor": "3", "editorChooseValue": "", "typeName": "盒子"}
 			};
 
 			var f = {
@@ -445,12 +447,29 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 					return width;
 				},
 
+				/**
+				 * 删除选中项
+				 */
+				deleteChooseItem: function(){
+					var chooseEcharts = skyeyeReportContent.find(".active").eq(0);
+					if(f.isNull(chooseEcharts)){
+						return;
+					}
+					var boxId = chooseEcharts.data("boxId");
+					$("#" + boxId).remove();
+					delete inPageEchartsObject[boxId];
+					delete inPageEcharts[boxId];
+				},
+
 				// 快捷键
 				tableKeyDown: function(e) {
 					let eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
 					if (e.ctrlKey && eCode === 90) {
 						// 撤销
 
+					}else if(eCode === 46){
+						// delete键
+						f.deleteChooseItem();
 					}
 				},
 
@@ -531,10 +550,6 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 						f.removeEchartsEditMation();
 						// 被选中项
 						_this.parent().find(".dian").show();
-						_this.parent().css({
-							"border": "1px solid #0f0",
-							"z-index": 200
-						});
 						_this.parent().addClass("active");
 						f.loadEchartsEditor();
 					}
@@ -543,10 +558,6 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 				// 移除所有图表的编辑信息
 				removeEchartsEditMation: function(){
 					$(".dian").hide();
-					$(".kuang").css({
-						"border": "1px solid darkgray",
-						"z-index": 100
-					});
 					$(".kuang").removeClass("active");
 					$("#showForm").parent().remove();
 				},
@@ -712,13 +723,19 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 					var heightScale = getScale(params.initData.contentHeight, skyeyeReportContent.height());
 					if(!f.isNull(modelList)){
 						$.each(modelList, function(i, item) {
+							var leftNum = multiplication(item.attrMation.attr["custom.move.x"].value, widthScale);
+							var topNum = multiplication(item.attrMation.attr["custom.move.y"].value, heightScale);
+							item.attrMation.attr["custom.move.x"].value = leftNum;
+							item.attrMation.attr["custom.move.y"].value = topNum;
 							var boxId = f.addNewModel(item.modelId, item.attrMation);
 							$("#" + boxId).css({
-								left: multiplication(item.attrMation.attr["custom.move.x"].value, widthScale) + "px",
-								top: multiplication(item.attrMation.attr["custom.move.y"].value, heightScale) + "px",
+								left: leftNum + "px",
+								top: topNum + "px",
 								width: multiplication(item.width, widthScale),
 								height: multiplication(item.height, heightScale)
 							});
+							setBoxAttrMation("custom.box.background", boxId, item.attrMation.attr["custom.box.background"].value);
+							setBoxAttrMation("custom.box.border-color", boxId, item.attrMation.attr["custom.box.border-color"].value);
 						});
 					}
 					if(!f.isNull(params.initData.bgImage)){
@@ -775,6 +792,10 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 				f.ui();
 			});
 
+			$(document).keydown(function (e) {
+				f.tableKeyDown(e);
+			});
+
 		};
 
 	})(jQuery);
@@ -805,6 +826,17 @@ function dataValueChange(value, _this){
 	var newChart = inPageEchartsObject[boxId];
 	newChart.setOption(option);
 	afterRunBack(controlType, value);
+
+	// 设置box盒子属性
+	setBoxAttrMation(modelKey, boxId, value);
+}
+
+function setBoxAttrMation(modelKey, boxId, value){
+	if(modelKey.indexOf("custom.box") >= 0){
+		// 设置图表盒子属性
+		var attr = modelKey.replace("custom.box.", "");
+		layui.$("#" + boxId).css(attr, value);
+	}
 }
 
 function getValueByControlType(controlType, value, parentBox){

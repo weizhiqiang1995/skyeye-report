@@ -230,7 +230,7 @@ body {
 
 .kuang {
 	box-sizing: border-box;
-	border: 1px solid #0f0;
+	border: 1px solid darkgray;
 	width: 450px;
 	height: 300px;
 	position: absolute;
@@ -426,6 +426,10 @@ body {
 	height: 60px !important;
 }
 
+.active{
+	border: 1px solid #0f0 !important;
+	z-index: 200 !important;
+}
 
 
 
