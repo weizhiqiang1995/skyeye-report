@@ -7,6 +7,9 @@ package com.skyeye.service;
 import com.skyeye.common.object.InputObject;
 import com.skyeye.common.object.OutputObject;
 
+import java.util.Map;
+import java.util.Set;
+
 /**
  * @ClassName: ReportCommonService
  * @Description:
@@ -83,9 +86,8 @@ public interface ReportCommonService {
      *
      * @param inputObject
      * @param outputObject
-     * @throws Exception
      */
-    void parseRestText(InputObject inputObject, OutputObject outputObject) throws Exception;
+    void parseRestText(InputObject inputObject, OutputObject outputObject);
 
     /**
      * 获取数据源类型列表
@@ -95,4 +97,6 @@ public interface ReportCommonService {
      * @throws Exception
      */
     void queryDataFromTypeMationList(InputObject inputObject, OutputObject outputObject) throws Exception;
+
+    void parseJsonSubNode(Map<String, Object> paramMap, Set<String> sets, boolean isFirstTime, String name);
 }

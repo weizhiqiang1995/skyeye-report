@@ -4,7 +4,8 @@
 
 package com.skyeye.service.impl;
 
-import com.alibaba.druid.support.json.JSONUtils;
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.json.JSONUtil;
 import com.google.gson.Gson;
 import com.skyeye.common.object.InputObject;
 import com.skyeye.common.object.OutputObject;
@@ -15,6 +16,7 @@ import com.skyeye.entity.ReportMetaDataColumn;
 import com.skyeye.service.ReportCommonService;
 import com.skyeye.service.ReportDataBaseService;
 import com.skyeye.sql.query.factory.QueryerFactory;
+import com.skyeye.util.HttpRequestUtil;
 import net.sf.json.JSONArray;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -153,8 +155,16 @@ public class ReportCommonServiceImpl implements ReportCommonService {
         outputObject.setBean(resultMap);
     }
 
-    // 解析Json并拼接节点下所有子节点名称
-    private void parseJsonSubNode(Map<String, Object> paramMap, Set<String> sets, boolean isFirstTime, String name) {
+    /**
+     * 解析Json并拼接节点下所有子节点名称
+     *
+     * @param paramMap 被解析的map
+     * @param sets 存放所有解析后的节点名称信息
+     * @param isFirstTime 是否首层调用
+     * @param name 名称
+     */
+    @Override
+    public void parseJsonSubNode(Map<String, Object> paramMap, Set<String> sets, boolean isFirstTime, String name) {
         Set<Map.Entry<String, Object>> entries = paramMap.entrySet();
         String key;
         Object value;
@@ -254,28 +264,53 @@ public class ReportCommonServiceImpl implements ReportCommonService {
      * @throws Exception
      */
     @Override
-    public void parseRestText(InputObject inputObject, OutputObject outputObject) throws Exception {
-        String restText = inputObject.getParams().get("restText").toString();
-        // url正则表达式
-        String restUrlRegex = "^([hH][tT]{2}[pP]:/{2}|[hH][tT]{2}[pP][sS]:/{2}|[fF][tT][pP]:/*)(([A-Za-z0-9-~]+).)+([A-Za-z0-9-~\\/])+(\\?{0,1}(([A-Za-z0-9-~]+\\={0,1})([A-Za-z0-9-~]*)\\&{0,1})*)$";
-        boolean isRestUrl = restText.matches(restUrlRegex);
-        if (isRestUrl) {
-            String[] split = restText.substring(restText.indexOf("?") + 1).split("&");
-            String tempStr;
-            Set<String> result = new HashSet<>();
-            Map<String, Object> resultMap = new HashMap<>();
-            for (int index = 0; index < split.length; index++) {
-                tempStr = split[index];
-                if (tempStr.contains("=")) {
-                    result.add(tempStr.split("=")[0]);
-                }
+    public void parseRestText(InputObject inputObject, OutputObject outputObject) {
+        try {
+            // 校验合规参数: 请求路径、请求体
+            String requestUrl = inputObject.getParams().get("requestUrl").toString();
+            String requestMethod = inputObject.getParams().get("requestMethod").toString();
+            String requestBody = inputObject.getParams().get("requestBody").toString();
+            if (!checkParam(outputObject, requestUrl, requestMethod, requestBody)) {
+                return;
             }
+            String requestHeader = inputObject.getParams().get("requestHeader").toString();
+            Gson gson = new Gson();
+            Map<String, String> requestHeaderKey2Value = gson.fromJson(requestHeader, Map.class);
+            String responseData = HttpRequestUtil.getDataByRequest(requestUrl, requestMethod, requestHeaderKey2Value, requestBody);
+            // 解析响应结果
+            Set<String> result = new HashSet<>();
+            parseJsonSubNode(gson.fromJson(responseData, Map.class), result, true, "");
+            Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("nodeArray", result);
             outputObject.setBean(resultMap);
-        } else {
-            LOGGER.info("该文本不符合url路径格式, 故无法解析. ");
-            outputObject.setreturnMessage("该文本不符合url路径格式, 故无法解析.");
+        } catch (Exception ex) {
+            LOGGER.info("接口解析失败.", ex);
+            outputObject.setreturnMessage("接口解析失败.");
         }
+    }
+
+    /**
+     * 校验rest解析的参数
+     *
+     * @param outputObject
+     * @param requestUrl 请求路径
+     * @param requestMethod 请求方式
+     * @param requestBody 请求体
+     * @return
+     */
+    private boolean checkParam(OutputObject outputObject, String requestUrl, String requestMethod, String requestBody) {
+        // url正则表达式
+        String restUrlRegex = "^([hH][tT]{2}[pP]:/{2}|[hH][tT]{2}[pP][sS]:/{2}|[fF][tT][pP]:/*)(([A-Za-z0-9-~]+).)+([A-Za-z0-9-~\\/])+(\\?{0,1}(([A-Za-z0-9-~]+\\={0,1})([A-Za-z0-9-~]*)\\&{0,1})*)$";
+        boolean isRequestUrl = requestUrl.matches(restUrlRegex);
+        if (!isRequestUrl) {
+            outputObject.setreturnMessage("接口地址有误, 需重新验证地址正确性.");
+            return false;
+        }
+        if (!"GET".equalsIgnoreCase(requestMethod) && !"".equals(requestBody) && !JSONUtil.isJson(requestBody)) {
+            outputObject.setreturnMessage("请求体结构有误, 需验证请求体结构正确性.");
+            return false;
+        }
+        return true;
     }
 
     /**
