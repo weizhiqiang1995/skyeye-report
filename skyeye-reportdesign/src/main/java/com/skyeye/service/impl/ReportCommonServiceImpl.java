@@ -137,17 +137,9 @@ public class ReportCommonServiceImpl implements ReportCommonService {
 
     @Override
     public void parseJsonText(InputObject inputObject, OutputObject outputObject) throws Exception {
-        Map<String, Object> map;
-        try  {
-            Map<String, Object> inputParams = inputObject.getParams();
-            String jsonText = inputParams.get("jsonText").toString();
-            Gson gson = new Gson();
-            map = gson.fromJson(jsonText, Map.class);
-        } catch (Exception ex) {
-            LOGGER.info("该文本不符合json文件格式, 故无法解析. ", ex);
-            outputObject.setreturnMessage("该文本不符合json文件格式, 故无法解析.");
-            return;
-        }
+        Map<String, Object> inputParams = inputObject.getParams();
+        Gson gson = new Gson();
+        Map<String, Object> map = gson.fromJson(inputParams.get("jsonText").toString(), Map.class);
         Set<String> result = new HashSet<>();
         parseJsonSubNode(map, result, true, "");
         Map<String, Object> resultMap = new HashMap<>();
@@ -266,18 +258,14 @@ public class ReportCommonServiceImpl implements ReportCommonService {
     @Override
     public void parseRestText(InputObject inputObject, OutputObject outputObject) {
         try {
-            // 校验合规参数: 请求路径、请求体
             String requestUrl = inputObject.getParams().get("requestUrl").toString();
             String requestMethod = inputObject.getParams().get("requestMethod").toString();
             String requestBody = inputObject.getParams().get("requestBody").toString();
-            if (!checkParam(outputObject, requestUrl, requestMethod, requestBody)) {
-                return;
-            }
             String requestHeader = inputObject.getParams().get("requestHeader").toString();
             Gson gson = new Gson();
             Map<String, String> requestHeaderKey2Value = gson.fromJson(requestHeader, Map.class);
             String responseData = HttpRequestUtil.getDataByRequest(requestUrl, requestMethod, requestHeaderKey2Value, requestBody);
-            // 解析响应结果
+            // 存放并解析响应结果
             Set<String> result = new HashSet<>();
             parseJsonSubNode(gson.fromJson(responseData, Map.class), result, true, "");
             Map<String, Object> resultMap = new HashMap<>();
@@ -287,30 +275,6 @@ public class ReportCommonServiceImpl implements ReportCommonService {
             LOGGER.info("接口解析失败.", ex);
             outputObject.setreturnMessage("接口解析失败.");
         }
-    }
-
-    /**
-     * 校验rest解析的参数
-     *
-     * @param outputObject
-     * @param requestUrl 请求路径
-     * @param requestMethod 请求方式
-     * @param requestBody 请求体
-     * @return
-     */
-    private boolean checkParam(OutputObject outputObject, String requestUrl, String requestMethod, String requestBody) {
-        // url正则表达式
-        String restUrlRegex = "^([hH][tT]{2}[pP]:/{2}|[hH][tT]{2}[pP][sS]:/{2}|[fF][tT][pP]:/*)(([A-Za-z0-9-~]+).)+([A-Za-z0-9-~\\/])+(\\?{0,1}(([A-Za-z0-9-~]+\\={0,1})([A-Za-z0-9-~]*)\\&{0,1})*)$";
-        boolean isRequestUrl = requestUrl.matches(restUrlRegex);
-        if (!isRequestUrl) {
-            outputObject.setreturnMessage("接口地址有误, 需重新验证地址正确性.");
-            return false;
-        }
-        if (!"GET".equalsIgnoreCase(requestMethod) && !"".equals(requestBody) && !JSONUtil.isJson(requestBody)) {
-            outputObject.setreturnMessage("请求体结构有误, 需验证请求体结构正确性.");
-            return false;
-        }
-        return true;
     }
 
     /**
