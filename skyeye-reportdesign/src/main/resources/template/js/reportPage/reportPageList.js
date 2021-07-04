@@ -32,7 +32,7 @@ layui.config({
             { field: 'createTime', title: '创建时间', align: 'center', width: 140 },
             { field: 'lastUpdateName', title: '最后修改人', align: 'left', width: 100 },
             { field: 'lastUpdateTime', title: '最后修改时间', align: 'center', width: 140},
-            { title: systemLanguage["com.skyeye.operation"][languageType], fixed: 'right', align: 'center', width: 200, toolbar: '#tableBar'}
+            { title: systemLanguage["com.skyeye.operation"][languageType], fixed: 'right', align: 'center', width: 250, toolbar: '#tableBar'}
         ]],
         done: function(){
             matchingLanguage();
@@ -48,6 +48,8 @@ layui.config({
             delet(data);
         }else if (layEvent === 'design') { //设计
             design(data);
+        }else if (layEvent === 'showPage') { //预览
+            showPage(data);
         }
     });
 
@@ -126,6 +128,11 @@ layui.config({
                 }
             }
         });
+    }
+
+    // 预览
+    function showPage(data){
+        window.open("../../tpl/reportPage/reportPageShow.html?rowId=" + data.id, "_blank");
     }
 
     // 刷新数据
