@@ -132,6 +132,10 @@
         <property id="name" name="name" ref="" var="数据来源名称"/>
         <property id="type" name="type" ref="num" var="数据来源类型"/>
     </url>
+    <url id="reportdatafrom007" path="/post/ReportDataFromController/getReportDataFromDateByFromId" val="根据Id查询数据来源" method="POST" allUse="0" groupName="数据来源">
+        <property id="fromId" name="fromId" ref="required" var="数据来源Id"/>
+        <property id="needGetDataStr" name="needGetDataStr" ref="required,json" var="需要获取的数据"/>
+    </url>
     <!-- 数据来源结束 -->
 
     <!-- 模型上传导入历史开始 -->

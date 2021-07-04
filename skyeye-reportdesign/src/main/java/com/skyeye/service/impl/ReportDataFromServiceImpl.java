@@ -5,7 +5,6 @@
 package com.skyeye.service.impl;
 
 import com.gexin.fastjson.JSONArray;
-import com.gexin.fastjson.JSONObject;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.skyeye.common.object.InputObject;
@@ -15,6 +14,8 @@ import com.skyeye.constants.ReportConstants;
 import com.skyeye.dao.*;
 import com.skyeye.service.ReportDataFromService;
 import com.skyeye.util.AnalysisDataToMapUtil;
+import com.skyeye.util.XmlExercise;
+import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -382,7 +383,8 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
         if (reportDataFromMap != null) {
             int type = Integer.valueOf(reportDataFromMap.get("type").toString());
             if (ReportConstants.DataFromTypeMation.XML.getType() == type) {
-
+                Map<String, Object> subReportDataFromMap = reportDataFromXMLDao.selectReportDataFromXMLByFromId(fromId);
+                return XmlExercise.xml2json(subReportDataFromMap.get("xmlContent").toString());
             } else if (ReportConstants.DataFromTypeMation.JSON.getType() == type) {
                 Map<String, Object> subReportDataFromMap = reportDataFromJsonDao.selectReportDataFromJsonByFromId(fromId);
                 return subReportDataFromMap.get("jsonContent").toString();
@@ -395,5 +397,29 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
         return "{}";
     }
 
+    /**
+     * 根据数据来源信息获取要取的数据
+     *
+     * @param inputObject
+     * @param outputObject
+     */
+    @Override
+    public void getReportDataFromDateByFromId(InputObject inputObject, OutputObject outputObject) throws Exception {
+        Map<String, Object> params = inputObject.getParams();
+        // 根据数据来源id获取解析对应的数据
+        String fromId = params.get("fromId").toString();
+        Map<String, Object> data = getReportDataFromMapByFromId(fromId);
+        // 前台需要获取的数据json
+        Map<String, Object> needGetData = JSONObject.fromObject(params.get("needGetDataStr").toString());
+        Map<String, Object> result = new HashMap<>();
+        needGetData.forEach((key, value) -> {
+            if(data.containsKey(key)){
+                result.put(key, data.get(key));
+            }else{
+                result.put(key, value);
+            }
+        });
+        outputObject.setBean(result);
+    }
 
 }

@@ -83,4 +83,12 @@ public interface ReportDataFromService {
      * @throws Exception
      */
     Map<String, Object> getReportDataFromMapByFromId(String fromId) throws Exception;
+
+    /**
+     * 根据数据来源信息获取要取的数据
+     *
+     * @param inputObject
+     * @param outputObject
+     */
+    void getReportDataFromDateByFromId(InputObject inputObject, OutputObject outputObject) throws Exception;
 }
