@@ -111,6 +111,10 @@
         <property id="xmlContent" name="xmlContent" ref="" var="xml字符串"/>
         <property id="sqlContent" name="sqlContent" ref="" var="sql字符串"/>
         <property id="sqlDataBaseId" name="sqlDataBaseId" ref="" var="sql数据源ID"/>
+        <property id="restUrl" name="restUrl" ref="" var="接口地址"/>
+        <property id="method" name="method" ref="" var="请求方式"/>
+        <property id="header" name="header" ref="json" var="请求头"/>
+        <property id="requestBody" name="requestBody" ref="json" var="请求体"/>
         <property id="remark" name="remark" ref="" var="备注"/>
     </url>
     <url id="reportdatafrom003" path="/post/ReportDataFromController/delReportDataFromById" val="根据Id删除数据来源" method="DELETE" allUse="1" groupName="数据来源">
@@ -124,6 +128,10 @@
         <property id="jsonContent" name="jsonContent" ref="" var="json字符串"/>
         <property id="xmlContent" name="xmlContent" ref="" var="xml字符串"/>
         <property id="sqlContent" name="sqlContent" ref="" var="sql字符串"/>
+        <property id="restUrl" name="restUrl" ref="" var="接口地址"/>
+        <property id="method" name="method" ref="" var="请求方式"/>
+        <property id="header" name="header" ref="" var="请求头"/>
+        <property id="requestBody" name="requestBody" ref="" var="请求体"/>
         <property id="remark" name="remark" ref="" var="备注"/>
     </url>
     <url id="reportdatafrom005" path="/post/ReportDataFromController/getReportDataFromById" val="根据Id查询数据来源" method="GET" allUse="2" groupName="数据来源">

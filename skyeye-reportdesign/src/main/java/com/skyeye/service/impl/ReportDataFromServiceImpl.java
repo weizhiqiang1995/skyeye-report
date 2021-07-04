@@ -117,7 +117,6 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
             subParams.put("id", subId);
             subParams.put("fromId", dataFromId);
             subParams.put(key, inputParams.get(key).toString());
-
             // 构造子数据源analysis数据
             List<Map<String, Object>> subAnalysisParams = getSubAnalysisData(inputParams, type, subId);
             // 根据type入不同的表
@@ -158,7 +157,11 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
             reportDataFromJsonDao.insertReportDataFromJson(subParams);
             reportDataFromJsonAnalysisDao.insertSubJsonAnalysis(subAnalysisParams);
         } else if (ReportConstants.DataFromTypeMation.REST_API.getType() == type) {
-
+            subParams.put("method", inputParams.get("method"));
+            subParams.put("header", inputParams.get("header"));
+            subParams.put("requestBody", inputParams.get("requestBody"));
+            reportDataFromRestDao.insertReportDataFromRest(subParams);
+            reportDataFromRestAnalysisDao.insertSubRestAnalysis(subAnalysisParams);
         } else if (ReportConstants.DataFromTypeMation.SQL.getType() == type) {
             subParams.put("dataBaseId", inputParams.get("sqlDataBaseId"));
             reportDataFromSQLDao.insertReportDataFromSQL(subParams);
@@ -198,7 +201,9 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
             reportDataFromJsonAnalysisDao.delByJsonId(subId);
             reportDataFromJsonDao.delReportDataFromJsonById(subId);
         } else if (ReportConstants.DataFromTypeMation.REST_API.getType() == type) {
-
+            subId = reportDataFromRestDao.selectIdByFromId(fromId);
+            reportDataFromRestAnalysisDao.delByRestId(subId);
+            reportDataFromRestDao.delReportDataFromRestById(subId);
         } else if (ReportConstants.DataFromTypeMation.SQL.getType() == type) {
             subId = reportDataFromSQLDao.selectSqlIdByFromId(fromId);
             reportDataFromSQLDao.delReportDataFromSQLById(subId);
@@ -269,7 +274,14 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
             reportDataFromJsonDao.updateReportDataFromJsonById(subParams);
             reportDataFromJsonAnalysisDao.insertSubJsonAnalysis(getSubAnalysisData(inputParams, type, subId));
         } else if (ReportConstants.DataFromTypeMation.REST_API.getType() == type) {
-
+            subId = reportDataFromRestDao.selectIdByFromId(fromId);
+            subParams.put("id", subId);
+            subParams.put("method", inputParams.get("method"));
+            subParams.put("header", inputParams.get("header"));
+            subParams.put("requestBody", inputParams.get("requestBody"));
+            reportDataFromRestAnalysisDao.delByRestId(subId);
+            reportDataFromRestDao.updateReportDataFromRestById(subParams);
+            reportDataFromRestAnalysisDao.insertSubRestAnalysis(getSubAnalysisData(inputParams, type, subId));
         } else if (ReportConstants.DataFromTypeMation.SQL.getType() == type) {
             subId = reportDataFromSQLDao.selectSqlIdByFromId(fromId);
             subParams.put("id", subId);

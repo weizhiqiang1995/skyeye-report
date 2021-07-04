@@ -183,7 +183,7 @@ public class ReportConstants {
     public static enum DataFromTypeMation {
         XML(1, "XML数据源", "xmlContent", "tpl/reportDataFrom/dataFromTpl/xmlTemplate.tpl", true),
         JSON(2, "JSON数据源", "jsonContent", "tpl/reportDataFrom/dataFromTpl/jsonTemplate.tpl", false),
-        REST_API(3, "Rest接口数据源", "restContent", "tpl/reportDataFrom/dataFromTpl/restTemplate.tpl", false),
+        REST_API(3, "Rest接口数据源", "restUrl", "tpl/reportDataFrom/dataFromTpl/restTemplate.tpl", false),
         SQL(4, "SQL数据源", "sqlContent", "tpl/reportDataFrom/dataFromTpl/sqlTemplate.tpl", false);
 
         private int type;
