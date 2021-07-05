@@ -15,13 +15,14 @@ import java.util.Map;
 
 /**
  * @ClassName: HttpRequestUtil
- * @Description:
- * @author: skyeye云系列--卫志强
+ * @Description: http请求--该工具类只适用于报表设计-rest接口数据源
+* @author: skyeye云系列--卫志强
  * @date: 2021/5/17 21:31
  * @Copyright: 2021 https://gitee.com/doc_wei01/skyeye Inc. All rights reserved.
  * 注意：本内容仅限购买后使用.禁止私自外泄以及用于其他的商业目的
  */
 public class HttpRequestUtil {
+
     private final static Logger LOGGER = LogManager.getLogger(HttpRequestUtil.class);
 
     /**
@@ -60,7 +61,7 @@ public class HttpRequestUtil {
             }
             result = sb.toString();
         } catch (Exception ex) {
-            LOGGER.error("getUrlRespose error. ", ex);
+            LOGGER.warn("getUrlRespose error. ", ex);
             throw new RuntimeException("getUrlRespose error.");
         } finally {
             if (in != null) {

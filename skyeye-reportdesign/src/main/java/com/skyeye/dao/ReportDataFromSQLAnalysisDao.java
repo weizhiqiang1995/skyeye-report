@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * 
  * @ClassName: ReportDataFromJsonAnalysisDao
- * @Description:
+ * @Description: SQL类型的数据源数据交互层
  * @author: skyeye云系列--卫志强
  * @date: 2021/6/03 23:19
  *   
@@ -25,6 +25,6 @@ public interface ReportDataFromSQLAnalysisDao {
 
     void delBySqlId(@Param("sqlId") String sqlId);
 
-    List<Map<String, Object>> getSQLAnalysisBySqlId(@Param("xmlId") String xmlId);
+    List<Map<String, Object>> getSQLAnalysisBySqlId(@Param("sqlId") String sqlId);
 
 }

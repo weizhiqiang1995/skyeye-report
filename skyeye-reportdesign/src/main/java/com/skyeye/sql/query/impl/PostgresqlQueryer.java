@@ -5,7 +5,6 @@
 package com.skyeye.sql.query.impl;
 
 import com.skyeye.entity.ReportDataSource;
-import com.skyeye.entity.ReportParameter;
 import com.skyeye.sql.query.AbstractQueryer;
 import com.skyeye.sql.query.Queryer;
 
@@ -22,7 +21,7 @@ import com.skyeye.sql.query.Queryer;
  * 注意：本内容具体规则请参照readme执行，地址：https://gitee.com/doc_wei01/skyeye-report/blob/master/README.md
  */
 public class PostgresqlQueryer extends AbstractQueryer implements Queryer {
-    public PostgresqlQueryer(ReportDataSource dataSource, ReportParameter parameter) {
-        super(dataSource, parameter);
+    public PostgresqlQueryer(ReportDataSource dataSource) {
+        super(dataSource);
     }
 }

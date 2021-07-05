@@ -5,7 +5,6 @@
 package com.skyeye.sql.query.factory;
 
 import com.skyeye.entity.ReportDataSource;
-import com.skyeye.entity.ReportParameter;
 import com.skyeye.sql.query.Queryer;
 
 import java.lang.reflect.Constructor;
@@ -21,20 +20,18 @@ import java.lang.reflect.Constructor;
  * 注意：本内容具体规则请参照readme执行，地址：https://gitee.com/doc_wei01/skyeye-report/blob/master/README.md
  */
 public class QueryerFactory {
-    public static Queryer create(ReportDataSource dataSource) {
-        return create(dataSource, null);
-    }
 
-    public static Queryer create(ReportDataSource dataSource, ReportParameter parameter) {
+    public static Queryer create(ReportDataSource dataSource) {
         if (dataSource != null) {
             try {
                 Class<?> clazz = Class.forName(dataSource.getQueryerClass());
-                Constructor<?> constructor = clazz.getConstructor(ReportDataSource.class, ReportParameter.class);
-                return (Queryer)constructor.newInstance(dataSource, parameter);
+                Constructor<?> constructor = clazz.getConstructor(ReportDataSource.class);
+                return (Queryer)constructor.newInstance(dataSource);
             } catch (final Exception ex) {
                 throw new RuntimeException("create report engine queryer error", ex);
             }
         }
         return null;
     }
+
 }

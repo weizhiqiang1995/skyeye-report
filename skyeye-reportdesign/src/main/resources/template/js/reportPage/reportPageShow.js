@@ -30,7 +30,7 @@ layui.config({
                     var topNum = multiplication(item.attrMation.attr["custom.move.y"].value, heightScale);
                     item.attrMation.attr["custom.move.x"].value = leftNum;
                     item.attrMation.attr["custom.move.y"].value = topNum;
-                    getDataFromRest(item.attrMation.attr);
+                    item.attrMation.attr = getDataFromRest(item.attrMation.attr);
                     // 加载模型
                     var boxId = addNewModel(item.modelId, item.attrMation);
                     $("#" + boxId).css({
@@ -59,7 +59,7 @@ layui.config({
         var xData = attr['xAxis.data'].pointValue;
         var yData = attr['series.data'].pointValue;
         if(isNull(fromId) || (isNull(xData) && isNull(yData))){
-            return;
+            return attr;
         }
         var needGetData = {};
         needGetData[xData] = attr['xAxis.data'].value;
@@ -71,10 +71,13 @@ layui.config({
         AjaxPostUtil.request({url:reqBasePath + "reportdatafrom007", params: params, type:'json', method: "POST", callback:function(json){
             if(json.returnCode == 0){
                 console.log(json)
+                attr['xAxis.data'].value = json.bean[xData];
+                attr['series.data'].value = json.bean[yData];
             }else{
                 winui.window.msg(json.returnMessage, {icon: 2,time: 2000});
             }
         }, async: false});
+        return attr;
     }
 
     function addNewModel(modelId, echartsMation){

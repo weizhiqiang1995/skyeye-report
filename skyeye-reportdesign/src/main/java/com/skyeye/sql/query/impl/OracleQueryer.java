@@ -5,7 +5,6 @@
 package com.skyeye.sql.query.impl;
 
 import com.skyeye.entity.ReportDataSource;
-import com.skyeye.entity.ReportParameter;
 import com.skyeye.sql.query.AbstractQueryer;
 import com.skyeye.sql.query.Queryer;
 
@@ -23,8 +22,8 @@ import com.skyeye.sql.query.Queryer;
  */
 public class OracleQueryer extends AbstractQueryer implements Queryer {
 
-    public OracleQueryer(ReportDataSource dataSource, ReportParameter parameter) {
-        super(dataSource, parameter);
+    public OracleQueryer(ReportDataSource dataSource) {
+        super(dataSource);
     }
 
 }

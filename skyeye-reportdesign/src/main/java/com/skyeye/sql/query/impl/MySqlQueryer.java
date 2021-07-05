@@ -5,7 +5,6 @@
 package com.skyeye.sql.query.impl;
 
 import com.skyeye.entity.ReportDataSource;
-import com.skyeye.entity.ReportParameter;
 import com.skyeye.sql.query.AbstractQueryer;
 import com.skyeye.sql.query.Queryer;
 import org.apache.commons.lang3.StringUtils;
@@ -25,8 +24,8 @@ import java.util.regex.Pattern;
  */
 public class MySqlQueryer extends AbstractQueryer implements Queryer {
 
-    public MySqlQueryer(ReportDataSource dataSource, ReportParameter parameter) {
-        super(dataSource, parameter);
+    public MySqlQueryer(ReportDataSource dataSource) {
+        super(dataSource);
     }
 
     @Override

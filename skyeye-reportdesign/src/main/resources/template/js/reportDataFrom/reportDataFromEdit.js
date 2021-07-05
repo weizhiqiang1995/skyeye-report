@@ -30,6 +30,8 @@ layui.config({
                 $("#dataBox").html(getFileContent(j.bean.staticTplPath));
                 dataFromType = j.bean.type;
                 initEvent(j.bean);
+
+                $("#analysisHeader").html($("#analysisHeaderTemplate").html());
                 $.each(j.bean.analysisData, function (i, item){
                     addAnalysisRow();
                     $("#key" + (rowNum - 1)).val(item.key);
@@ -37,8 +39,8 @@ layui.config({
                     $("#remark" + (rowNum - 1)).val(item.remark);
                     if(dataFromType == 4){
                         $("#dataType" + (rowNum - 1)).val(item.dataType);
-                        $("#dataLength" + (rowNum - 1)).val(item.width);
-                        $("#dataPrecision" + (rowNum - 1)).val(item.decimals);
+                        $("#dataLength" + (rowNum - 1)).val(item.dataLength);
+                        $("#dataPrecision" + (rowNum - 1)).val(item.dataPrecision);
                     }
                 });
 
@@ -111,9 +113,9 @@ layui.config({
         function getRESTData(){
             return {
                 restUrl: $("#restUrl").val(),
-                restMethod: $("#restMethod").val(),
-                restHeader: getRestRequestHeaderData(),
-                restRequestBody: restRequestBodyContent.getValue()
+                method: $("#restMethod").val(),
+                header: getRestRequestHeaderData(),
+                requestBody: restRequestBodyContent.getValue()
             };
         }
 
@@ -178,11 +180,21 @@ layui.config({
                 jsonContent.setValue(bean.jsonContent);
             } else if(dataFromType == 3){
                 // Rest接口数据源
+                $("#restUrl").val(bean.restUrl);
+                $("#restMethod").val(bean.restMethod);
+                $.each(JSON.parse(bean.restHeader), function (i, item){
+                    addRow();
+                    $("#headerKey" + (rowNum - 1)).val(item.headerKey);
+                    $("#headerValue" + (rowNum - 1)).val(item.headerValue);
+                    $("#headerDescription" + (rowNum - 1)).val(item.headerDescription);
+                });
                 restRequestBodyContent = CodeMirror.fromTextArea(document.getElementById("requestBody"), $.extend(true, commonOptions, {
                     mode: "xml",
                     theme: "default"
                 }));
-                restRequestBodyContent.setValue(bean.restContent);
+                if(!isNull(bean.restContent)){
+                    restRequestBodyContent.setValue(bean.restContent);
+                }
             } else if(dataFromType == 4){
                 // SQL数据源
                 showGrid({
@@ -195,6 +207,7 @@ layui.config({
                     ajaxSendLoadBefore: function(hdb){
                     },
                     ajaxSendAfter:function(json){
+                        $("#sqlDataBase").val(bean.sqlDataBaseId);
                     }
                 });
                 sqlContent = CodeMirror.fromTextArea(document.getElementById("sqlData"), $.extend(true, commonOptions, {
@@ -244,7 +257,7 @@ layui.config({
                 url = "reportcommon003";
             } else if(dataFromType == 3){
                 // Rest接口数据源
-                url = "";
+                url = "reportcommon005";
             } else if(dataFromType == 4){
                 // SQL数据源
                 url = "reportcommon004";
@@ -278,7 +291,16 @@ layui.config({
                 };
             } else if(dataFromType == 3){
                 // Rest接口数据源
-                params = {};
+                if(isNull($("#restUrl").val())){
+                    winui.window.msg('请填写url', {icon: 2,time: 2000});
+                    return null;
+                }
+                params = {
+                    requestUrl: $("#restUrl").val(),
+                    requestMethod: $("#restMethod").val(),
+                    requestHeader: getRestRequestHeaderDataToResolution(),
+                    requestBody: restRequestBodyContent.getValue()
+                };
             } else if(dataFromType == 4){
                 // SQL数据源
                 if(isNull($("#sqlDataBase").val())){
@@ -297,6 +319,17 @@ layui.config({
             return params;
         }
 
+        function getRestRequestHeaderDataToResolution(){
+            var tableData = new Array();
+            var rowTr = $("#restHeaderTable tr");
+            $.each(rowTr, function(i, item) {
+                //获取行编号
+                var rowNum = $(item).attr("trcusid").replace("tr", "");
+                tableData[$("#headerKey" + rowNum).val()] = $("#headerValue" + rowNum).val();
+            });
+            return JSON.stringify(tableData);
+        }
+
         function getDataByDataFromType(json){
             if(dataFromType == 1){
                 // XML数据源
@@ -306,6 +339,7 @@ layui.config({
                 return json.bean.nodeArray;
             } else if(dataFromType == 3){
                 // Rest接口数据源
+                return json.bean.nodeArray;
             } else if(dataFromType == 4){
                 // SQL数据源
                 return json.rows;

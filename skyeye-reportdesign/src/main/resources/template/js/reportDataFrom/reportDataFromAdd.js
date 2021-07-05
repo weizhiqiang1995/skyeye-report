@@ -105,9 +105,9 @@ layui.config({
         function getRESTData(){
             return {
                 restUrl: $("#restUrl").val(),
-                restMethod: $("#restMethod").val(),
-                restHeader: getRestRequestHeaderData(),
-                restRequestBody: restRequestBodyContent.getValue()
+                method: $("#restMethod").val(),
+                header: getRestRequestHeaderData(),
+                requestBody: restRequestBodyContent.getValue()
             };
         }
 
@@ -251,7 +251,7 @@ layui.config({
                 url = "reportcommon003";
             } else if(dataFromType == 3){
                 // Rest接口数据源
-                url = "";
+                url = "reportcommon005";
             } else if(dataFromType == 4){
                 // SQL数据源
                 url = "reportcommon004";
@@ -286,7 +286,16 @@ layui.config({
                 };
             } else if(dataFromType == 3){
                 // Rest接口数据源
-                params = {};
+                if(isNull($("#restUrl").val())){
+                    winui.window.msg('请填写url', {icon: 2,time: 2000});
+                    return null;
+                }
+                params = {
+                    requestUrl: $("#restUrl").val(),
+                    requestMethod: $("#restMethod").val(),
+                    requestHeader: getRestRequestHeaderDataToResolution(),
+                    requestBody: restRequestBodyContent.getValue()
+                };
             } else if(dataFromType == 4){
                 // SQL数据源
                 if(isNull($("#sqlDataBase").val())){
@@ -305,6 +314,17 @@ layui.config({
             return params;
         }
 
+        function getRestRequestHeaderDataToResolution(){
+            var tableData = new Array();
+            var rowTr = $("#restHeaderTable tr");
+            $.each(rowTr, function(i, item) {
+                //获取行编号
+                var rowNum = $(item).attr("trcusid").replace("tr", "");
+                tableData[$("#headerKey" + rowNum).val()] = $("#headerValue" + rowNum).val();
+            });
+            return JSON.stringify(tableData);
+        }
+
         function getDataByDataFromType(dataFromType, json){
             if(dataFromType == 1){
                 // XML数据源
@@ -314,6 +334,7 @@ layui.config({
                 return json.bean.nodeArray;
             } else if(dataFromType == 3){
                 // Rest接口数据源
+                return json.bean.nodeArray;
             } else if(dataFromType == 4){
                 // SQL数据源
                 return json.rows;

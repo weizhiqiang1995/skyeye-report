@@ -260,8 +260,8 @@ public class ReportCommonServiceImpl implements ReportCommonService {
         try {
             String requestUrl = inputObject.getParams().get("requestUrl").toString();
             String requestMethod = inputObject.getParams().get("requestMethod").toString();
-            String requestBody = inputObject.getParams().get("requestBody").toString();
             String requestHeader = inputObject.getParams().get("requestHeader").toString();
+            String requestBody = inputObject.getParams().get("requestBody").toString();
             Gson gson = new Gson();
             Map<String, String> requestHeaderKey2Value = gson.fromJson(requestHeader, Map.class);
             String responseData = HttpRequestUtil.getDataByRequest(requestUrl, requestMethod, requestHeaderKey2Value, requestBody);

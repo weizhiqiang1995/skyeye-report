@@ -4,6 +4,7 @@
 
 package com.skyeye.service.impl;
 
+import com.gexin.fastjson.JSON;
 import com.gexin.fastjson.JSONArray;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
@@ -12,7 +13,11 @@ import com.skyeye.common.object.OutputObject;
 import com.skyeye.common.util.ToolUtil;
 import com.skyeye.constants.ReportConstants;
 import com.skyeye.dao.*;
+import com.skyeye.entity.ReportDataSource;
+import com.skyeye.entity.ReportMetaDataRow;
+import com.skyeye.service.ReportDataBaseService;
 import com.skyeye.service.ReportDataFromService;
+import com.skyeye.sql.query.factory.QueryerFactory;
 import com.skyeye.util.AnalysisDataToMapUtil;
 import com.skyeye.util.XmlExercise;
 import net.sf.json.JSONObject;
@@ -65,6 +70,9 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
 
     @Autowired
     private ReportDataFromSQLAnalysisDao reportDataFromSQLAnalysisDao;
+
+    @Autowired
+    private ReportDataBaseService reportDataBaseService;
 
     /**
      * 获取数据源列表信息
@@ -141,8 +149,8 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
             subAnalysisData.put("remark", obj.get("remark"));
             if (ReportConstants.DataFromTypeMation.SQL.getType() == type) {
                 subAnalysisData.put("dataType", obj.get("dataType"));
-                subAnalysisData.put("dataLength", obj.get("dataLength"));
-                subAnalysisData.put("dataPrecision", obj.get("dataPrecision"));
+                subAnalysisData.put("dataLength", ToolUtil.isBlank(obj.get("dataLength").toString()) ? 0 : obj.get("dataLength"));
+                subAnalysisData.put("dataPrecision", ToolUtil.isBlank(obj.get("dataPrecision").toString()) ? 0 : obj.get("dataPrecision"));
             }
             subAnalysisParams.add(subAnalysisData);
         }
@@ -403,10 +411,28 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
             } else if (ReportConstants.DataFromTypeMation.REST_API.getType() == type) {
 
             } else if (ReportConstants.DataFromTypeMation.SQL.getType() == type) {
-
+                Map<String, Object> subReportDataFromMap = reportDataFromSQLDao.selectReportDataFromSQLByFromId(fromId);
+                String sqlContent = subReportDataFromMap.get("sqlContent").toString();
+                String dataBaseId = subReportDataFromMap.get("dataBaseId").toString();
+                // 1.获取数据源信息
+                ReportDataSource dataBase = reportDataBaseService.getReportDataSource(dataBaseId);
+                List<ReportMetaDataRow> metaDataRows = QueryerFactory.create(dataBase).getMetaDataRows(sqlContent);
+                return JSON.toJSONString(resetSqlResultData(metaDataRows));
             }
         }
         return "{}";
+    }
+
+    private List<Map<String, Object>> resetSqlResultData(List<ReportMetaDataRow> metaDataRows){
+        List<Map<String, Object>> result = new ArrayList<>();
+        metaDataRows.forEach(cells -> {
+            Map<String, Object> bean = new HashMap<>();
+            cells.getCells().forEach((key, cell) -> {
+                bean.put(key, cell.getValue());
+            });
+            result.add(bean);
+        });
+        return result;
     }
 
     /**

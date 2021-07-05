@@ -19,12 +19,13 @@
     <select id="getSQLAnalysisBySqlId" resultType="java.util.Map">
         SELECT
             `key`,
-            title,
+            title `name`,
             data_type dataType,
             data_length dataLength,
             data_precision dataPrecision,
             remark
-        FROM report_data_from_sql_analysis
+        FROM
+             report_data_from_sql_analysis
         WHERE sql_id = #{sqlId}
     </select>
 </mapper>

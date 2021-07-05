@@ -44,7 +44,7 @@ layui.config({
             cols: [[
                 { title: systemLanguage["com.skyeye.serialNumber"][languageType], type: 'numbers'},
                 { field: 'name', title: '名称', align: 'left', width: 150},
-                { field: 'typeName', title: '来源', align: 'left', width: 100 },
+                { field: 'typeName', title: '来源', align: 'left', width: 150 },
                 { field: 'remark', title: '备注', align: 'left', width: 150 },
                 { field: 'createName', title: '创建人', align: 'left', width: 100 },
                 { field: 'createTime', title: '创建时间', align: 'center', width: 140 },

@@ -23,7 +23,7 @@
         <if test="type != '' and type != null">
             AND rdf.type = #{type}
         </if>
-        ORDER BY rdf.last_update_time DESC
+        ORDER BY rdf.create_time DESC
     </select>
 
     <insert id="insertReportDataFrom" parameterType="java.util.Map">

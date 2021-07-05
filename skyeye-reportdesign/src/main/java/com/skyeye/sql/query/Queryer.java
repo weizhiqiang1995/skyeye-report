@@ -40,14 +40,9 @@ public interface Queryer {
     /**
      * 获取报表原始数据行集合
      *
-     * @return List[ReportMetaDataRow]
+     * @param sqlText sql语句
+     * @return
      */
-    List<ReportMetaDataRow> getMetaDataRows();
+    List<ReportMetaDataRow> getMetaDataRows(String sqlText);
 
-    /**
-     * 获取报表原始数据列集合
-     *
-     * @return List[ReportMetaDataColumn]
-     */
-    List<ReportMetaDataColumn> getMetaDataColumns();
 }
