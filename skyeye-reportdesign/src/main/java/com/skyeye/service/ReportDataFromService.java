@@ -91,4 +91,11 @@ public interface ReportDataFromService {
      * @param outputObject
      */
     void getReportDataFromDateByFromId(InputObject inputObject, OutputObject outputObject) throws Exception;
+
+    /**
+     * 根据数据来源ID查询Rest接口json返回值
+     *
+     * @return json返回值
+     */
+    String getRestUrlResponseByFromId(String fromId) throws Exception;
 }

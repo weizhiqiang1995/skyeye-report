@@ -8,6 +8,7 @@ import com.gexin.fastjson.JSON;
 import com.gexin.fastjson.JSONArray;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
+import com.google.gson.Gson;
 import com.skyeye.common.object.InputObject;
 import com.skyeye.common.object.OutputObject;
 import com.skyeye.common.util.ToolUtil;
@@ -19,6 +20,7 @@ import com.skyeye.service.ReportDataBaseService;
 import com.skyeye.service.ReportDataFromService;
 import com.skyeye.sql.query.factory.QueryerFactory;
 import com.skyeye.util.AnalysisDataToMapUtil;
+import com.skyeye.util.HttpRequestUtil;
 import com.skyeye.util.XmlExercise;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
@@ -458,6 +460,25 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
             }
         });
         outputObject.setBean(result);
+    }
+
+    @Override
+    public String getRestUrlResponseByFromId(String fromId) throws Exception {
+        String jsonStr = "";
+        Map<String, Object> reportDataFromMap = reportDataFromDao.getReportDataFromById(fromId);
+        if (reportDataFromMap != null) {
+            Map<String, Object> subReportDataFromMap = reportDataFromRestDao.selectReportDataFromRestByFromId(fromId);
+            String requestUrl = subReportDataFromMap.get("restUrl").toString();
+            String requestMethod = subReportDataFromMap.get("method").toString();
+            String requestHeader = subReportDataFromMap.get("header").toString();
+            String requestBody = subReportDataFromMap.get("requestBody").toString();
+            Gson gson = new Gson();
+            Map<String, String> requestHeaderKey2Value = gson.fromJson(requestHeader, Map.class);
+            String responseData = HttpRequestUtil.getDataByRequest(requestUrl, requestMethod, requestHeaderKey2Value, requestBody);
+            Map<String, Object> responseDataMap = gson.fromJson(responseData, Map.class);
+            jsonStr = gson.toJson(responseDataMap.get("data"));
+        }
+        return jsonStr;
     }
 
 }

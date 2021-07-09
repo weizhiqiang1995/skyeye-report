@@ -5,6 +5,7 @@
 package com.skyeye.util;
 
 import cn.hutool.core.collection.CollectionUtil;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -41,7 +42,7 @@ public class HttpRequestUtil {
         DataOutputStream out = null;
         HttpURLConnection conn = getHttpConnection(requestUrl, requestMethod);
         try {
-            if (!"GET".equalsIgnoreCase(requestMethod) && requestBody != null) {
+            if (!"GET".equalsIgnoreCase(requestMethod) && !StringUtils.isEmpty(requestBody)) {
                 conn.setDoInput(true);
                 conn.setDoOutput(true);
                 if (!CollectionUtil.isEmpty(requestHeader)) {
