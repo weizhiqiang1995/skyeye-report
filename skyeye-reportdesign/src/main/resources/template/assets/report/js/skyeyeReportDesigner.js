@@ -861,23 +861,73 @@ function afterRunBack(controlType, value){
 
 // 获取echarts的配置信息
 function getEchartsOptions(echartsMation){
-	var echartsJson = {};
+	var list = new Array();
 	layui.$.each(echartsMation.attr, function(key, val) {
+		val["useKey"] = key;
+		list.push(val);
+	});
+	list = list.sort(compare("useKey",1));
+	var echartsJson = {};
+	layui.$.each(list, function(i, val) {
 		var value = val.value;
-		echartsJson = layui.$.extend(true, echartsJson, calcKeyHasPointToJson(key, value));
+		var key = val.useKey;
+		echartsJson = layui.$.extend(true, {}, echartsJson, calcKeyHasPointToJson(echartsJson, key, [], value));
 	});
 	return echartsJson;
 }
 
-function calcKeyHasPointToJson(key, value){
+function calcKeyHasPointToJson(echartsJson, key, parentKey, value){
 	var keyArr = key.split(".");
+	if (isJSON(value)) {
+		value = JSON.parse(value);
+	}
 	var resultValue = value;
 	if(keyArr.length > 1){
-		resultValue = calcKeyHasPointToJson(key.substr(key.indexOf(".") + 1), value);
+		parentKey.push(key.substring(0, (key.indexOf("."))));
+		resultValue = calcKeyHasPointToJson(echartsJson, key.substr(key.indexOf(".") + 1), parentKey, value);
 	}
-	var result = {};
-	result[keyArr[0]] = resultValue;
-	return result;
+	var thisKey = keyArr[0];
+	if(judgeIsArray(thisKey)){
+		var mation;
+		var funStr = "echartsJson";
+		layui.$.each(parentKey, function(i, val) {
+			if(judgeIsArray(val)){
+				var parentKey = getInArrayStrIndex(val)
+				var parentIndex = getInArrayNumIndex(val);
+				mation = echartsJson[parentKey][parentIndex];
+				funStr += '["' + parentKey + '"][' + parentIndex + ']';
+			}else{
+				mation = echartsJson[val];
+				funStr += '["' + val + '"]';
+			}
+		});
+		mation = layui.$.extend(true, {}, mation, resultValue);
+		funStr += ' = mation';
+		eval(funStr);
+		return echartsJson;
+	}else{
+		var result = {};
+		result[thisKey] = resultValue;
+		return result;
+	}
+}
+
+function judgeIsArray(key){
+	if(key.indexOf('[') >= 0 && key.indexOf(']') >= 0){
+		return true;
+	}
+	return false;
+}
+
+function getInArrayNumIndex(key){
+	var startIndex = key.indexOf('[') + 1;
+	var endIndex = key.indexOf(']');
+	return parseInt(key.substring(startIndex, endIndex));
+}
+
+function getInArrayStrIndex(key){
+	var endIndex = key.indexOf('[');
+	return key.substring(0, endIndex);
 }
 
 function getVal(value){
@@ -903,4 +953,28 @@ function getScale(oldSize, newContentSize){
 		return 0;
 	}
 	return (a1 / a2).toFixed(6);
+}
+
+function compare(propertyName, order) {
+	return function (object1, object2) {
+		var value1 = isNull(object1[propertyName]) ? 0 : object1[propertyName].length;
+		var value2 = isNull(object2[propertyName]) ? 0 : object2[propertyName].length;
+		if(order == 0){
+			if (value2 < value1) {
+				return -1;
+			} else if (value2 > value1) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}if(order == 1){
+			if (value2 > value1) {
+				return -1;
+			} else if (value2 < value1) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}
+	}
 }

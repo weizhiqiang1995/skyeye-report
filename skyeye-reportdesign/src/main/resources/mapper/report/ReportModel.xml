@@ -64,9 +64,12 @@
             a.logo_path image,
             a.software_version version
         FROM
-            (SELECT b.* FROM report_model b WHERE b.state = 1 ORDER BY b.software_version DESC LIMIT 10000) a
+            (SELECT b.* FROM report_model b WHERE b.state = 1 ORDER BY b.software_version DESC LIMIT 10000) a,
+            report_import_model c
+        WHERE a.model_code_id = c.model_id
         GROUP BY
             a.model_code_id
+        ORDER BY c.create_time ASC
     </select>
 
 </mapper>

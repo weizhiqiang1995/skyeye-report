@@ -45,6 +45,7 @@
         FROM
             report_model_attr a
         WHERE a.model_id = #{modelId}
+        ORDER BY LENGTH(a.attr_code) ASC
     </select>
 
 </mapper>
