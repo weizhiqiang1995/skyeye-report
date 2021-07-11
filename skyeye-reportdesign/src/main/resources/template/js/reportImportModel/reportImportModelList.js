@@ -26,8 +26,8 @@ layui.config({
         limit: getLimit(),
         cols: [[
             { title: systemLanguage["com.skyeye.serialNumber"][languageType], type: 'numbers'},
-            { field: 'fileName', title: '文件名称', align: 'left', width: 150},
-            { field: 'modelId', title: '模型ID', align: 'left', width: 150 },
+            { field: 'fileName', title: '文件名称', align: 'left', width: 250},
+            { field: 'modelId', title: '模型ID', align: 'left', width: 250 },
             { field: 'createName', title: '创建人', align: 'left', width: 100 },
             { field: 'createTime', title: '创建时间', align: 'center', width: 140 },
             { field: 'lastUpdateName', title: '最后修改人', align: 'left', width: 100 },

@@ -22,6 +22,7 @@
         <if test="modelId != '' and modelId != null">
             AND a.model_id LIKE '%${modelId}%'
         </if>
+        ORDER BY a.create_time DESC
     </select>
 
     <select id="queryReportImportModelByFileName" resultType="java.lang.Integer">
