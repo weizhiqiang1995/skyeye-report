@@ -233,7 +233,7 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 							newChart.resize();
 						});
 						// 加入页面属性
-						echartsMation.attr = $.extend(true, echartsCustomOptions, echartsMation.attr);
+						echartsMation.attr = $.extend(true, {}, echartsCustomOptions, echartsMation.attr);
 						inPageEcharts[boxId] = $.extend(true, {}, echartsMation);
 						inPageEchartsObject[boxId] = newChart;
 						return boxId;
