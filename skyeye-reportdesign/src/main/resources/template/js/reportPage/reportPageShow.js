@@ -56,23 +56,34 @@ layui.config({
 
     function getDataFromRest(attr){
         var fromId = attr['custom.dataBaseMation'].value.id;
-        var xData = attr['xAxis.data'].pointValue;
-        var yData = attr['series.data'].pointValue;
-        if(isNull(fromId) || (isNull(xData) && isNull(yData))){
+        var needGetData = {};
+        $.each(attr, function(key, value){
+            if(value.editor == 9){
+                var pointValue = attr[key].pointValue;
+                if(!isNull(pointValue)){
+                    needGetData[pointValue] = attr[key].value;
+                }
+            }
+        });
+        if(isNull(fromId) || needGetData.length == 0){
             return attr;
         }
-        var needGetData = {};
-        needGetData[xData] = attr['xAxis.data'].value;
-        needGetData[yData] = attr['series.data'].value;
         var params = {
             fromId: fromId,
             needGetDataStr: JSON.stringify(needGetData)
         };
         AjaxPostUtil.request({url:reqBasePath + "reportdatafrom007", params: params, type:'json', method: "POST", callback:function(json){
             if(json.returnCode == 0){
-                console.log(json)
-                attr['xAxis.data'].value = json.bean[xData];
-                attr['series.data'].value = json.bean[yData];
+                $.each(json.bean, function(key, value){
+                    $.each(attr, function(key1, value1){
+                        if(value1.editor == 9){
+                            var pointValue = attr[key1].pointValue;
+                            if(!isNull(pointValue) && key == pointValue){
+                                attr[key1].value = value;
+                            }
+                        }
+                    });
+                });
             }else{
                 winui.window.msg(json.returnMessage, {icon: 2,time: 2000});
             }

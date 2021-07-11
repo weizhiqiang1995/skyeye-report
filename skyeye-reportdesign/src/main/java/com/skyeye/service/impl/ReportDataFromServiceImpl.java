@@ -411,7 +411,7 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
                 Map<String, Object> subReportDataFromMap = reportDataFromJsonDao.selectReportDataFromJsonByFromId(fromId);
                 return subReportDataFromMap.get("jsonContent").toString();
             } else if (ReportConstants.DataFromTypeMation.REST_API.getType() == type) {
-
+                return getRestUrlResponseByFromId(fromId);
             } else if (ReportConstants.DataFromTypeMation.SQL.getType() == type) {
                 Map<String, Object> subReportDataFromMap = reportDataFromSQLDao.selectReportDataFromSQLByFromId(fromId);
                 String sqlContent = subReportDataFromMap.get("sqlContent").toString();
