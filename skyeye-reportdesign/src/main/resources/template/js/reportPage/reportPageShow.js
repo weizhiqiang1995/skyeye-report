@@ -20,7 +20,7 @@ layui.config({
     // 获取初始化数据
     AjaxPostUtil.request({url:reqBasePath + "reportpage006", params: {rowId: rowId}, type:'json', method: "GET", callback:function(json){
         if(json.returnCode == 0){
-            initData = JSON.parse(json.bean.content);
+            initData = JSON.parse(getContentStr(json.bean.content));
             var modelList = initData.modelList;
             var widthScale = getScale(initData.contentWidth, content.width());
             var heightScale = getScale(initData.contentHeight, content.height());
@@ -53,6 +53,11 @@ layui.config({
             winui.window.msg(json.returnMessage, {icon: 2,time: 2000});
         }
     }});
+
+    function getContentStr(str){
+        str = str.replace(/%/g, '%25');
+        return decodeURIComponent(str);
+    }
 
     function getDataFromRest(attr){
         var fromId = attr['custom.dataBaseMation'].value.id;

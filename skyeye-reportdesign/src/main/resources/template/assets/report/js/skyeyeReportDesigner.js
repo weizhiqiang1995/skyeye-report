@@ -534,7 +534,7 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 							bgImage: skyeyeReportContent.css("backgroundImage").replace('url(','').replace(')', ''),
 							modelList: eachartsList
 						};
-						AjaxPostUtil.request({url:reqBasePath + "reportpage007", params: {rowId: rowId, content: JSON.stringify(params)}, type:'json', method: "POST", callback:function(json){
+						AjaxPostUtil.request({url:reqBasePath + "reportpage007", params: {rowId: rowId, content: encodeURIComponent(JSON.stringify(params))}, type:'json', method: "POST", callback:function(json){
 							if(json.returnCode == 0){
 								winui.window.msg(systemLanguage["com.skyeye.successfulOperation"][languageType], {icon: 1,time: 2000});
 							}else{
