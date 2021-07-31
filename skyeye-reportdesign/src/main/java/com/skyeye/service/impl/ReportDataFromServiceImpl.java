@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -382,14 +383,15 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
      * 根据数据来源id获取该数据来源下的所有数据并组装成map
      *
      * @param fromId 数据来源id
+     * @param needGetKeys 需要获取的key
      * @return 该数据来源下的所有数据并组装成map
      * @throws Exception
      */
     @Override
-    public Map<String, Object> getReportDataFromMapByFromId(String fromId) throws Exception {
+    public Map<String, Object> getReportDataFromMapByFromId(String fromId, List<String> needGetKeys) throws Exception {
         String jsonContent = getJsonStrByFromId(fromId);
         Map<String, Object> result = new HashMap<>();
-        AnalysisDataToMapUtil.getMapByJson("", jsonContent, null, result);
+        AnalysisDataToMapUtil.getMapByJson("", jsonContent, null, result, needGetKeys);
         return result;
     }
 
@@ -448,9 +450,10 @@ public class ReportDataFromServiceImpl implements ReportDataFromService {
         Map<String, Object> params = inputObject.getParams();
         // 根据数据来源id获取解析对应的数据
         String fromId = params.get("fromId").toString();
-        Map<String, Object> data = getReportDataFromMapByFromId(fromId);
         // 前台需要获取的数据json
         Map<String, Object> needGetData = JSONObject.fromObject(params.get("needGetDataStr").toString());
+        List<String> needGetKeys = needGetData.entrySet().stream().map(bean -> bean.getKey()).collect(Collectors.toList());
+        Map<String, Object> data = getReportDataFromMapByFromId(fromId, needGetKeys);
         Map<String, Object> result = new HashMap<>();
         needGetData.forEach((key, value) -> {
             if(data.containsKey(key)){

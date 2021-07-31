@@ -21,22 +21,47 @@ import java.util.*;
  */
 public class AnalysisDataToMapUtil {
 
-    public static void getMapByJson(String keyPrefix, String jsonStr, Integer jsonStrType, Map<String, Object> result){
+    /**
+     * 获取指定key的方法
+     *
+     * @param keyPrefix key的前缀
+     * @param jsonStr json串数据
+     * @param jsonStrType json串数据类型
+     * @param result 结果
+     * @param needGetKeys 需要获取的key的集合
+     */
+    public static void getMapByJson(String keyPrefix, String jsonStr, Integer jsonStrType, Map<String, Object> result, List<String> needGetKeys){
         jsonStrType = getJsonStrType(jsonStr, jsonStrType);
+        // 获取jsonStr是json对象还是json集合  1.对象  2.集合
+        Integer initJsonStrType = jsonStrType == 1 ? 1 : 2;
+        for(String key: needGetKeys){
+            getResult(keyPrefix, jsonStr, jsonStrType, result, key, initJsonStrType);
+        }
+    }
+
+    private static void getResult(String keyPrefix, String jsonStr, Integer jsonStrType, Map<String, Object> result, String targetKey, Integer initJsonStrType) {
+        // 这里只加载我们要获取的key的数据
+        if(!ToolUtil.isBlank(keyPrefix) && !targetKey.startsWith(keyPrefix)){
+            return;
+        }
+        if(targetKey.equalsIgnoreCase(keyPrefix) && initJsonStrType == 1){
+            result.put(targetKey, getData(jsonStr, jsonStrType));
+            return;
+        }
         if(jsonStrType == 1){
             // 对象
             JSONObject json = JSONObject.fromObject(jsonStr);
             json.forEach((key, value) -> {
                 String newKey = getNewKeyStr(keyPrefix, String.valueOf(key));
                 String newStr = String.valueOf(value);
-                getMapByJson(newKey, newStr, getJsonStrType(newStr, null), result);
+                getResult(newKey, newStr, getJsonStrType(newStr, null), result, targetKey, initJsonStrType == 1 ? 1 : initJsonStrType);
             });
         }else if(jsonStrType == 2){
             // 集合
             JSONArray json = JSONArray.fromObject(jsonStr);
             json.forEach(bean -> {
                 String newJsonStr = JSON.toJSONString(bean);
-                getMapByJson(keyPrefix, newJsonStr, 1, result);
+                getResult(keyPrefix, newJsonStr, 1, result, targetKey, 2);
             });
         }else if(jsonStrType == 3){
             // 字符串
@@ -60,6 +85,23 @@ public class AnalysisDataToMapUtil {
                 result.put(keyPrefix, value);
             }
         }
+    }
+
+    private static Object getData(String jsonStr, Integer jsonStrType) {
+        if(jsonStrType == 1){
+            // 对象
+            return JSONObject.fromObject(jsonStr);
+        }else if(jsonStrType == 2){
+            // 集合
+            return JSONArray.fromObject(jsonStr);
+        }else if(jsonStrType == 3){
+            // 字符串
+            return jsonStr;
+        }else if(jsonStrType == 4){
+            // 字符串数组
+            return JSONArray.fromObject(jsonStr);
+        }
+        return null;
     }
 
     private static String getNewKeyStr(String keyPrefix, String key) {
@@ -104,6 +146,12 @@ public class AnalysisDataToMapUtil {
         return false;
     }
 
+    /**
+     * 判断字符串是否是json实体对象
+     *
+     * @param content
+     * @return
+     */
     private static boolean isJsonObject(String content){
         try {
             JSONObject.fromObject(content);
@@ -113,6 +161,11 @@ public class AnalysisDataToMapUtil {
         }
     }
 
+    /**
+     * 判断字符串是否是json集合对象
+     * @param content
+     * @return
+     */
     private static boolean isJsonArray(String content){
         try {
             JSONArray.fromObject(content);
@@ -120,13 +173,6 @@ public class AnalysisDataToMapUtil {
         } catch (Exception ee){
             return false;
         }
-    }
-
-    public static void main(String[] args) {
-        Map<String, Object> result = new HashMap<>();
-        String str = "{\"employees\":[{\"firstName\":\"Bill\",\"lastName\":\"Gates\"},{\"firstName\":\"George\",\"lastName\":\"Bush\"},{\"firstName\":\"Thomas\",\"lastName\":\"Carter\"}]}";
-        getMapByJson("", str, null, result);
-        System.out.println(JSON.toJSONString(result));
     }
 
 }
