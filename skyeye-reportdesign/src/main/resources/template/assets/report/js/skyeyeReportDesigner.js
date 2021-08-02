@@ -653,6 +653,12 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 					if(isJSON(val.value)){
 						value = JSON.parse(val.value);
 					}
+					if(val.editor == '2'){
+						// 编辑器类型为数据框：如果是数组，则需要转成json串
+						if(value instanceof Array){
+							value = JSON.stringify(value);
+						}
+					}
 					return {
 						"bean": {
 							modelKey: key,
@@ -869,9 +875,17 @@ function getEchartsOptions(echartsMation){
 	list = list.sort(compare("useKey",1));
 	var echartsJson = {};
 	layui.$.each(list, function(i, val) {
-		var value = val.value;
+		var value = getVal(val.value);
 		var key = val.useKey;
 		echartsJson = layui.$.extend(true, {}, echartsJson, calcKeyHasPointToJson(echartsJson, key, [], value));
+	});
+	layui.$.each(echartsJson, function(key, val) {
+		if(judgeIsArray(key)){
+			var parentKey = getInArrayStrIndex(key)
+			var parentIndex = getInArrayNumIndex(key);
+			echartsJson[parentKey][parentIndex] = val;
+			delete echartsJson[key];
+		}
 	});
 	return echartsJson;
 }
@@ -904,7 +918,9 @@ function calcKeyHasPointToJson(echartsJson, key, parentKey, value){
 		mation = layui.$.extend(true, {}, mation, resultValue);
 		funStr += ' = mation';
 		eval(funStr);
-		return echartsJson;
+		var result = {};
+		result[thisKey] = mation;
+		return result;
 	}else{
 		var result = {};
 		result[thisKey] = resultValue;

@@ -46,8 +46,11 @@ layui.config({
     }, async: false});
 
     function getContentStr(str){
-        str = str.replace(/%/g, '%25');
-        return decodeURIComponent(str);
+        if(!isNull(str)){
+            str = str.replace(/%/g, '%25');
+            return decodeURIComponent(str);
+        }
+        return "{}";
     }
 
     $.skyeyeReportDesigner({
