@@ -143,7 +143,7 @@ body {
 
 .hd-main .navs .app-url .child-menu a,
 .hd-main .navs .app-url .child-menu a:hover {
-	color: #333
+	color: #333;
 }
 
 .hd-main .navs .app-url .li {
@@ -152,11 +152,12 @@ body {
 	border-radius: 3px;
 	display: block;
 	float: left;
-	text-align: center
+	text-align: center;
+	margin: 8px 0px;
 }
 
 .hd-main .navs .app-url .li:hover {
-	background-color: #e0e1e5
+	background-color: #e0e1e5;
 }
 
 .hd-main .navs .def-nav .icon,
@@ -184,7 +185,11 @@ body {
 .hd-main .navs .app-url .li .text {
 	height: 30px;
 	display: block;
-	font: 14px/30px "Microsoft YaHei", "Microsoft JhengHei"
+	font: 14px/30px "Microsoft YaHei", "Microsoft JhengHei";
+	overflow: hidden;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .hd-main .navs .pulldown-nav {

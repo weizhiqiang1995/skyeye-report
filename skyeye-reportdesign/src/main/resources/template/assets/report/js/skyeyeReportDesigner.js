@@ -167,12 +167,12 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 					str = f.getCommonParentHeader(str, item);
 					$.each(item.children, function (j, bean) {
 						if (f.isNull(bean.icon)) {
-							str += '<a class="li disk layui-col-xs3" href="javascript:void(0);" rowId="' + bean.id + '">' +
+							str += '<a class="li disk layui-col-xs3" href="javascript:void(0);" rowId="' + bean.id + '" title="' + bean.title + '">' +
 								'<img class="image" src="' + bean.image + '"/>' +
 								'<span class="text">' + bean.title + '</span>' +
 								'</a>';
 						} else {
-							str += '<a class="li disk layui-col-xs3" href="javascript:void(0);" rowId="' + bean.id + '">' +
+							str += '<a class="li disk layui-col-xs3" href="javascript:void(0);" rowId="' + bean.id + '" title="' + bean.title + '">' +
 								'<i class="icon' + bean.icon + '"></i>' +
 								'<span class="text">' + bean.title + '</span>' +
 								'</a>';
@@ -188,7 +188,7 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 				getBgImageHtml: function(item, str) {
 					str = f.getCommonParentHeader(str, item);
 					$.each(item.children, function (j, bean) {
-						str += '<a class="li bgImage layui-col-xs3" href="javascript:void(0);" rowId="' + bean.id + '">' +
+						str += '<a class="li bgImage layui-col-xs3" href="javascript:void(0);" rowId="' + bean.id + '" title="' + bean.title + '">' +
 							'<img class="image" src="' + bean.imagePath + '"/>' +
 							'<span class="text">' + bean.title + '</span>' +
 							'</a>';
