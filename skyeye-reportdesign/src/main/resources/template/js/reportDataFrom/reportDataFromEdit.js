@@ -182,12 +182,14 @@ layui.config({
                 // Rest接口数据源
                 $("#restUrl").val(bean.restUrl);
                 $("#restMethod").val(bean.restMethod);
-                $.each(JSON.parse(bean.restHeader), function (i, item){
-                    addRow();
-                    $("#headerKey" + (rowNum - 1)).val(item.headerKey);
-                    $("#headerValue" + (rowNum - 1)).val(item.headerValue);
-                    $("#headerDescription" + (rowNum - 1)).val(item.headerDescription);
-                });
+                if(!isNull(bean.restHeader)) {
+                    $.each(JSON.parse(bean.restHeader), function (i, item) {
+                        addRow();
+                        $("#headerKey" + (rowNum - 1)).val(item.headerKey);
+                        $("#headerValue" + (rowNum - 1)).val(item.headerValue);
+                        $("#headerDescription" + (rowNum - 1)).val(item.headerDescription);
+                    });
+                }
                 restRequestBodyContent = CodeMirror.fromTextArea(document.getElementById("requestBody"), $.extend(true, commonOptions, {
                     mode: "xml",
                     theme: "default"
