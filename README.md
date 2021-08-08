@@ -8,6 +8,7 @@ skyeye-report是一款高性能的Java报表引擎，提供完善的基于网页
 #### 注意事项
 
 - 开源不易，给个star吧
+- [项目相关文档](https://gitee.com/doc_wei01/skyeye-report/blob/master/%E7%9B%B8%E5%85%B3%E6%96%87%E6%A1%A3.md)
 - 本系列其他商业产品：[点击查看](https://docs.qq.com/doc/DQlRxcVRMWWVjbU1i?_from=1&disableReturnList=1)
 - 免费进QQ群：1016439713。禁止发广告、招人信息等，一经发现直接踢出。
 - 需要进微信群的，进微信群需要支付五元费用(加我拉你进群(请备注：报表)，wzq_598748873)，为了防止发广告的等，望谅解
