@@ -6,6 +6,8 @@ package com.skyeye.common.util;
 import cn.hutool.json.JSONUtil;
 import com.skyeye.common.constans.Constants;
 import com.skyeye.common.object.ObjectConstant;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
@@ -1320,11 +1322,11 @@ public class ToolUtil {
 	 */
 	public static boolean isJson(String content) {
 		try {
-			JSONUtil.toBean(content, null);
+			JSONObject.fromObject(content);
 			return true;
 		} catch (Exception e) {
 			try {
-				JSONUtil.toList(content, null);
+				JSONArray.fromObject(content);
 				return true;
 			} catch (Exception e2) {
 				return false;
