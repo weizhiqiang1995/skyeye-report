@@ -47,7 +47,7 @@
         <property id="modelId" name="modelId" ref="required" var="模型id"/>
     </url>
     <url id="reportimportmodel003" path="/post/ReportImportModelController/delReportImportModelById" val="根据id删除文件模型关系表格信息" allUse="1" method="DELETE" groupName="文件模型关系">
-        <property id="id" name="id" ref="required" var="文件模型唯一id"/>
+        <property id="rowId" name="id" ref="required" var="文件模型唯一id"/>
     </url>
     <url id="reportimportmodel004" path="/post/ReportImportModelController/updateReportImportModelById" val="更新文件模型关系表格信息" allUse="1" method="PUT" groupName="文件模型关系">
         <property id="id" name="id" ref="required" var="文件模型唯一id"/>
