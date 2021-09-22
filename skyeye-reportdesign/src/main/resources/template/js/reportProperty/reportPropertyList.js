@@ -127,7 +127,7 @@ layui.config({
     function getTableParams(){
         return {
             title: $("#title").val(),
-            code: $("#code").val()
+            attrCode: $("#attrCode").val()
         };
     }
 
