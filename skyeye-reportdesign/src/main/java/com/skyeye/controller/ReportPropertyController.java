@@ -64,6 +64,30 @@ public class ReportPropertyController {
     }
 
     /**
+     * 根据Id更新模型属性
+     *
+     * @param inputObject
+     * @param outputObject
+     */
+    @RequestMapping("/post/ReportPropertyController/updateReportPropertyById")
+    @ResponseBody
+    public void updateReportPropertyById(InputObject inputObject, OutputObject outputObject) throws Exception {
+        reportPropertyService.updateReportPropertyById(inputObject, outputObject);
+    }
+
+    /**
+     * 根据Id回显模型属性
+     *
+     * @param inputObject
+     * @param outputObject
+     */
+    @RequestMapping("/post/ReportPropertyController/getReportPropertyByIdToEdit")
+    @ResponseBody
+    public void getReportPropertyByIdToEdit(InputObject inputObject, OutputObject outputObject) throws Exception {
+        reportPropertyService.getReportPropertyByIdToEdit(inputObject, outputObject);
+    }
+
+    /**
      * 根据id获取模型属性详情
      *
      * @param inputObject

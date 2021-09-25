@@ -26,6 +26,8 @@ public interface ReportPropertyDao {
 
     void delReportPropertyById(@Param("id") String id);
 
+    void updateReportPropertyById(Map<String, Object> map);
+
     Map<String, Object> getReportPropertyById(@Param("id") String id);
 
 }

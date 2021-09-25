@@ -27,6 +27,13 @@
         delete from report_property where id = #{id}
     </delete>
 
+    <update id="updateReportPropertyById" parameterType="java.util.Map">
+        update report_property
+        set title = #{title}, code = #{code}, editor_type = #{editorType},
+            optional = #{optional}, dafault_value = #{defaultValue}, last_update_id = #{userId}, last_update_time = #{lastUpdateTime}
+        where id = #{id}
+    </update>
+
     <select id="getReportPropertyById" parameterType="java.lang.String" resultType="java.util.Map">
         SELECT
             rp.id,

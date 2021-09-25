@@ -57,35 +57,9 @@ public class ReportPropertyServiceImpl implements ReportPropertyService {
         inputParams.put("id", ToolUtil.getSurFaceId());
         Integer optional = Integer.valueOf(inputParams.get("optional").toString());
         // 当optional=1时, 需要解析options. 当optional=2时, defaultValue为必填
-        if (Integer.valueOf(1).equals(optional)) {
-            List<Map<String, Object>> propertyValueList = new ArrayList<>();
-            List<Map> options = JSONUtil.toList(inputParams.get("options").toString(), Map.class);
-            Map<String, Object> tempMap;
-            boolean flag = false;
-            for (int index = 0, len = options.size(); index < len; index++) {
-                tempMap = options.get(index);
-                // 存放属性表值字段
-                Map<String, Object> propertyValueParams = new HashMap<>();
-                propertyValueParams.put("propertyId", inputParams.get("id"));
-                propertyValueParams.put("id", ToolUtil.getSurFaceId());
-                propertyValueParams.put("title", tempMap.get("title"));
-                propertyValueParams.put("value", tempMap.get("value"));
-                Integer defaultChoose = Integer.valueOf(tempMap.get("defaultChoose").toString());
-
-                flag = !flag ? (Integer.valueOf(1).equals(defaultChoose) ? false : true) : false;
-                propertyValueParams.put("defaultChoose", flag ? 2 : 1);
-                propertyValueParams.put("orderBy", index + 1);
-                propertyValueList.add(propertyValueParams);
-            }
-            reportPropertyValueDao.insertReportPropertyValue(propertyValueList);
-        } else {
-            Object defaultValue = inputParams.get("defaultValue");
-            if (defaultValue == null || StringUtils.isEmpty(defaultValue.toString())) {
-                outputObject.setreturnMessage("标识属性值为不可选时, 属性默认值必填");
-                return;
-            }
+        if (checkOptionalValue(inputObject, outputObject, inputParams, optional)) {
+            return;
         }
-        inputParams.put("userId", inputObject.getLogParams().get("id"));
         inputParams.put("createTime", ToolUtil.getTimeAndToString());
         reportPropertyDao.insertReportProperty(inputParams);
     }
@@ -99,7 +73,59 @@ public class ReportPropertyServiceImpl implements ReportPropertyService {
     }
 
     @Override
-    public void getReportPropertyById(InputObject inputObject, OutputObject outputObject) throws Exception {
+    @Transactional(value = "transactionManager")
+    public void updateReportPropertyById(InputObject inputObject, OutputObject outputObject) throws Exception {
+        Map<String, Object> inputParams = inputObject.getParams();
+        Integer optional = Integer.valueOf(inputParams.get("optional").toString());
+        String id = inputParams.get("id").toString();
+        reportPropertyValueDao.delReportPropertyValueByPropertyId(id);
+        // 当optional=1时, 需要解析options. 当optional=2时, defaultValue为必填
+        if (checkOptionalValue(inputObject, outputObject, inputParams, optional)) {
+            return;
+        }
+        inputParams.put("lastUpdateTime", ToolUtil.getTimeAndToString());
+        reportPropertyDao.updateReportPropertyById(inputParams);
+    }
+
+    private boolean checkOptionalValue(InputObject inputObject, OutputObject outputObject, Map<String, Object> inputParams, Integer optional) throws Exception {
+        if (Integer.valueOf(1).equals(optional)) {
+            saveReportPropertyValueList(inputParams);
+        } else {
+            Object defaultValue = inputParams.get("defaultValue");
+            if (defaultValue == null || StringUtils.isEmpty(defaultValue.toString())) {
+                outputObject.setreturnMessage("标识属性值为不可选时, 属性默认值必填");
+                return true;
+            }
+        }
+        inputParams.put("userId", inputObject.getLogParams().get("id"));
+        return false;
+    }
+
+    private void saveReportPropertyValueList(Map<String, Object> inputParams) {
+        List<Map<String, Object>> propertyValueList = new ArrayList<>();
+        List<Map> options = JSONUtil.toList(inputParams.get("options").toString(), Map.class);
+        Map<String, Object> tempMap;
+        boolean flag = false;
+        for (int index = 0, len = options.size(); index < len; index++) {
+            tempMap = options.get(index);
+            // 存放属性表值字段
+            Map<String, Object> propertyValueParams = new HashMap<>();
+            propertyValueParams.put("propertyId", inputParams.get("id"));
+            propertyValueParams.put("id", ToolUtil.getSurFaceId());
+            propertyValueParams.put("title", tempMap.get("title"));
+            propertyValueParams.put("value", tempMap.get("value"));
+            Integer defaultChoose = Integer.valueOf(tempMap.get("defaultChoose").toString());
+
+            flag = !flag ? (Integer.valueOf(1).equals(defaultChoose) ? false : true) : false;
+            propertyValueParams.put("defaultChoose", flag ? 2 : 1);
+            propertyValueParams.put("orderBy", index + 1);
+            propertyValueList.add(propertyValueParams);
+        }
+        reportPropertyValueDao.insertReportPropertyValue(propertyValueList);
+    }
+
+    @Override
+    public void getReportPropertyByIdToEdit(InputObject inputObject, OutputObject outputObject) throws Exception {
         String id = inputObject.getParams().get("id").toString();
         Map<String, Object> reportPropertyMap = reportPropertyDao.getReportPropertyById(id);
         if (reportPropertyMap != null) {
@@ -109,6 +135,13 @@ public class ReportPropertyServiceImpl implements ReportPropertyService {
                 reportPropertyMap.put("options", JSONUtil.toJsonStr(reportPropertyValueList));
             }
         }
+        outputObject.setBean(reportPropertyMap);
+    }
+
+    @Override
+    public void getReportPropertyById(InputObject inputObject, OutputObject outputObject) throws Exception {
+        String id = inputObject.getParams().get("id").toString();
+        Map<String, Object> reportPropertyMap = reportPropertyDao.getReportPropertyById(id);
         outputObject.setBean(reportPropertyMap);
     }
 

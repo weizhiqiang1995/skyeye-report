@@ -42,6 +42,22 @@ public interface ReportPropertyService {
     void delReportPropertyById(InputObject inputObject, OutputObject outputObject) throws Exception;
 
     /**
+     * 根据Id更新模型属性
+     *
+     * @param inputObject
+     * @param outputObject
+     */
+    void updateReportPropertyById(InputObject inputObject, OutputObject outputObject) throws Exception;
+
+    /**
+     * 根据Id回显模型属性
+     *
+     * @param inputObject
+     * @param outputObject
+     */
+    void getReportPropertyByIdToEdit(InputObject inputObject, OutputObject outputObject) throws Exception;
+
+    /**
      * 根据id获取模型属性详情
      *
      * @param inputObject
