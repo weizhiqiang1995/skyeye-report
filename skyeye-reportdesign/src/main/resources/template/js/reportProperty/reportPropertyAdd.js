@@ -15,44 +15,57 @@ layui.config({
         var usetableTemplate = $("#usetableTemplate").html();
         var selOption = getFileContent('tpl/template/select-option.tpl');
 
-        // 连接池数据变化
-        form.on('select(poolClass)', function(data) {
+        skyeyeReportUtil.getReportEditorType("editorType", selOption, function (){
+            form.render('select');
+        });
+
+        // 属性值是否可选的变化变化
+        form.on('radio(optional)', function(data) {
             var val = data.value;
-            var options = getInPoingArr(poolList, "id", val, "options");
-            options = JSON.parse(options);
-            $("#useTable").html("");
-            rowNum = 1;
-            $.each(options, function(key, value){
-                addRow();
-                $("#configKey" + (rowNum - 1)).val(key);
-                $("#configValue" + (rowNum - 1)).val(value);
-            });
+            if(val == 1){
+                $("#canChoose").show();
+                $("#canNotChoose").hide();
+            }else{
+                $("#canChoose").hide();
+                $("#canNotChoose").show();
+            }
         });
 
         matchingLanguage();
         form.render();
         form.on('submit(formAddBean)', function (data) {
             if (winui.verifyForm(data.elem)) {
+                // 是否可选
+                var optional = $("input[name='optional']:checked").val();
                 var tableData = new Array();
-                var rowTr = $("#useTable tr");
-                $.each(rowTr, function(i, item) {
-                    //获取行编号
-                    var rowNum = $(item).attr("trcusid").replace("tr", "");
-                    var row = {
-                        configKey: $("#configKey" + rowNum).val(),
-                        configValue: $("#configValue" + rowNum).val(),
-                        remark: $("#remark" + rowNum).val()
-                    };
-                    tableData.push(row);
-                });
+                if(optional == 1){
+                    var rowTr = $("#useTable tr");
+                    $.each(rowTr, function(i, item) {
+                        var rowNum = $(item).attr("trcusid").replace("tr", "");
+                        var row = {
+                            title: $("#title" + rowNum).val(),
+                            value: $("#value" + rowNum).val(),
+                            dafaultChoose: $("input[name='dafaultChoose" + rowNum + "']:checked").val()
+                        };
+                        tableData.push(row);
+                    });
+                    if(tableData.length == 1){
+                        winui.window.msg('请最少填写一条属性值', {icon: 2,time: 2000});
+                        return false;
+                    }
+                }else{
+                    if(isNull($("#dafaultValue").val())){
+                        winui.window.msg('请填写默认值', {icon: 2,time: 2000});
+                        return false;
+                    }
+                }
+
                 var params = {
-                    name: $("#name").val(),
-                    jdbcUrl: $("#jdbcUrl").val(),
-                    user: $("#user").val(),
-                    password: $("#password").val(),
-                    dataType: $("#dataType").val(),
-                    poolClass: $("#poolClass").val(),
-                    comment: $("#comment").val(),
+                    title: $("#title").val(),
+                    attrCode: $("#attrCode").val(),
+                    editorType: $("#editorType").val(),
+                    optional: optional,
+                    defaultValue: $("#defaultValue").val(),
                     options: JSON.stringify(tableData),
                 };
                 AjaxPostUtil.request({url:reqBasePath + "reportdatabase002", params: params, type:'json', method: "POST", callback:function(json){

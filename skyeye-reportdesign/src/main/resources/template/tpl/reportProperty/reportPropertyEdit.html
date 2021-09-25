@@ -19,56 +19,43 @@
             <span class="hr-title">基础信息</span><hr>
         </div>
         <div class="layui-form-item layui-col-xs12">
-            <label class="layui-form-label">数据库名称<i class="red">*</i></label>
+            <label class="layui-form-label">标题<i class="red">*</i></label>
             <div class="layui-input-block">
-                <input type="text" id="name" name="name" win-verify="required" placeholder="数据库名称" class="layui-input" maxlength="100" value="{{name}}"/>
-            </div>
-        </div>
-        <div class="layui-form-item layui-col-xs12">
-            <label class="layui-form-label">连接串<i class="red">*</i></label>
-            <div class="layui-input-block">
-                <input type="text" id="jdbcUrl" name="jdbcUrl" win-verify="required" placeholder="请输入连接字符串" class="layui-input" maxlength="200" value="{{jdbcUrl}}"/>
+                <input type="text" id="title" name="title" win-verify="required" placeholder="请输入标题" class="layui-input" maxlength="100" value="{{title}}"/>
             </div>
         </div>
         <div class="layui-form-item layui-col-xs6">
-            <label class="layui-form-label">用户名<i class="red">*</i></label>
+            <label class="layui-form-label">属性<i class="red">*</i></label>
             <div class="layui-input-block">
-                <input type="text" id="user" name="user" win-verify="required" placeholder="请输入用户名" class="layui-input" maxlength="100" value="{{user}}"/>
+                <input type="text" id="attrCode" name="attrCode" win-verify="required" placeholder="请输入属性" class="layui-input" maxlength="100" value="{{attrCode}}"/>
             </div>
         </div>
         <div class="layui-form-item layui-col-xs6">
-            <label class="layui-form-label">密码</label>
+            <label class="layui-form-label">编辑器类型<i class="red">*</i></label>
             <div class="layui-input-block">
-                <input type="text" id="password" name="password" placeholder="请输入密码" class="layui-input" maxlength="100" value="{{password}}"/>
-            </div>
-        </div>
-        <div class="layui-form-item layui-col-xs6">
-            <label class="layui-form-label">数据源<i class="red">*</i></label>
-            <div class="layui-input-block">
-                <select id="dataType" name="dataType" lay-search win-verify="required">
-
-                </select>
-            </div>
-        </div>
-        <div class="layui-form-item layui-col-xs6">
-            <label class="layui-form-label">连接池<i class="red">*</i></label>
-            <div class="layui-input-block">
-                <select id="poolClass" name="poolClass" lay-search win-verify="required" lay-filter="poolClass">
+                <select id="editorType" name="editorType" lay-search win-verify="required">
 
                 </select>
             </div>
         </div>
         <div class="layui-form-item layui-col-xs12">
-            <label class="layui-form-label">备注</label>
-            <div class="layui-input-block">
-                <textarea id="comment" name="comment" placeholder="请输入备注" maxlength="200" class="layui-textarea" style="height: 100px;">{{comment}}</textarea>
+            <span class="hr-title">属性值信息</span><hr>
+        </div>
+        <div class="layui-form-item layui-col-xs12">
+            <label class="layui-form-label">是否可选<i class="red">*</i></label>
+            <div class="layui-input-block winui-radio">
+                <input type="radio" name="optional" value="1" title="可选" lay-filter="optional" />
+                <input type="radio" name="optional" value="2" title="不可选" lay-filter="optional"/>
             </div>
         </div>
-        <div class="layui-form-item layui-col-xs12">
-            <span class="hr-title">配置选项</span><hr>
+        <div class="layui-form-item layui-col-xs12" id="canNotChoose">
+            <label class="layui-form-label">默认值<i class="red">*</i></label>
+            <div class="layui-input-block">
+                <input type="text" id="dafaultValue" name="dafaultValue" placeholder="请输入默认值" class="layui-input" maxlength="100" value="{{dafaultValue}}"/>
+            </div>
         </div>
-        <div class="layui-form-item layui-col-xs12">
-            <label class="layui-form-label">配置选项：</label>
+        <div class="layui-form-item layui-col-xs12" style="display: none" id="canChoose">
+            <label class="layui-form-label">属性值选项：</label>
             <div class="layui-input-block">
                 <div class="winui-toolbar">
                     <div class="winui-tool" style="text-align: left;">
@@ -80,9 +67,9 @@
                     <thead>
                     <tr>
                         <th style="width: 30px;"></th>
-                        <th style="width: 150px;">配置项<i class="red">*</i></th>
-                        <th style="width: 150px;">配置值</th>
-                        <th style="width: 200px;">备注</th>
+                        <th style="width: 150px;">标题</th>
+                        <th style="width: 150px;">属性值<i class="red">*</i></th>
+                        <th style="width: 200px;">是否默认<i class="red">*</i></th>
                     </tr>
                     </thead>
                     <tbody id="useTable" class="insurance-table">
@@ -90,11 +77,9 @@
                 </table>
             </div>
         </div>
-
         <div class="layui-form-item layui-col-xs12">
             <div class="layui-input-block">
                 <button class="winui-btn" id="cancle"><language showName="com.skyeye.cancel"></language></button>
-                <button class="winui-btn" lay-submit lay-filter="testConnection">连接测试</button>
                 <button class="winui-btn" lay-submit lay-filter="formEditBean"><language showName="com.skyeye.save"></language></button>
             </div>
         </div>
@@ -105,9 +90,14 @@
     <script type="text/x-handlebars-template" id="usetableTemplate">
         <tr trcusid="{{trId}}">
             <td><input type="checkbox" rowId="{{id}}" lay-filter="checkboxProperty" name="tableCheckRow"/></td>
-            <td><input type="text" class="layui-input" id="{{configKey}}" win-verify="required"/></td>
-            <td><input type="text" class="layui-input" id="{{configValue}}"/></td>
-            <td><input type="text" class="layui-input" id="{{remark}}"/></td>
+            <td><input type="text" class="layui-input" id="{{title}}"/></td>
+            <td><input type="text" class="layui-input" id="{{value}}" win-verify="required"/></td>
+            <td>
+                <div class="winui-radio">
+                    <input type="radio" name="{{dafaultChoose}}" value="1" title="是" lay-filter="{{dafaultChoose}}" />
+                    <input type="radio" name="{{dafaultChoose}}" value="2" title="否" lay-filter="{{dafaultChoose}}" />
+                </div>
+            </td>
         </tr>
     </script>
 

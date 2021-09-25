@@ -12,13 +12,13 @@ layui.config({
         form = layui.form,
         table = layui.table;
 
-    authBtn('1624759338639');
+    authBtn('1632578804216');
     // 属性列表
     table.render({
         id: 'messageTable',
         elem: '#messageTable',
         method: 'post',
-        url: reqBasePath + 'reportpage001',
+        url: reqBasePath + 'reportproperty001',
         where: getTableParams(),
         even: true,
         page: true,
