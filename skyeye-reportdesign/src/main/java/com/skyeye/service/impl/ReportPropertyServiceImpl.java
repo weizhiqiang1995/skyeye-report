@@ -4,10 +4,24 @@
 
 package com.skyeye.service.impl;
 
+import cn.hutool.json.JSONUtil;
+import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
+import com.github.miemiedev.mybatis.paginator.domain.PageList;
+import com.skyeye.common.object.InputObject;
+import com.skyeye.common.object.OutputObject;
+import com.skyeye.common.util.ToolUtil;
 import com.skyeye.dao.ReportPropertyDao;
+import com.skyeye.dao.ReportPropertyValueDao;
 import com.skyeye.service.ReportPropertyService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName: ReportPropertyServiceImpl
@@ -23,4 +37,85 @@ public class ReportPropertyServiceImpl implements ReportPropertyService {
     @Autowired
     private ReportPropertyDao reportPropertyDao;
 
+    @Autowired
+    private ReportPropertyValueDao reportPropertyValueDao;
+
+    @Override
+    public void getReportPropertyList(InputObject inputObject, OutputObject outputObject) throws Exception {
+        Map<String, Object> inputParams = inputObject.getParams();
+        List<Map<String, Object>> beans = reportPropertyDao.getReportPropertyList(inputParams,
+                new PageBounds(Integer.parseInt(inputParams.get("page").toString()), Integer.parseInt(inputParams.get("limit").toString())));
+        PageList<Map<String, Object>> beansPageList = (PageList<Map<String, Object>>) beans;
+        outputObject.setBeans(beans);
+        outputObject.settotal(beansPageList.getPaginator().getTotalCount());
+    }
+
+    @Override
+    @Transactional(value = "transactionManager")
+    public void insertReportProperty(InputObject inputObject, OutputObject outputObject) throws Exception {
+        Map<String, Object> inputParams = inputObject.getParams();
+        inputParams.put("id", ToolUtil.getSurFaceId());
+        Integer optional = Integer.valueOf(inputParams.get("optional").toString());
+        // 当optional=1时, 需要解析options. 当optional=2时, defaultValue为必填
+        if (Integer.valueOf(1).equals(optional)) {
+            List<Map<String, Object>> propertyValueList = new ArrayList<>();
+            List<Map> options = JSONUtil.toList(inputParams.get("options").toString(), Map.class);
+            Map<String, Object> tempMap;
+            boolean flag = false;
+            for (int index = 0, len = options.size(); index < len; index++) {
+                tempMap = options.get(index);
+                // 存放属性表值字段
+                Map<String, Object> propertyValueParams = new HashMap<>();
+                propertyValueParams.put("propertyId", inputParams.get("id"));
+                propertyValueParams.put("id", ToolUtil.getSurFaceId());
+                propertyValueParams.put("title", tempMap.get("title"));
+                propertyValueParams.put("value", tempMap.get("value"));
+                Integer defaultChoose = Integer.valueOf(tempMap.get("defaultChoose").toString());
+
+                flag = !flag ? (Integer.valueOf(1).equals(defaultChoose) ? false : true) : false;
+                propertyValueParams.put("defaultChoose", flag ? 2 : 1);
+                propertyValueParams.put("orderBy", index + 1);
+                propertyValueList.add(propertyValueParams);
+            }
+            reportPropertyValueDao.insertReportPropertyValue(propertyValueList);
+        } else {
+            Object defaultValue = inputParams.get("defaultValue");
+            if (defaultValue == null || StringUtils.isEmpty(defaultValue.toString())) {
+                outputObject.setreturnMessage("标识属性值为不可选时, 属性默认值必填");
+                return;
+            }
+        }
+        inputParams.put("userId", inputObject.getLogParams().get("id"));
+        inputParams.put("createTime", ToolUtil.getTimeAndToString());
+        reportPropertyDao.insertReportProperty(inputParams);
+    }
+
+    @Override
+    @Transactional(value = "transactionManager")
+    public void delReportPropertyById(InputObject inputObject, OutputObject outputObject) throws Exception {
+        String id = inputObject.getParams().get("id").toString();
+        reportPropertyDao.delReportPropertyById(id);
+        reportPropertyValueDao.delReportPropertyValueByPropertyId(id);
+    }
+
+    @Override
+    public void getReportPropertyById(InputObject inputObject, OutputObject outputObject) throws Exception {
+        String id = inputObject.getParams().get("id").toString();
+        Map<String, Object> reportPropertyMap = reportPropertyDao.getReportPropertyById(id);
+        if (reportPropertyMap != null) {
+            Integer optional = Integer.valueOf(reportPropertyMap.get("optional").toString());
+            if (optional.equals(1)) {
+                List<Map<String, Object>> reportPropertyValueList = reportPropertyValueDao.getReportPropertyValueByPropertyId(id);
+                reportPropertyMap.put("options", JSONUtil.toJsonStr(reportPropertyValueList));
+            }
+        }
+        outputObject.setBean(reportPropertyMap);
+    }
+
+    @Override
+    public void getReportPropertyValueByPropertyId(InputObject inputObject, OutputObject outputObject) throws Exception {
+        String id = inputObject.getParams().get("id").toString();
+        List<Map<String, Object>> reportPropertyValueList = reportPropertyValueDao.getReportPropertyValueByPropertyId(id);
+        outputObject.setBeans(reportPropertyValueList);
+    }
 }

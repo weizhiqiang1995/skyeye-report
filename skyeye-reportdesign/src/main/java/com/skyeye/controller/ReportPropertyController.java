@@ -4,9 +4,13 @@
 
 package com.skyeye.controller;
 
+import com.skyeye.common.object.InputObject;
+import com.skyeye.common.object.OutputObject;
 import com.skyeye.service.ReportPropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * @ClassName: ReportPropertyController
@@ -22,5 +26,64 @@ public class ReportPropertyController {
     @Autowired
     private ReportPropertyService reportPropertyService;
 
+    /**
+     * 获取模型属性列表信息
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @RequestMapping("/post/ReportPropertyController/getReportPropertyList")
+    @ResponseBody
+    public void getReportPropertyList(InputObject inputObject, OutputObject outputObject) throws Exception{
+        reportPropertyService.getReportPropertyList(inputObject, outputObject);
+    }
 
+    /**
+     * 新增模型属性
+     *
+     * @param inputObject
+     * @param outputObject
+     */
+    @RequestMapping("/post/ReportPropertyController/insertReportProperty")
+    @ResponseBody
+    public void insertReportProperty(InputObject inputObject, OutputObject outputObject) throws Exception {
+        reportPropertyService.insertReportProperty(inputObject, outputObject);
+    }
+
+    /**
+     * 删除模型属性
+     *
+     * @param inputObject
+     * @param outputObject
+     */
+    @RequestMapping("/post/ReportPropertyController/delReportPropertyById")
+    @ResponseBody
+    public void delReportPropertyById(InputObject inputObject, OutputObject outputObject) throws Exception {
+        reportPropertyService.delReportPropertyById(inputObject, outputObject);
+    }
+
+    /**
+     * 根据id获取模型属性详情
+     *
+     * @param inputObject
+     * @param outputObject
+     */
+    @RequestMapping("/post/ReportPropertyController/getReportPropertyById")
+    @ResponseBody
+    public void getReportPropertyById(InputObject inputObject, OutputObject outputObject) throws Exception {
+        reportPropertyService.getReportPropertyById(inputObject, outputObject);
+    }
+
+    /**
+     * 根据propertyid获取模型属性值列表
+     *
+     * @param inputObject
+     * @param outputObject
+     */
+    @RequestMapping("/post/ReportPropertyController/getReportPropertyValueById")
+    @ResponseBody
+    public void getReportPropertyValueByPropertyId(InputObject inputObject, OutputObject outputObject) throws Exception {
+        reportPropertyService.getReportPropertyValueByPropertyId(inputObject, outputObject);
+    }
 }

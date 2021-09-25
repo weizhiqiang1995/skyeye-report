@@ -4,6 +4,12 @@
 
 package com.skyeye.dao;
 
+import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
+
 /**
  * @ClassName: ReportPropertyDao
  * @Description: 模型---样式属性管理数据层
@@ -13,4 +19,13 @@ package com.skyeye.dao;
  * 注意：本内容仅限购买后使用.禁止私自外泄以及用于其他的商业目的
  */
 public interface ReportPropertyDao {
+
+    List<Map<String, Object>> getReportPropertyList(Map<String, Object> map, PageBounds pageBounds) throws Exception;
+
+    void insertReportProperty(Map<String, Object> map);
+
+    void delReportPropertyById(@Param("id") String id);
+
+    Map<String, Object> getReportPropertyById(@Param("id") String id);
+
 }

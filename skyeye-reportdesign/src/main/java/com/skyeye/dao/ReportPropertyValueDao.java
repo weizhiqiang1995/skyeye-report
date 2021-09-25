@@ -4,6 +4,11 @@
 
 package com.skyeye.dao;
 
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
+
 /**
  * @ClassName: ReportPropertyValueDao
  * @Description: 模型---样式属性值数据层
@@ -14,6 +19,10 @@ package com.skyeye.dao;
  */
 public interface ReportPropertyValueDao {
 
+    void insertReportPropertyValue(List<Map<String, Object>> list);
 
+    void delReportPropertyValueByPropertyId(@Param("id") String id);
+
+    List<Map<String, Object>> getReportPropertyValueByPropertyId(@Param("id") String id);
 
 }
