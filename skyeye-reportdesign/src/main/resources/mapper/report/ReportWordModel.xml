@@ -2,5 +2,57 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.skyeye.dao.ReportWordModelDao">
 
+    <select id="getReportWordModelList" resultType="java.util.Map">
+        SELECT
+            id,
+            title,
+            logo,
+            default_width defaultWidth,
+            default_height defaultHeight,
+            state,
+            CONVERT(create_time, char) createTime,
+            CONVERT(last_update_time, char) lastUpdateTime
+        FROM report_word_model
+        ORDER BY last_update_time DESC
+    </select>
 
+    <insert id="insertReportWordModel" parameterType="java.util.Map">
+        insert into report_word_model
+            (id, title, logo, default_width, default_height, state, create_id, create_time, last_update_id, last_update_time)
+        values
+            (#{id}, #{title}, #{logo}, #{defaultWidth}, #{defaultHeight}, #{state}, #{userId}, #{createTime}, #{userId}, #{createTime})
+    </insert>
+
+    <delete id="delReportWordModelById" parameterType="java.lang.String">
+        delete from report_word_model
+        where id = #{id} and state = 1
+    </delete>
+
+    <update id="updateReportWordModelById" parameterType="java.util.Map">
+        update report_word_model
+        set title = #{title}, logo = #{logo}, default_width = #{defaultWidth},
+            default_height = #{defaultHeight}, state = #{state}, last_update_id = #{userId}, last_update_time = #{lastUpdateTime}
+        where id = #{id}
+    </update>
+
+    <select id="getReportWordModelById" parameterType="java.lang.String" resultType="java.util.Map">
+        SELECT
+            id,
+            title,
+            logo,
+            default_width defaultWidth,
+            default_height defaultHeight,
+            state,
+            CONVERT(create_time, char) createTime,
+            CONVERT(last_update_time, char) lastUpdateTime
+        FROM report_word_model
+        WHERE id = #{id}
+        ORDER BY last_update_time DESC
+    </select>
+
+    <update id="updateReportWordModelStateById" parameterType="java.util.Map">
+        update report_word_model
+        set state = #{state}, last_update_id = #{userId}, last_update_time = #{lastUpdateTime}
+        where id = #{id}
+    </update>
 </mapper>

@@ -4,9 +4,13 @@
 
 package com.skyeye.controller;
 
+import com.skyeye.common.object.InputObject;
+import com.skyeye.common.object.OutputObject;
 import com.skyeye.service.ReportWordModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * @ClassName: ReportWordModelController
@@ -22,4 +26,112 @@ public class ReportWordModelController {
     @Autowired
     private ReportWordModelService reportWordModelService;
 
+    /**
+     * 获取所有文字模型
+     *
+     * @param inputObject
+     * @param outputObject
+     * @throws Exception
+     */
+    @RequestMapping("/post/ReportWordModelController/getReportWordModelList")
+    @ResponseBody
+    public void getReportWordModelList(InputObject inputObject, OutputObject outputObject) throws Exception{
+        reportWordModelService.getReportWordModelList(inputObject, outputObject);
+    }
+
+    /**
+     * 保存文字模型
+     *
+     * @param inputObject
+     * @param outputObject
+     */
+    @RequestMapping("/post/ReportWordModelController/insertReportWordModel")
+    @ResponseBody
+    public void insertReportWordModel(InputObject inputObject, OutputObject outputObject) throws Exception {
+        reportWordModelService.insertReportWordModel(inputObject, outputObject);
+    }
+
+    /**
+     * 根据Id删除文字模型设置
+     *
+     * @param inputObject
+     * @param outputObject
+     */
+    @RequestMapping("/post/ReportWordModelController/delReportWordModelById")
+    @ResponseBody
+    public void delReportWordModelById(InputObject inputObject, OutputObject outputObject) throws Exception {
+        reportWordModelService.delReportWordModelById(inputObject, outputObject);
+    }
+
+    /**
+     * 根据Id更新文字模型
+     *
+     * @param inputObject
+     * @param outputObject
+     */
+    @RequestMapping("/post/ReportWordModelController/updateReportWordModelById")
+    @ResponseBody
+    public void updateReportWordModelById(InputObject inputObject, OutputObject outputObject) throws Exception {
+        reportWordModelService.updateReportWordModelById(inputObject, outputObject);
+    }
+
+    /**
+     * 根据Id回显模型属性
+     *
+     * @param inputObject
+     * @param outputObject
+     */
+    @RequestMapping("/post/ReportWordModelController/getReportWordModelByIdToEdit")
+    @ResponseBody
+    public void getReportWordModelByIdToEdit(InputObject inputObject, OutputObject outputObject) throws Exception {
+        reportWordModelService.getReportWordModelByIdToEdit(inputObject, outputObject);
+    }
+
+    /**
+     * 根据id获取详情信息
+     *
+     * @param inputObject
+     * @param outputObject
+     */
+    @RequestMapping("/post/ReportWordModelController/getReportWordModelById")
+    @ResponseBody
+    public void getReportWordModelById(InputObject inputObject, OutputObject outputObject) throws Exception {
+        reportWordModelService.getReportWordModelById(inputObject, outputObject);
+    }
+
+    /**
+     * 根据Modelid获取文件模型属性列表
+     *
+     * @param inputObject
+     * @param outputObject
+     */
+    @RequestMapping("/post/ReportWordModelController/getReportWordModelAttrByModelId")
+    @ResponseBody
+    public void getReportWordModelAttrByModelId(InputObject inputObject, OutputObject outputObject) throws Exception {
+        reportWordModelService.getReportWordModelAttrByModelId(inputObject, outputObject);
+    }
+
+    /**
+     * 发布
+     *
+     * @param inputObject
+     * @param outputObject
+     */
+    @RequestMapping("/post/ReportWordModelController/publish")
+    @ResponseBody
+    public void publishReportWordModel(InputObject inputObject, OutputObject outputObject) throws Exception {
+        reportWordModelService.publishReportWordModel(inputObject, outputObject);
+    }
+
+    /**
+     * 取消发布
+     *
+     * @param inputObject
+     * @param outputObject
+     */
+    @RequestMapping("/post/ReportWordModelController/unPublish")
+    @ResponseBody
+    public void unPublishReportWordModel(InputObject inputObject, OutputObject outputObject) throws Exception {
+        reportWordModelService.unPublishReportWordModel(inputObject, outputObject);
+    }
 }

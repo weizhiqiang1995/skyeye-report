@@ -61,6 +61,7 @@ public class ReportPropertyServiceImpl implements ReportPropertyService {
             return;
         }
         inputParams.put("createTime", ToolUtil.getTimeAndToString());
+        inputParams.put("userId", inputObject.getLogParams().get("id"));
         reportPropertyDao.insertReportProperty(inputParams);
     }
 
@@ -83,6 +84,7 @@ public class ReportPropertyServiceImpl implements ReportPropertyService {
         if (checkOptionalValue(inputObject, outputObject, inputParams, optional)) {
             return;
         }
+        inputParams.put("userId", inputObject.getLogParams().get("id"));
         inputParams.put("lastUpdateTime", ToolUtil.getTimeAndToString());
         reportPropertyDao.updateReportPropertyById(inputParams);
     }
@@ -97,7 +99,6 @@ public class ReportPropertyServiceImpl implements ReportPropertyService {
                 return true;
             }
         }
-        inputParams.put("userId", inputObject.getLogParams().get("id"));
         return false;
     }
 

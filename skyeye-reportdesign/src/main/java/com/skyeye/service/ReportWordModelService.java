@@ -4,6 +4,9 @@
 
 package com.skyeye.service;
 
+import com.skyeye.common.object.InputObject;
+import com.skyeye.common.object.OutputObject;
+
 /**
  * @ClassName: ReportWordModelService
  * @Description: 文字模型管理服务接口层
@@ -13,4 +16,78 @@ package com.skyeye.service;
  * 注意：本内容仅限购买后使用.禁止私自外泄以及用于其他的商业目的
  */
 public interface ReportWordModelService {
+
+    /**
+     * 获取所有文字模型
+     *
+     * @param inputObject
+     * @param outputObject
+     */
+    void getReportWordModelList(InputObject inputObject, OutputObject outputObject) throws Exception;
+
+    /**
+     * 保存文字模型
+     *
+     * @param inputObject
+     * @param outputObject
+     */
+    void insertReportWordModel(InputObject inputObject, OutputObject outputObject) throws Exception;
+
+    /**
+     * 根据Id删除文字模型设置
+     *
+     * @param inputObject
+     * @param outputObject
+     */
+    void delReportWordModelById(InputObject inputObject, OutputObject outputObject) throws Exception;
+
+    /**
+     * 根据Id更新文字模型
+     *
+     * @param inputObject
+     * @param outputObject
+     */
+    void updateReportWordModelById(InputObject inputObject, OutputObject outputObject) throws Exception;
+
+    /**
+     * 根据Id回显模型属性
+     *
+     * @param inputObject
+     * @param outputObject
+     */
+    void getReportWordModelByIdToEdit(InputObject inputObject, OutputObject outputObject) throws Exception;
+
+    /**
+     * 根据id获取详情信息
+     *
+     * @param inputObject
+     * @param outputObject
+     */
+    void getReportWordModelById(InputObject inputObject, OutputObject outputObject) throws Exception;
+
+
+    /**
+     * 根据Modelid获取文件模型属性列表
+     *
+     * @param inputObject
+     * @param outputObject
+     */
+    void getReportWordModelAttrByModelId(InputObject inputObject, OutputObject outputObject) throws Exception;
+
+    /**
+     * 发布
+     *
+     * @param inputObject
+     * @param outputObject
+     */
+    void publishReportWordModel(InputObject inputObject, OutputObject outputObject) throws Exception;
+
+    /**
+     * 取消发布
+     *
+     * @param inputObject
+     * @param outputObject
+     */
+    void unPublishReportWordModel(InputObject inputObject, OutputObject outputObject) throws Exception;
+
 }

@@ -4,7 +4,7 @@
 
     <insert id="insertReportPropertyValue" parameterType="java.util.Map">
         insert into report_property_value
-            (id, property_id, title, value, dafault_choose, order_by)
+            (id, property_id, title, value, default_choose, order_by)
         values
         <foreach collection="list" item="item" index="index" separator="," >
             (#{item.id}, #{item.propertyId}, #{item.title}, #{item.value}, #{item.defaultChoose}, #{item.orderBy})
@@ -21,7 +21,7 @@
             property_id as propertyId,
             title,
             value,
-            dafault_choose as defaultChoose,
+            default_choose as defaultChoose,
             order_by as orderBy
         from report_property_value
         where property_id = #{id}

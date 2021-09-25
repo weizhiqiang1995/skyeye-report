@@ -9,18 +9,18 @@
             rp.code,
             rp.editor_type editorType,
             rp.optional,
-            rp.dafault_value defaultValue,
+            rp.default_value defaultValue,
             CONVERT(rp.create_time, char) createTime,
             CONVERT(rp.last_update_time, char) lastUpdateTime
         FROM report_property rp
-        ORDER BY rp.last_update_time DESC;
+        ORDER BY rp.last_update_time DESC
     </select>
 
     <insert id="insertReportProperty" parameterType="java.util.Map">
         insert into report_property
-        (id, title, code, editor_type, optional, dafault_value, create_id, create_time, last_update_id, last_update_time)
+        (id, title, code, editor_type, optional, default_value, create_id, create_time, last_update_id, last_update_time)
         values
-        (#{id}, #{title}, #{code}, #{editorType}, #{optional}, #{defaultValue}, #{userId}, #{createTime}, #{userId}, #{createTime});
+        (#{id}, #{title}, #{attrCode}, #{editorType}, #{optional}, #{defaultValue}, #{userId}, #{createTime}, #{userId}, #{createTime})
     </insert>
 
     <delete id="delReportPropertyById" parameterType="java.lang.String">
@@ -29,8 +29,8 @@
 
     <update id="updateReportPropertyById" parameterType="java.util.Map">
         update report_property
-        set title = #{title}, code = #{code}, editor_type = #{editorType},
-            optional = #{optional}, dafault_value = #{defaultValue}, last_update_id = #{userId}, last_update_time = #{lastUpdateTime}
+        set title = #{title}, code = #{attrCode}, editor_type = #{editorType},
+            optional = #{optional}, default_value = #{defaultValue}, last_update_id = #{userId}, last_update_time = #{lastUpdateTime}
         where id = #{id}
     </update>
 
@@ -41,7 +41,7 @@
             rp.code,
             rp.editor_type editorType,
             rp.optional,
-            rp.dafault_value defaultValue,
+            rp.default_value defaultValue,
             CONVERT(rp.create_time, char) createTime,
             CONVERT(rp.last_update_time, char) lastUpdateTime
         FROM report_property rp
