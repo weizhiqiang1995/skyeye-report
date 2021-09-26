@@ -209,6 +209,8 @@
 
     <!-- 模型属性设置开始 -->
     <url id="reportproperty001" path="/post/ReportPropertyController/getReportPropertyList" val="获取所有模型属性" method="POST" allUse="1" groupName="模型属性">
+        <property id="title" name="title" ref="" var="标题"/>
+        <property id="attrCode" name="attrCode" ref="" var="样式属性"/>
         <property id="limit" name="limit" ref="required,num" var="分页参数,每页多少条数据" />
         <property id="page" name="page" ref="required,num" var="分页参数,第几页"/>
     </url>

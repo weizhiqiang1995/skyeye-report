@@ -13,6 +13,13 @@
             CONVERT(rp.create_time, char) createTime,
             CONVERT(rp.last_update_time, char) lastUpdateTime
         FROM report_property rp
+        WHERE 1 = 1
+        <if test="title != null and title !=''">
+           AND rp.title like '%${title}%'
+        </if>
+        <if test="attrCode != null and attrCode !=''">
+            AND rp.code like '%${attrCode}%'
+        </if>
         ORDER BY rp.last_update_time DESC
     </select>
 
