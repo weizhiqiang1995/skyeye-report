@@ -22,7 +22,7 @@ var skyeyeReportUtil = {
                 $("#" + showDomId).html(getDataUseHandlebars(template, {rows: rows}));
             }
             if(typeof(callBack) == "function") {
-                callBack();
+                callBack(rows);
             }
         });
     }

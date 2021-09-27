@@ -26,8 +26,17 @@ layui.config({
         limit: getLimit(),
         cols: [[
             { title: systemLanguage["com.skyeye.serialNumber"][languageType], type: 'numbers'},
-            { field: 'title', title: '标题', align: 'left', width: 150},
+            { field: 'title', title: '标题', align: 'left', width: 150, templet: function(d){
+                return '<a lay-event="details" class="notice-title-click">' + d.title + '</a>';
+            }},
             { field: 'code', title: '属性', align: 'left', width: 150 },
+            { field: 'optional', title: '属性值是否可选', align: 'center', width: 150, templet: function(d){
+                if(d.optional == 1){
+                    return '可选';
+                } else if(d.optional == 2){
+                    return '不可选';
+                }
+            }},
             { field: 'createName', title: '创建人', align: 'left', width: 100 },
             { field: 'createTime', title: '创建时间', align: 'center', width: 140 },
             { field: 'lastUpdateName', title: '最后修改人', align: 'left', width: 100 },
@@ -74,7 +83,7 @@ layui.config({
     function delet(data){
         layer.confirm(systemLanguage["com.skyeye.deleteOperationMsg"][languageType], {icon: 3, title: systemLanguage["com.skyeye.deleteOperation"][languageType]}, function(index){
             layer.close(index);
-            AjaxPostUtil.request({url:reqBasePath + "reportpage005", params:{rowId: data.id}, type:'json', method: "DELETE", callback:function(json){
+            AjaxPostUtil.request({url:reqBasePath + "reportproperty003", params:{id: data.id}, type:'json', method: "DELETE", callback:function(json){
                 if(json.returnCode == 0){
                     winui.window.msg(systemLanguage["com.skyeye.deleteOperationSuccessMsg"][languageType], {icon: 1,time: 2000});
                     loadTable();
@@ -100,6 +109,19 @@ layui.config({
                 } else if (refreshCode == '-9999') {
                     winui.window.msg(systemLanguage["com.skyeye.operationFailed"][languageType], {icon: 2,time: 2000});
                 }
+            }
+        });
+    }
+
+    // 详情
+    function details(data){
+        rowId = data.id;
+        _openNewWindows({
+            url: "../../tpl/reportProperty/reportPropertyDetails.html",
+            title: systemLanguage["com.skyeye.detailsPageTitle"][languageType],
+            pageId: "reportPropertyDetails",
+            area: ['90vw', '90vh'],
+            callBack: function(refreshCode){
             }
         });
     }

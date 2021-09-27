@@ -17,7 +17,7 @@ layui.config({
 
         showGrid({
             id: "showForm",
-            url: reqBasePath + "reportdatabase005",
+            url: reqBasePath + "reportproperty005",
             params: {id: parent.rowId},
             pagination: false,
             method: "GET",
@@ -30,25 +30,23 @@ layui.config({
                     form.render('select');
                 });
 
-                var options = JSON.parse(j.bean.options);
-                // 加载属性值
-                $.each(options, function(i, item){
-                    addRow();
-                    $("#title" + (rowNum - 1)).val(item.configKey);
-                    $("#value" + (rowNum - 1)).val(item.configValue);
-                    $("input:radio[name='dafaultChoose" + (rowNum - 1) + "'][value=" + item.dafaultChoose + "]").attr("checked", true);
-                });
+                if(j.bean.optional == 1){
+                    var options = JSON.parse(j.bean.options);
+                    // 加载属性值
+                    $.each(options, function(i, item){
+                        addRow();
+                        $("#title" + (rowNum - 1)).val(item.title);
+                        $("#value" + (rowNum - 1)).val(item.value);
+                        $("input:radio[name='defaultChoose" + (rowNum - 1) + "'][value=" + item.defaultChoose + "]").attr("checked", true);
+                    });
+                }
 
+                $("input:radio[name='optional'][value=" + j.bean.optional + "]").attr("checked", true);
+                setAttrValueHide(j.bean.optional);
                 // 属性值是否可选的变化变化
                 form.on('radio(optional)', function(data) {
                     var val = data.value;
-                    if(val == 1){
-                        $("#canChoose").show();
-                        $("#canNotChoose").hide();
-                    }else{
-                        $("#canChoose").hide();
-                        $("#canNotChoose").show();
-                    }
+                    setAttrValueHide(val);
                 });
 
                 matchingLanguage();
@@ -65,7 +63,7 @@ layui.config({
                                 var row = {
                                     title: $("#title" + rowNum).val(),
                                     value: $("#value" + rowNum).val(),
-                                    dafaultChoose: $("input[name='dafaultChoose" + rowNum + "']:checked").val()
+                                    defaultChoose: $("input[name='defaultChoose" + rowNum + "']:checked").val()
                                 };
                                 tableData.push(row);
                             });
@@ -74,7 +72,7 @@ layui.config({
                                 return false;
                             }
                         }else{
-                            if(isNull($("#dafaultValue").val())){
+                            if(isNull($("#defaultValue").val())){
                                 winui.window.msg('请填写默认值', {icon: 2,time: 2000});
                                 return false;
                             }
@@ -89,7 +87,7 @@ layui.config({
                             options: JSON.stringify(tableData),
                             id: parent.rowId
                         };
-                        AjaxPostUtil.request({url:reqBasePath + "reportdatabase004", params: params, type:'json', method: "PUT", callback:function(json){
+                        AjaxPostUtil.request({url:reqBasePath + "reportproperty004", params: params, type:'json', method: "PUT", callback:function(json){
                             if(json.returnCode == 0){
                                 parent.layer.close(index);
                                 parent.refreshCode = '0';
@@ -102,6 +100,16 @@ layui.config({
                 });
             }
         });
+
+        function setAttrValueHide(val){
+            if(val == 1){
+                $("#canChoose").show();
+                $("#canNotChoose").hide();
+            }else{
+                $("#canChoose").hide();
+                $("#canNotChoose").show();
+            }
+        }
 
         // 新增行
         $("body").on("click", "#addRow", function() {
@@ -120,7 +128,7 @@ layui.config({
                 trId: "tr" + rowNum.toString(), // 行的id
                 title: "title" + rowNum.toString(), // 标题id
                 value: "value" + rowNum.toString(), // 属性值id
-                dafaultChoose: "dafaultChoose" + rowNum.toString() // 是否默认id
+                defaultChoose: "defaultChoose" + rowNum.toString() // 是否默认id
             };
             $("#useTable").append(getDataUseHandlebars(usetableTemplate, par));
             form.render();

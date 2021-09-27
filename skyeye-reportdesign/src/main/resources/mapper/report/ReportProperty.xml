@@ -10,9 +10,14 @@
             rp.editor_type editorType,
             rp.optional,
             rp.default_value defaultValue,
+            b.user_name createName,
             CONVERT(rp.create_time, char) createTime,
+            c.user_name lastUpdateName,
             CONVERT(rp.last_update_time, char) lastUpdateTime
-        FROM report_property rp
+        FROM
+            report_property rp
+            LEFT JOIN sys_eve_user_staff b ON rp.create_id = b.user_id
+            LEFT JOIN sys_eve_user_staff c ON rp.last_update_id = c.user_id
         WHERE 1 = 1
         <if test="title != null and title !=''">
            AND rp.title like '%${title}%'
@@ -20,7 +25,7 @@
         <if test="attrCode != null and attrCode !=''">
             AND rp.code like '%${attrCode}%'
         </if>
-        ORDER BY rp.last_update_time DESC
+        ORDER BY rp.create_time DESC
     </select>
 
     <insert id="insertReportProperty" parameterType="java.util.Map">

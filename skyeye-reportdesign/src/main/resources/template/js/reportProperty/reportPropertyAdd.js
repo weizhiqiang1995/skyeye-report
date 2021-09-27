@@ -45,7 +45,7 @@ layui.config({
                         var row = {
                             title: $("#title" + rowNum).val(),
                             value: $("#value" + rowNum).val(),
-                            dafaultChoose: $("input[name='dafaultChoose" + rowNum + "']:checked").val()
+                            defaultChoose: $("input[name='defaultChoose" + rowNum + "']:checked").val()
                         };
                         tableData.push(row);
                     });
@@ -54,7 +54,7 @@ layui.config({
                         return false;
                     }
                 }else{
-                    if(isNull($("#dafaultValue").val())){
+                    if(isNull($("#defaultValue").val())){
                         winui.window.msg('请填写默认值', {icon: 2,time: 2000});
                         return false;
                     }
@@ -68,7 +68,7 @@ layui.config({
                     defaultValue: $("#defaultValue").val(),
                     options: JSON.stringify(tableData),
                 };
-                AjaxPostUtil.request({url:reqBasePath + "reportdatabase002", params: params, type:'json', method: "POST", callback:function(json){
+                AjaxPostUtil.request({url:reqBasePath + "reportproperty002", params: params, type:'json', method: "POST", callback:function(json){
                     if(json.returnCode == 0){
                         parent.layer.close(index);
                         parent.refreshCode = '0';
@@ -97,7 +97,7 @@ layui.config({
                 trId: "tr" + rowNum.toString(), // 行的id
                 title: "title" + rowNum.toString(), // 标题id
                 value: "value" + rowNum.toString(), // 属性值id
-                dafaultChoose: "dafaultChoose" + rowNum.toString() // 是否默认id
+                defaultChoose: "defaultChoose" + rowNum.toString() // 是否默认id
             };
             $("#useTable").append(getDataUseHandlebars(usetableTemplate, par));
             form.render();

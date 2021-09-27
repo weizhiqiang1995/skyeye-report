@@ -45,7 +45,7 @@
             <div class="layui-form-item layui-col-xs12" id="canNotChoose">
                 <label class="layui-form-label">默认值<i class="red">*</i></label>
                 <div class="layui-input-block">
-                    <input type="text" id="dafaultValue" name="dafaultValue" placeholder="请输入默认值" class="layui-input" maxlength="100"/>
+                    <input type="text" id="defaultValue" name="defaultValue" placeholder="请输入默认值" class="layui-input" maxlength="100"/>
                 </div>
             </div>
             <div class="layui-form-item layui-col-xs12" style="display: none" id="canChoose">
@@ -89,8 +89,8 @@
             <td><input type="text" class="layui-input" id="{{value}}" win-verify="required"/></td>
             <td>
                 <div class="winui-radio">
-                    <input type="radio" name="{{dafaultChoose}}" value="1" title="是" lay-filter="{{dafaultChoose}}" />
-                    <input type="radio" name="{{dafaultChoose}}" value="2" title="否" lay-filter="{{dafaultChoose}}" checked/>
+                    <input type="radio" name="{{defaultChoose}}" value="1" title="是" lay-filter="{{defaultChoose}}" />
+                    <input type="radio" name="{{defaultChoose}}" value="2" title="否" lay-filter="{{defaultChoose}}" checked/>
                 </div>
             </td>
         </tr>

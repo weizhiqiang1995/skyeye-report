@@ -57,7 +57,7 @@ public class ReportPropertyServiceImpl implements ReportPropertyService {
         inputParams.put("id", ToolUtil.getSurFaceId());
         Integer optional = Integer.valueOf(inputParams.get("optional").toString());
         // 当optional=1时, 需要解析options. 当optional=2时, defaultValue为必填
-        if (checkOptionalValue(inputObject, outputObject, inputParams, optional)) {
+        if (checkOptionalValue(outputObject, inputParams, optional)) {
             return;
         }
         inputParams.put("createTime", ToolUtil.getTimeAndToString());
@@ -81,7 +81,7 @@ public class ReportPropertyServiceImpl implements ReportPropertyService {
         String id = inputParams.get("id").toString();
         reportPropertyValueDao.delReportPropertyValueByPropertyId(id);
         // 当optional=1时, 需要解析options. 当optional=2时, defaultValue为必填
-        if (checkOptionalValue(inputObject, outputObject, inputParams, optional)) {
+        if (checkOptionalValue(outputObject, inputParams, optional)) {
             return;
         }
         inputParams.put("userId", inputObject.getLogParams().get("id"));
@@ -89,7 +89,7 @@ public class ReportPropertyServiceImpl implements ReportPropertyService {
         reportPropertyDao.updateReportPropertyById(inputParams);
     }
 
-    private boolean checkOptionalValue(InputObject inputObject, OutputObject outputObject, Map<String, Object> inputParams, Integer optional) throws Exception {
+    private boolean checkOptionalValue(OutputObject outputObject, Map<String, Object> inputParams, Integer optional) throws Exception {
         if (Integer.valueOf(1).equals(optional)) {
             saveReportPropertyValueList(inputParams);
         } else {
@@ -106,7 +106,7 @@ public class ReportPropertyServiceImpl implements ReportPropertyService {
         List<Map<String, Object>> propertyValueList = new ArrayList<>();
         List<Map> options = JSONUtil.toList(inputParams.get("options").toString(), Map.class);
         Map<String, Object> tempMap;
-        boolean flag = false;
+        Integer defaultChooseFlag = 2;
         for (int index = 0, len = options.size(); index < len; index++) {
             tempMap = options.get(index);
             // 存放属性表值字段
@@ -116,9 +116,15 @@ public class ReportPropertyServiceImpl implements ReportPropertyService {
             propertyValueParams.put("title", tempMap.get("title"));
             propertyValueParams.put("value", tempMap.get("value"));
             Integer defaultChoose = Integer.valueOf(tempMap.get("defaultChoose").toString());
+            if(defaultChooseFlag == 1){
+                propertyValueParams.put("defaultChoose", 2);
+            }else{
+                if(defaultChoose == 1){
+                    defaultChooseFlag = 1;
+                }
+                propertyValueParams.put("defaultChoose", defaultChooseFlag);
+            }
 
-            flag = !flag ? (Integer.valueOf(1).equals(defaultChoose) ? false : true) : false;
-            propertyValueParams.put("defaultChoose", flag ? 2 : 1);
             propertyValueParams.put("orderBy", index + 1);
             propertyValueList.add(propertyValueParams);
         }
@@ -137,13 +143,22 @@ public class ReportPropertyServiceImpl implements ReportPropertyService {
             }
         }
         outputObject.setBean(reportPropertyMap);
+        outputObject.settotal(1);
     }
 
     @Override
     public void getReportPropertyById(InputObject inputObject, OutputObject outputObject) throws Exception {
         String id = inputObject.getParams().get("id").toString();
         Map<String, Object> reportPropertyMap = reportPropertyDao.getReportPropertyById(id);
+        if (reportPropertyMap != null) {
+            Integer optional = Integer.valueOf(reportPropertyMap.get("optional").toString());
+            if (optional.equals(1)) {
+                List<Map<String, Object>> reportPropertyValueList = reportPropertyValueDao.getReportPropertyValueByPropertyId(id);
+                reportPropertyMap.put("options", JSONUtil.toJsonStr(reportPropertyValueList));
+            }
+        }
         outputObject.setBean(reportPropertyMap);
+        outputObject.settotal(1);
     }
 
     @Override
