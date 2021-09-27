@@ -139,55 +139,15 @@ public class CommonServiceImpl implements CommonService{
 				String fileExtName = fileName.substring(fileName.lastIndexOf(".") + 1);
 				if (file != null) {
 					File pack = new File(basePath);
-					if(!pack.isDirectory())//目录不存在 
+					if(!pack.isDirectory()) {//目录不存在
 						pack.mkdirs();//创建目录
+					}
 					// 自定义的文件名称
     				String newFileName = String.valueOf(System.currentTimeMillis()) + "." + fileExtName;
 					String path = basePath + "\\" + newFileName;
 					// 上传
 					file.transferTo(new File(path));
-					switch (type) {
-					case 1://小程序上传
-						break;
-					case 2://系统桌面背景自定义图片上传
-						newFileName = "/images/upload/winbgpic/" + newFileName ;
-						break;
-					case 3://系统桌面锁屏背景自定义图片上传
-						newFileName = "/images/upload/winlockbgpic/" + newFileName ;
-						break;
-					case 4://系统桌面背景自定义图片上传用户自定义
-						newFileName = "/images/upload/winbgpic/" + newFileName ;
-						break;
-					case 5://系统桌面锁屏背景自定义图片上传用户自定义
-						newFileName = "/images/upload/winlockbgpic/" + newFileName ;
-						break;
-					case 6://用户头像
-						newFileName = "/images/upload/userphoto/" + newFileName ;
-						break;
-					case 7://聊天群组头像
-						newFileName = "/images/upload/talkgroup/" + newFileName ;
-						break;
-					case 8://系统图片
-						newFileName = "/images/upload/syswin/" + newFileName ;
-						break;
-					case 9://聊天图片
-						newFileName = "/images/upload/talkpic/" + newFileName ;
-						break;
-					case 10://聊天附件
-						newFileName = "/images/upload/talkfile/" + newFileName ;
-						break;
-					case 11://富文本内容图片
-						newFileName = "/images/upload/edit/" + newFileName ;
-						break;
-					case 12://菜单logo图片
-						newFileName = "/images/upload/menulogo/" + newFileName ;
-						break;
-					case 18://报表基础设置背景图
-						newFileName = "/images/upload/reportBgImage/" + newFileName ;
-						break;
-					default:
-						break;
-					}
+					newFileName = Constants.FileUploadPath.getVisitPath(type) + newFileName;
 					if(ToolUtil.isBlank(trueFileName)){
 						trueFileName = newFileName;
 					}else{
@@ -213,12 +173,10 @@ public class CommonServiceImpl implements CommonService{
 	     * @return void    返回类型
 	     * @throws
 	 */
-	@SuppressWarnings("static-access")
 	@Override
 	public void uploadFileBase64(InputObject inputObject, OutputObject outputObject) throws Exception {
 		Map<String, Object> map = inputObject.getParams();
 		int type = Integer.parseInt(map.get("type").toString());
-		String basePath = "";
 		String dataPrix = "";
 		String data = "";//数据
 		String imgStr = map.get("images").toString();
@@ -226,15 +184,8 @@ public class CommonServiceImpl implements CommonService{
 		boolean a = false;//判断后缀是否为图片
         String fileType = null;//文件后缀
         String [] d = imgStr.split("base64,");
-        //决定存储路径
-		switch (type) {
-		case 1://小程序上传
-			basePath = tPath + "\\upload\\smpropic" ;
-			break;
-		default:
-			basePath = tPath;
-			break;
-		}
+        // 决定存储路径
+		String basePath = tPath + Constants.FileUploadPath.getSavePath(type);
 		//上传数据是否合法
         if(d != null && d.length == 2){
         	dataPrix = d[0];
@@ -257,11 +208,11 @@ public class CommonServiceImpl implements CommonService{
             }
             if(a){
     			try {
-    				Base64 base64 = new Base64();
-    				byte[] bytes = base64.decodeBase64(new String(data).getBytes());
+    				byte[] bytes = Base64.decodeBase64(new String(data).getBytes());
     				File dirname = new File(basePath);
-    				if (!dirname.isDirectory())// 目录不存在
-    					dirname.mkdirs(); // 创建目录
+    				if (!dirname.isDirectory()) {// 目录不存在
+						dirname.mkdirs(); // 创建目录
+					}
     				// 自定义的文件名称
     				String trueFileName = String.valueOf(System.currentTimeMillis()) + "." + fileType;
     				// 设置存放图片文件的路径
@@ -276,6 +227,7 @@ public class CommonServiceImpl implements CommonService{
     				out.flush();
     				out.close();
     				Map<String, Object> bean = new HashMap<>();
+					trueFileName = Constants.FileUploadPath.getVisitPath(type) + trueFileName;
     				bean.put("picUrl", trueFileName);
     				bean.put("type", type);
     				outputObject.setBean(bean);

@@ -252,13 +252,13 @@
     <url id="reportwordmodel001" path="/post/ReportWordModelController/getReportWordModelList" val="获取所有文字模型" method="POST" allUse="1" groupName="文件模型设置">
         <property id="limit" name="limit" ref="required,num" var="分页参数,每页多少条数据" />
         <property id="page" name="page" ref="required,num" var="分页参数,第几页"/>
+        <property id="title" name="title" ref="" var="文字模型标题"/>
     </url>
     <url id="reportwordmodel002" path="/post/ReportWordModelController/insertReportWordModel" val="保存文字模型" method="POST" allUse="1" groupName="文件模型设置">
         <property id="title" name="title" ref="required" var="默认值"/>
         <property id="logo" name="logo" ref="" var="预览logo地址"/>
         <property id="defaultWidth" name="defaultWidth" ref="required,num" var="默认宽度"/>
         <property id="defaultHeight" name="defaultHeight" ref="required,num" var="默认高度"/>
-        <property id="state" name="state" ref="num" var="状态，1未发布 2已发布"/>
         <property id="options" name="options" ref="" var="组装后的json数据"/>
     </url>
     <url id="reportwordmodel003" path="/post/ReportWordModelController/delReportWordModelById" val="根据Id删除文字模型设置" method="DELETE" allUse="1" groupName="文件模型设置">
@@ -270,7 +270,6 @@
         <property id="logo" name="logo" ref="" var="预览logo地址"/>
         <property id="defaultWidth" name="defaultWidth" ref="required,num" var="默认宽度"/>
         <property id="defaultHeight" name="defaultHeight" ref="required,num" var="默认高度"/>
-        <property id="state" name="state" ref="num" var="状态，1未发布 2已发布"/>
         <property id="options" name="options" ref="" var="组装后的json数据"/>
     </url>
     <url id="reportwordmodel005" path="/post/ReportWordModelController/getReportWordModelByIdToEdit" val="根据Id回显文字模型" method="GET" allUse="2" groupName="文件模型设置">

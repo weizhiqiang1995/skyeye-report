@@ -67,7 +67,7 @@ layui.config({
                                 };
                                 tableData.push(row);
                             });
-                            if(tableData.length == 1){
+                            if(tableData.length == 0){
                                 winui.window.msg('请最少填写一条属性值', {icon: 2,time: 2000});
                                 return false;
                             }

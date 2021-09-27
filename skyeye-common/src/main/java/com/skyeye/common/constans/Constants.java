@@ -470,21 +470,23 @@ public class Constants {
 	 * 文件上传路径
 	 */
 	public static enum FileUploadPath {
-		SMPROPIC(new int[]{1}, "\\smpropic", "/", "小程序上传"),
-		WINBGPIC(new int[]{2, 4}, "\\winbgpic", "/winbgpic/", "系统桌面背景自定义图片上传,系统桌面背景自定义图片上传用户自定义"),
-		WINLOCKBGPIC(new int[]{3, 5}, "\\winlockbgpic", "/winlockbgpic/", "系统桌面锁屏背景自定义图片上传,系统桌面锁屏背景自定义图片上传用户自定义"),
-		USERPHOTO(new int[]{6}, "\\userphoto", "/userphoto/", "用户头像"),
-		TALKGROUP(new int[]{7}, "\\talkgroup", "/talkgroup/", "聊天群组头像"),
-		SYSWIN(new int[]{8}, "\\syswin", "/syswin/", "系统图片"),
-		TALKPIC(new int[]{9}, "\\talkpic", "/talkpic/", "聊天图片"),
-		TALKFILE(new int[]{10}, "\\talkfile", "/talkfile/", "聊天附件"),
-		EDIT(new int[]{11}, "\\edit", "/edit/", "富文本内容图片"),
-		MENULOGO(new int[]{12}, "\\menulogo", "/menulogo/", "菜单logo图片"),
-		LAYEDIT(new int[]{13}, "\\layedit", "/layedit/", "富文本编辑图片"),
-		ORDER(new int[]{14}, "\\order", "/order/", "工单图片"),
-		STUDENTPIC(new int[]{15}, "\\studentPic", "/studentPic/", "学生照图片"),
-		SCHOOLBANK(new int[]{16}, "\\schoolBank", "/schoolBank/", "考试题库文件"),
-		ACT_MODEL(new int[]{17}, "\\actmodel", "/actmodel/", "流程配置图片");
+		SMPROPIC(new int[]{1}, "/smpropic", "/", "小程序上传"),
+		WINBGPIC(new int[]{2, 4}, "/winbgpic", "/winbgpic/", "系统桌面背景自定义图片上传,系统桌面背景自定义图片上传用户自定义"),
+		WINLOCKBGPIC(new int[]{3, 5}, "/winlockbgpic", "/winlockbgpic/", "系统桌面锁屏背景自定义图片上传,系统桌面锁屏背景自定义图片上传用户自定义"),
+		USERPHOTO(new int[]{6}, "/userphoto", "/userphoto/", "用户头像"),
+		TALKGROUP(new int[]{7}, "/talkgroup", "/talkgroup/", "聊天群组头像"),
+		SYSWIN(new int[]{8}, "/syswin", "/syswin/", "系统图片"),
+		TALKPIC(new int[]{9}, "/talkpic", "/talkpic/", "聊天图片"),
+		TALKFILE(new int[]{10}, "/talkfile", "/talkfile/", "聊天附件"),
+		EDIT(new int[]{11}, "/edit", "/edit/", "富文本内容图片"),
+		MENULOGO(new int[]{12}, "/menulogo", "/menulogo/", "菜单logo图片"),
+		LAYEDIT(new int[]{13}, "/layedit", "/layedit/", "富文本编辑图片"),
+		ORDER(new int[]{14}, "/order", "/order/", "工单图片"),
+		STUDENTPIC(new int[]{15}, "/studentPic", "/studentPic/", "学生照图片"),
+		SCHOOLBANK(new int[]{16}, "/schoolBank", "/schoolBank/", "考试题库文件"),
+		ACT_MODEL(new int[]{17}, "/actmodel", "/actmodel/", "流程配置图片"),
+		REPORT_BG_IMAGE(new int[]{18}, "/reportBgImage", "/reportBgImage/", "报表基础设置背景图"),
+		REPORT_WORD_MODEL_IMAGE(new int[]{19}, "/reportWordModel", "/reportWordModel/", "报表文字模型logo");
 
 		private int[] type;
 		// 保存地址

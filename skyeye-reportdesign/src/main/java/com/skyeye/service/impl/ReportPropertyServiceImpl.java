@@ -46,6 +46,7 @@ public class ReportPropertyServiceImpl implements ReportPropertyService {
         List<Map<String, Object>> beans = reportPropertyDao.getReportPropertyList(inputParams,
                 new PageBounds(Integer.parseInt(inputParams.get("page").toString()), Integer.parseInt(inputParams.get("limit").toString())));
         PageList<Map<String, Object>> beansPageList = (PageList<Map<String, Object>>) beans;
+        setPropertyValue(beans);
         outputObject.setBeans(beans);
         outputObject.settotal(beansPageList.getPaginator().getTotalCount());
     }
@@ -167,7 +168,25 @@ public class ReportPropertyServiceImpl implements ReportPropertyService {
         List<Map<String, Object>> beans = reportPropertyDao.getReportPropertyList(inputParams,
                 new PageBounds(Integer.parseInt(inputParams.get("page").toString()), Integer.parseInt(inputParams.get("limit").toString())));
         PageList<Map<String, Object>> beansPageList = (PageList<Map<String, Object>>) beans;
+        setPropertyValue(beans);
         outputObject.setBeans(beans);
         outputObject.settotal(beansPageList.getPaginator().getTotalCount());
     }
+
+    private void setPropertyValue(List<Map<String, Object>> beans){
+        beans.forEach(bean -> {
+            String id = bean.get("id").toString();
+            Integer optional = Integer.valueOf(bean.get("optional").toString());
+            if (optional.equals(1)) {
+                List<Map<String, Object>> reportPropertyValueList = reportPropertyValueDao.getReportPropertyValueByPropertyId(id);
+                reportPropertyValueList.forEach(item -> {
+                    if("1".equals(item.get("defaultChoose").toString())){
+                        bean.put("defaultValue", item.get("value"));
+                    }
+                });
+                bean.put("options", JSONUtil.toJsonStr(reportPropertyValueList));
+            }
+        });
+    }
+
 }

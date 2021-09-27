@@ -10,12 +10,14 @@ import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.skyeye.common.object.InputObject;
 import com.skyeye.common.object.OutputObject;
+import com.skyeye.common.util.FileUtil;
 import com.skyeye.common.util.ToolUtil;
 import com.skyeye.dao.ReportWordModelAttrDao;
 import com.skyeye.dao.ReportWordModelDao;
 import com.skyeye.service.ReportWordModelService;
 import org.jsoup.helper.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +40,9 @@ public class ReportWordModelServiceImpl implements ReportWordModelService {
     @Autowired
     private ReportWordModelAttrDao reportWordModelAttrDao;
 
+    @Value("${IMAGES_PATH}")
+    private String tPath;
+
     @Override
     public void getReportWordModelList(InputObject inputObject, OutputObject outputObject) throws Exception {
         Map<String, Object> inputParams = inputObject.getParams();
@@ -53,10 +58,7 @@ public class ReportWordModelServiceImpl implements ReportWordModelService {
     public void insertReportWordModel(InputObject inputObject, OutputObject outputObject) throws Exception {
         Map<String, Object> inputParams = inputObject.getParams();
         inputParams.put("id", ToolUtil.getSurFaceId());
-        Object stateObj = inputParams.get("state");
-        // state默认为未发布
-        Integer state = stateObj == null || StringUtil.isBlank(stateObj.toString()) ? 1 : Integer.valueOf(stateObj.toString());
-        inputParams.put("state", state);
+        inputParams.put("state", 1);
         insertReportWordModelAttr(inputParams);
         inputParams.put("createTime", ToolUtil.getTimeAndToString());
         inputParams.put("userId", inputObject.getLogParams().get("id"));
@@ -85,12 +87,17 @@ public class ReportWordModelServiceImpl implements ReportWordModelService {
     }
 
     @Override
+    @Transactional(value = "transactionManager")
     public void delReportWordModelById(InputObject inputObject, OutputObject outputObject) throws Exception {
         Map<String, Object> inputParams = inputObject.getParams();
         String id = inputParams.get("id").toString();
+        Map<String, Object> reportPropertyMap = reportWordModelDao.getReportWordModelById(id);
         int num = reportWordModelDao.delReportWordModelById(id);
         if (num == 0) {
             outputObject.setreturnMessage("已发布的文件模型不允许删除");
+        }else{
+            FileUtil.deleteFile(tPath.replace("images", "") + reportPropertyMap.get("logo").toString());
+            reportWordModelAttrDao.delReportWordModelAttrByModelId(id);
         }
     }
 
@@ -99,10 +106,6 @@ public class ReportWordModelServiceImpl implements ReportWordModelService {
     public void updateReportWordModelById(InputObject inputObject, OutputObject outputObject) throws Exception {
         Map<String, Object> inputParams = inputObject.getParams();
         String id = inputParams.get("id").toString();
-        Object stateObj = inputParams.get("state");
-        // state默认为未发布
-        Integer state = stateObj == null || StringUtil.isBlank(stateObj.toString()) ? 1 : Integer.valueOf(stateObj.toString());
-        inputParams.put("state", state);
         reportWordModelAttrDao.delReportWordModelAttrByModelId(id);
         insertReportWordModelAttr(inputParams);
         inputParams.put("userId", inputObject.getLogParams().get("id"));
@@ -136,11 +139,13 @@ public class ReportWordModelServiceImpl implements ReportWordModelService {
     }
 
     @Override
+    @Transactional(value = "transactionManager")
     public void publishReportWordModel(InputObject inputObject, OutputObject outputObject) throws Exception {
         updateMoeldState(inputObject, 2);
     }
 
     @Override
+    @Transactional(value = "transactionManager")
     public void unPublishReportWordModel(InputObject inputObject, OutputObject outputObject) throws Exception {
         updateMoeldState(inputObject, 1);
     }

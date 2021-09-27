@@ -1,4 +1,6 @@
 
+var rowId = "";
+
 layui.config({
 	base: basePath, 
 	version: skyeyeVersion
@@ -44,10 +46,11 @@ layui.config({
 						return '不可选';
 					}
 				}},
-	            { field: 'createName', title: '创建人', align: 'left', width: 80 },
-	            { field: 'createTime', title: '创建时间', align: 'center', width: 100 },
+				{ field: 'defaultValue', title: '默认值', align: 'left', width: 140 },
+	            { field: 'createName', title: '创建人', align: 'left', width: 100 },
+	            { field: 'createTime', title: '创建时间', align: 'center', width: 140 },
 	            { field: 'lastUpdateName', title: '最后修改人', align: 'left', width: 100 },
-	            { field: 'lastUpdateTime', title: '最后修改时间', align: 'center', width: 100}
+	            { field: 'lastUpdateTime', title: '最后修改时间', align: 'center', width: 140}
 		    ]],
 		    done: function(res, curr, count){
 		    	matchingLanguage();
@@ -72,6 +75,27 @@ layui.config({
 		});
 		
 		form.render();
+	}
+
+	table.on('tool(messageTable)', function (obj) {
+		var data = obj.data;
+		var layEvent = obj.event;
+		if (layEvent === 'details') { // 详情
+			details(data);
+		}
+	});
+
+	// 详情
+	function details(data){
+		rowId = data.id;
+		_openNewWindows({
+			url: "../../tpl/reportProperty/reportPropertyDetails.html",
+			title: systemLanguage["com.skyeye.detailsPageTitle"][languageType],
+			pageId: "reportPropertyDetails",
+			area: ['90vw', '90vh'],
+			callBack: function(refreshCode){
+			}
+		});
 	}
 
 	form.render();
