@@ -162,9 +162,12 @@ public class ReportPropertyServiceImpl implements ReportPropertyService {
     }
 
     @Override
-    public void getReportPropertyValueByPropertyId(InputObject inputObject, OutputObject outputObject) throws Exception {
-        String id = inputObject.getParams().get("id").toString();
-        List<Map<String, Object>> reportPropertyValueList = reportPropertyValueDao.getReportPropertyValueByPropertyId(id);
-        outputObject.setBeans(reportPropertyValueList);
+    public void getReportPropertyListToChoose(InputObject inputObject, OutputObject outputObject) throws Exception {
+        Map<String, Object> inputParams = inputObject.getParams();
+        List<Map<String, Object>> beans = reportPropertyDao.getReportPropertyList(inputParams,
+                new PageBounds(Integer.parseInt(inputParams.get("page").toString()), Integer.parseInt(inputParams.get("limit").toString())));
+        PageList<Map<String, Object>> beansPageList = (PageList<Map<String, Object>>) beans;
+        outputObject.setBeans(beans);
+        outputObject.settotal(beansPageList.getPaginator().getTotalCount());
     }
 }

@@ -67,11 +67,11 @@ public interface ReportPropertyService {
 
 
     /**
-     * 根据propertyid获取模型属性值列表
+     * 获取所有模型属性供其他功能选择
      *
      * @param inputObject
      * @param outputObject
      */
-    void getReportPropertyValueByPropertyId(InputObject inputObject, OutputObject outputObject) throws Exception;
+    void getReportPropertyListToChoose(InputObject inputObject, OutputObject outputObject) throws Exception;
 
 }

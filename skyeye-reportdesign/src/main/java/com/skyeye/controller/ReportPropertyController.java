@@ -100,14 +100,14 @@ public class ReportPropertyController {
     }
 
     /**
-     * 根据propertyid获取模型属性值列表
+     * 获取所有模型属性供其他功能选择
      *
      * @param inputObject
      * @param outputObject
      */
-    @RequestMapping("/post/ReportPropertyController/getReportPropertyValueById")
+    @RequestMapping("/post/ReportPropertyController/getReportPropertyListToChoose")
     @ResponseBody
-    public void getReportPropertyValueByPropertyId(InputObject inputObject, OutputObject outputObject) throws Exception {
-        reportPropertyService.getReportPropertyValueByPropertyId(inputObject, outputObject);
+    public void getReportPropertyListToChoose(InputObject inputObject, OutputObject outputObject) throws Exception {
+        reportPropertyService.getReportPropertyListToChoose(inputObject, outputObject);
     }
 }
