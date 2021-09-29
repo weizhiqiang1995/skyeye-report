@@ -95,12 +95,12 @@ public class ReportWordModelServiceImpl implements ReportWordModelService {
     public void delReportWordModelById(InputObject inputObject, OutputObject outputObject) throws Exception {
         Map<String, Object> inputParams = inputObject.getParams();
         String id = inputParams.get("id").toString();
-        Map<String, Object> reportPropertyMap = reportWordModelDao.getReportWordModelById(id);
+        Map<String, Object> reportWordModel = reportWordModelDao.getReportWordModelById(id);
         int num = reportWordModelDao.delReportWordModelById(id);
         if (num == 0) {
             outputObject.setreturnMessage("已发布的文件模型不允许删除");
         }else{
-            FileUtil.deleteFile(tPath.replace("images", "") + reportPropertyMap.get("logo").toString());
+            FileUtil.deleteFile(tPath.replace("images", "") + reportWordModel.get("logo").toString());
             reportWordModelAttrDao.delReportWordModelAttrByModelId(id);
         }
     }
@@ -125,18 +125,28 @@ public class ReportWordModelServiceImpl implements ReportWordModelService {
             List<Map<String, Object>> reportPropertyValueList = reportWordModelAttrDao.getReportWordModelAttrByModelId(id);
             // 轮询获取属性的默认值
             reportPropertyValueList.forEach(bean -> {
-                reportPropertyService.getPropertyDefaultValue(bean, bean.get("propertyId").toString(), Integer.parseInt(bean.get("optional").toString()));
+                reportPropertyService.getPropertyDefaultValue(bean, bean.get("id").toString(), Integer.parseInt(bean.get("optional").toString()));
             });
             reportWordModelMap.put("options", JSONUtil.toJsonStr(reportPropertyValueList));
         }
         outputObject.setBean(reportWordModelMap);
+        outputObject.settotal(1);
     }
 
     @Override
     public void getReportWordModelById(InputObject inputObject, OutputObject outputObject) throws Exception {
         String id = inputObject.getParams().get("id").toString();
-        Map<String, Object> reportPropertyMap = reportWordModelDao.getReportWordModelById(id);
-        outputObject.setBean(reportPropertyMap);
+        Map<String, Object> reportWordModelMap = reportWordModelDao.getReportWordModelById(id);
+        if (reportWordModelMap != null) {
+            List<Map<String, Object>> reportPropertyValueList = reportWordModelAttrDao.getReportWordModelAttrByModelId(id);
+            // 轮询获取属性的默认值
+            reportPropertyValueList.forEach(bean -> {
+                reportPropertyService.getPropertyDefaultValue(bean, bean.get("id").toString(), Integer.parseInt(bean.get("optional").toString()));
+            });
+            reportWordModelMap.put("options", JSONUtil.toJsonStr(reportPropertyValueList));
+        }
+        outputObject.setBean(reportWordModelMap);
+        outputObject.settotal(1);
     }
 
     @Override

@@ -17,12 +17,13 @@
 
     <select id="getReportWordModelAttrByModelId" parameterType="java.lang.String" resultType="java.util.Map">
         select
-            a.id,
+            a.id itemId,
             a.word_id as wordId,
-            a.property_id as propertyId,
+            a.property_id as id,
             a.editor,
             a.show_to_editor as showToEditor,
             b.optional,
+            b.code,
             b.default_value defaultValue
         from
             report_word_model_attr a,
