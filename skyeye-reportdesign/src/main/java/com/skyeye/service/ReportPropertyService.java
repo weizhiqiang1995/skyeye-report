@@ -7,6 +7,8 @@ package com.skyeye.service;
 import com.skyeye.common.object.InputObject;
 import com.skyeye.common.object.OutputObject;
 
+import java.util.Map;
+
 /**
  * @ClassName: ReportPropertyService
  * @Description: 模型---样式属性管理服务接口层
@@ -73,5 +75,14 @@ public interface ReportPropertyService {
      * @param outputObject
      */
     void getReportPropertyListToChoose(InputObject inputObject, OutputObject outputObject) throws Exception;
+
+    /**
+     * 获取指定属性的默认值
+     *
+     * @param bean 实体对象
+     * @param id 属性id
+     * @param optional 属性值是否可选  1.可选  2.不可选
+     */
+    public void getPropertyDefaultValue(Map<String, Object> bean, String id, Integer optional);
 
 }

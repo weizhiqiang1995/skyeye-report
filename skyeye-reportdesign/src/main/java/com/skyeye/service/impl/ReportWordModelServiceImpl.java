@@ -14,6 +14,7 @@ import com.skyeye.common.util.FileUtil;
 import com.skyeye.common.util.ToolUtil;
 import com.skyeye.dao.ReportWordModelAttrDao;
 import com.skyeye.dao.ReportWordModelDao;
+import com.skyeye.service.ReportPropertyService;
 import com.skyeye.service.ReportWordModelService;
 import org.jsoup.helper.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,9 @@ public class ReportWordModelServiceImpl implements ReportWordModelService {
 
     @Autowired
     private ReportWordModelAttrDao reportWordModelAttrDao;
+
+    @Autowired
+    private ReportPropertyService reportPropertyService;
 
     @Value("${IMAGES_PATH}")
     private String tPath;
@@ -119,6 +123,10 @@ public class ReportWordModelServiceImpl implements ReportWordModelService {
         Map<String, Object> reportWordModelMap = reportWordModelDao.getReportWordModelById(id);
         if (reportWordModelMap != null) {
             List<Map<String, Object>> reportPropertyValueList = reportWordModelAttrDao.getReportWordModelAttrByModelId(id);
+            // 轮询获取属性的默认值
+            reportPropertyValueList.forEach(bean -> {
+                reportPropertyService.getPropertyDefaultValue(bean, bean.get("propertyId").toString(), Integer.parseInt(bean.get("optional").toString()));
+            });
             reportWordModelMap.put("options", JSONUtil.toJsonStr(reportPropertyValueList));
         }
         outputObject.setBean(reportWordModelMap);

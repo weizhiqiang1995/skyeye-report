@@ -177,16 +177,21 @@ public class ReportPropertyServiceImpl implements ReportPropertyService {
         beans.forEach(bean -> {
             String id = bean.get("id").toString();
             Integer optional = Integer.valueOf(bean.get("optional").toString());
-            if (optional.equals(1)) {
-                List<Map<String, Object>> reportPropertyValueList = reportPropertyValueDao.getReportPropertyValueByPropertyId(id);
-                reportPropertyValueList.forEach(item -> {
-                    if("1".equals(item.get("defaultChoose").toString())){
-                        bean.put("defaultValue", item.get("value"));
-                    }
-                });
-                bean.put("options", JSONUtil.toJsonStr(reportPropertyValueList));
-            }
+            getPropertyDefaultValue(bean, id, optional);
         });
+    }
+
+    @Override
+    public void getPropertyDefaultValue(Map<String, Object> bean, String id, Integer optional) {
+        if (optional.equals(1)) {
+            List<Map<String, Object>> reportPropertyValueList = reportPropertyValueDao.getReportPropertyValueByPropertyId(id);
+            reportPropertyValueList.forEach(item -> {
+                if("1".equals(item.get("defaultChoose").toString())){
+                    bean.put("defaultValue", item.get("value"));
+                }
+            });
+            bean.put("options", JSONUtil.toJsonStr(reportPropertyValueList));
+        }
     }
 
 }

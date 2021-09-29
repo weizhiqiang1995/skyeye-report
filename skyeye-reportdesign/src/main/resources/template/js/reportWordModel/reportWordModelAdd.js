@@ -37,8 +37,9 @@ layui.config({
                         var tableData = new Array();
                         $.each(rowTr, function(i, item) {
                             var rowNum = $(item).attr("trcusid").replace("tr", "");
+                            var trId = $(item).attr("trcusid");
                             var row = {
-                                propertyId: $("#propertyId" + rowNum).val(),
+                                propertyId: choosePropertyList[trId].id,
                                 editor: $("input[name='whetherEditor" + rowNum + "']:checked").val(),
                                 showToEditor: $("input[name='whetherShow" + rowNum + "']:checked").val()
                             };
