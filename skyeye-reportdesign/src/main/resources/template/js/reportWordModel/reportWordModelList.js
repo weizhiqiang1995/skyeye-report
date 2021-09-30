@@ -29,8 +29,8 @@ layui.config({
             { field: 'title', title: '标题', align: 'left', width: 150, templet: function(d){
                 return '<a lay-event="details" class="notice-title-click">' + d.title + '</a>';
             }},
-            { field: 'logo', title: 'LOGO', align: 'center', width: 180, templet: function(d){
-                return '<img src="' + fileBasePath + d.logo + '" style="width:100%;height:auto" class="cursor" lay-event="printsPicUrl">';
+            { field: 'logo', title: 'LOGO', align: 'center', width: 180, height: 60, templet: function(d){
+                return '<img src="' + fileBasePath + d.logo + '" style="height:60px" class="cursor" lay-event="printsPicUrl">';
             }},
             { field: 'defaultWidth', title: '默认宽度', align: 'center', width: 120 },
             { field: 'defaultHeight', title: '默认高度', align: 'center', width: 120 },
