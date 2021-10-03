@@ -442,6 +442,15 @@ body {
 	z-index: 200 !important;
 }
 
+@keyframes masked-animation {
+	0% {
+		background-position: 0  0;
+	}
+	100% {
+		background-position: -100%  0;
+	}
+}
+
 
 
 

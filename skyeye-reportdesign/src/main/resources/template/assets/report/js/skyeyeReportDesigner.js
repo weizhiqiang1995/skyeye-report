@@ -329,7 +329,7 @@ layui.define(["jquery", 'form', 'element'], function(exports) {
 					var wordBox = document.createElement("font");
 					// 为div设置类名
 					wordBox.className = "word-box";
-					wordBox.innerHTML = "Hello, Skyeye.";
+					wordBox.innerHTML = wordStyleMation["attr"]["custom.textContent"].value;
 					wordBox.style = styleStr;
 					wordBox.id = wordId;
 					var box = f.createBox(boxId, modelId, f.setDesignAttr(wordStyleMation));
