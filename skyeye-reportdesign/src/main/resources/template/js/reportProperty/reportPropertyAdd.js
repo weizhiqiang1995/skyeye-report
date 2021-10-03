@@ -45,7 +45,7 @@ layui.config({
                         var row = {
                             title: $("#title" + rowNum).val(),
                             value: $("#value" + rowNum).val(),
-                            defaultChoose: $("input[name='defaultChoose" + rowNum + "']:checked").val()
+                            defaultChoose: encodeURIComponent($("input[name='defaultChoose" + rowNum + "']:checked").val())
                         };
                         tableData.push(row);
                     });
@@ -65,7 +65,7 @@ layui.config({
                     attrCode: $("#attrCode").val(),
                     editorType: $("#editorType").val(),
                     optional: optional,
-                    defaultValue: $("#defaultValue").val(),
+                    defaultValue: encodeURIComponent($("#defaultValue").val()),
                     options: JSON.stringify(tableData),
                 };
                 AjaxPostUtil.request({url:reqBasePath + "reportproperty002", params: params, type:'json', method: "POST", callback:function(json){

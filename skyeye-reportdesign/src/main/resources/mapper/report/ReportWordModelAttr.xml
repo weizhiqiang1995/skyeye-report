@@ -24,7 +24,9 @@
             a.show_to_editor as showToEditor,
             b.optional,
             b.code,
-            b.default_value defaultValue
+            b.title,
+            b.default_value defaultValue,
+            b.editor_type editorType
         from
             report_word_model_attr a,
             report_property b

@@ -32,4 +32,5 @@ public interface ReportWordModelDao {
 
     void updateReportWordModelStateById(Map<String, Object> map);
 
+    List<Map<String, Object>> getReportWordModelListByState(@Param("state") Integer state);
 }

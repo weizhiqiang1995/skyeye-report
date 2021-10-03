@@ -6,6 +6,7 @@ package com.skyeye.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.json.JSONUtil;
+import com.alibaba.druid.support.json.JSONUtils;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import com.skyeye.common.object.InputObject;
@@ -122,12 +123,12 @@ public class ReportWordModelServiceImpl implements ReportWordModelService {
         String id = inputObject.getParams().get("id").toString();
         Map<String, Object> reportWordModelMap = reportWordModelDao.getReportWordModelById(id);
         if (reportWordModelMap != null) {
-            List<Map<String, Object>> reportPropertyValueList = reportWordModelAttrDao.getReportWordModelAttrByModelId(id);
+            List<Map<String, Object>> reportPropertyList = reportWordModelAttrDao.getReportWordModelAttrByModelId(id);
             // 轮询获取属性的默认值
-            reportPropertyValueList.forEach(bean -> {
+            reportPropertyList.forEach(bean -> {
                 reportPropertyService.getPropertyDefaultValue(bean, bean.get("id").toString(), Integer.parseInt(bean.get("optional").toString()));
             });
-            reportWordModelMap.put("options", JSONUtil.toJsonStr(reportPropertyValueList));
+            reportWordModelMap.put("options", reportPropertyList);
         }
         outputObject.setBean(reportWordModelMap);
         outputObject.settotal(1);
@@ -138,22 +139,70 @@ public class ReportWordModelServiceImpl implements ReportWordModelService {
         String id = inputObject.getParams().get("id").toString();
         Map<String, Object> reportWordModelMap = reportWordModelDao.getReportWordModelById(id);
         if (reportWordModelMap != null) {
-            List<Map<String, Object>> reportPropertyValueList = reportWordModelAttrDao.getReportWordModelAttrByModelId(id);
+            List<Map<String, Object>> reportPropertyList = reportWordModelAttrDao.getReportWordModelAttrByModelId(id);
             // 轮询获取属性的默认值
-            reportPropertyValueList.forEach(bean -> {
+            reportPropertyList.forEach(bean -> {
                 reportPropertyService.getPropertyDefaultValue(bean, bean.get("id").toString(), Integer.parseInt(bean.get("optional").toString()));
             });
-            reportWordModelMap.put("options", JSONUtil.toJsonStr(reportPropertyValueList));
+            reportWordModelMap.put("options", reportPropertyList);
         }
         outputObject.setBean(reportWordModelMap);
         outputObject.settotal(1);
     }
 
     @Override
-    public void getReportWordModelAttrByModelId(InputObject inputObject, OutputObject outputObject) throws Exception {
-        String id = inputObject.getParams().get("id").toString();
-        List<Map<String, Object>> reportPropertyValueList = reportWordModelAttrDao.getReportWordModelAttrByModelId(id);
-        outputObject.setBeans(reportPropertyValueList);
+    public void getReportWordModelListByState(InputObject inputObject, OutputObject outputObject) throws Exception {
+        Integer state = Integer.parseInt(inputObject.getParams().get("state").toString());
+        List<Map<String, Object>> reportWordModelList = reportWordModelDao.getReportWordModelListByState(state);
+        reportWordModelList.forEach(reportWordModel -> {
+            String id = reportWordModel.get("id").toString();
+            List<Map<String, Object>> reportPropertyList = reportWordModelAttrDao.getReportWordModelAttrByModelId(id);
+            // 轮询获取属性的默认值
+            reportPropertyList.forEach(bean -> {
+                reportPropertyService.getPropertyDefaultValue(bean, bean.get("id").toString(), Integer.parseInt(bean.get("optional").toString()));
+            });
+            reportWordModel.put("attr", resetAttr(reportPropertyList, reportWordModel.get("id").toString()));
+        });
+        outputObject.setBeans(reportWordModelList);
+        outputObject.settotal(reportWordModelList.size());
+    }
+
+    private Map<String, Object> resetAttr(List<Map<String, Object>> reportPropertyList, String modelId) {
+        Map<String, Object> attr = new HashMap<>();
+        reportPropertyList.forEach(bean -> {
+            Map<String, Object> item = new HashMap<>();
+            item.put("editor", bean.get("editorType"));
+            item.put("attrCode", bean.get("code"));
+            item.put("modelId", modelId);
+            item.put("edit", bean.get("editor"));
+            item.put("typeName", "Style属性");
+            item.put("title", bean.get("title"));
+            item.put("id", bean.get("id"));
+            item.put("value", bean.get("defaultValue"));
+            // 是否显示在编辑框
+            item.put("showToEditor", bean.get("showToEditor"));
+            item.put("desc", bean.get("title"));
+            item.put("editorChooseValue", JSONUtils.toJSONString(bean.get("options")));
+            attr.put(bean.get("code").toString(), item);
+        });
+        attr.put("custom.textContent", getEditFontTextAttr(modelId));
+        return attr;
+    }
+
+    private Map<String, Object> getEditFontTextAttr(String modelId){
+        Map<String, Object> item = new HashMap<>();
+        item.put("editor", 2);
+        item.put("attrCode", "custom.textContent");
+        item.put("modelId", modelId);
+        item.put("edit", 1);
+        item.put("typeName", "Style属性");
+        item.put("title", "文字");
+        item.put("id", "customEditTextContentId");
+        item.put("value", "Hello, Skyeye.");
+        // 是否显示在编辑框
+        item.put("showToEditor", 1);
+        item.put("desc", "文字");
+        return item;
     }
 
     @Override

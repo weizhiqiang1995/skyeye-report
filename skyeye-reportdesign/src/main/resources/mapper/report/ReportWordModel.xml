@@ -43,7 +43,8 @@
     <update id="updateReportWordModelById" parameterType="java.util.Map">
         update
             report_word_model
-        set title = #{title},
+        set
+            title = #{title},
             logo = #{logo},
             default_width = #{defaultWidth},
             default_height = #{defaultHeight},
@@ -70,7 +71,25 @@
 
     <update id="updateReportWordModelStateById" parameterType="java.util.Map">
         update report_word_model
-        set state = #{state}, last_update_id = #{userId}, last_update_time = #{lastUpdateTime}
+        set
+            state = #{state},
+            last_update_id = #{userId},
+            last_update_time = #{lastUpdateTime}
         where id = #{id}
     </update>
+
+    <select id="getReportWordModelListByState" resultType="java.util.Map">
+        SELECT
+            rw.id,
+            rw.title,
+            rw.logo,
+            rw.default_width defaultWidth,
+            rw.default_height defaultHeight,
+            rw.state
+        FROM
+            report_word_model rw
+        WHERE rw.state = #{state}
+        ORDER BY rw.create_time DESC
+    </select>
+
 </mapper>

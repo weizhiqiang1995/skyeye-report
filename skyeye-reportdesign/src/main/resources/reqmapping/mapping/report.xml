@@ -273,19 +273,19 @@
         <property id="options" name="options" ref="" var="组装后的json数据"/>
     </url>
     <url id="reportwordmodel005" path="/post/ReportWordModelController/getReportWordModelByIdToEdit" val="根据Id回显文字模型" method="GET" allUse="2" groupName="文件模型设置">
-        <property id="id" name="id" ref="required" var="模型属性Id"/>
+        <property id="id" name="id" ref="required" var="文字模型Id"/>
     </url>
     <url id="reportwordmodel006" path="/post/ReportWordModelController/getReportWordModelById" val="根据id获取详情信息" method="GET" allUse="2" groupName="文件模型设置">
-        <property id="id" name="id" ref="required" var="模型属性Id"/>
+        <property id="id" name="id" ref="required" var="文字模型Id"/>
     </url>
-    <url id="reportwordmodel007" path="/post/ReportWordModelController/getReportWordModelAttrByModelId" val="根据Modelid获取文件模型属性列表" method="GET" allUse="2" groupName="文件模型设置">
-        <property id="id" name="id" ref="required" var="模型属性Id"/>
+    <url id="reportwordmodel007" path="/post/ReportWordModelController/getReportWordModelListByState" val="根据状态获取文字模型列表" method="GET" allUse="2" groupName="文件模型设置">
+        <property id="state" name="state" ref="required,num" var="文字模型发布状态"/>
     </url>
     <url id="reportwordmodel008" path="/post/ReportWordModelController/publish" val="发布" method="PUT" allUse="1" groupName="文件模型设置">
-        <property id="id" name="id" ref="required" var="模型属性Id"/>
+        <property id="id" name="id" ref="required" var="文字模型Id"/>
     </url>
     <url id="reportwordmodel009" path="/post/ReportWordModelController/unPublish" val="取消发布" method="PUT" allUse="1" groupName="文件模型设置">
-        <property id="id" name="id" ref="required" var="模型属性Id"/>
+        <property id="id" name="id" ref="required" var="文字模型Id"/>
     </url>
     <!-- 文字模型设置结束 -->
 

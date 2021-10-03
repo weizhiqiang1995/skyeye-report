@@ -22,7 +22,6 @@ layui.config({
             method: "GET",
             template: $("#showBaseTemplate").html(),
             ajaxSendLoadBefore: function (hdb, json) {
-                json.bean.options = JSON.parse(json.bean.options);
             },
             ajaxSendAfter: function (j) {
 

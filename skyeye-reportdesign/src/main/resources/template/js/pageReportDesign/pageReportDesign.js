@@ -35,6 +35,16 @@ layui.config({
         }
     }, async: false});
 
+    var wordModel = {};
+    // 获取已经发布的文字模型
+    AjaxPostUtil.request({url:reqBasePath + "reportwordmodel007", params: {state: 2}, type:'json', method: "GET", callback:function(json){
+        if(json.returnCode == 0){
+            wordModel = json.rows;
+        }else{
+            winui.window.msg(json.returnMessage, {icon: 2,time: 2000});
+        }
+    }, async: false});
+
     var initData = {};
     // 获取初始化数据
     AjaxPostUtil.request({url:reqBasePath + "reportpage006", params: {rowId: rowId}, type:'json', method: "GET", callback:function(json){
@@ -57,6 +67,11 @@ layui.config({
         mouseLineColor: "blue",
         initData: initData,
         headerMenuJson: [{
+            "icon": " fa fa-area-chart fa-fw",
+            "title": "文字",
+            "id": "wordModel",
+            "children": wordModel
+        }, {
             "icon": " fa fa-area-chart fa-fw",
             "title": "图表",
             "id": "echartsModel",
@@ -85,5 +100,7 @@ layui.config({
     });
 
     form.render();
+
+    exports('pageReportDesign', {});
 
 });

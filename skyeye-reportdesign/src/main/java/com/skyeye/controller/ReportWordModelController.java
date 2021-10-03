@@ -100,15 +100,15 @@ public class ReportWordModelController {
     }
 
     /**
-     * 根据Modelid获取文件模型属性列表
+     * 根据状态获取文字模型列表
      *
      * @param inputObject
      * @param outputObject
      */
-    @RequestMapping("/post/ReportWordModelController/getReportWordModelAttrByModelId")
+    @RequestMapping("/post/ReportWordModelController/getReportWordModelListByState")
     @ResponseBody
-    public void getReportWordModelAttrByModelId(InputObject inputObject, OutputObject outputObject) throws Exception {
-        reportWordModelService.getReportWordModelAttrByModelId(inputObject, outputObject);
+    public void getReportWordModelListByState(InputObject inputObject, OutputObject outputObject) throws Exception {
+        reportWordModelService.getReportWordModelListByState(inputObject, outputObject);
     }
 
     /**

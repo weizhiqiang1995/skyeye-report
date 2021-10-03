@@ -67,12 +67,12 @@ public interface ReportWordModelService {
 
 
     /**
-     * 根据Modelid获取文件模型属性列表
+     * 根据状态获取文字模型列表
      *
      * @param inputObject
      * @param outputObject
      */
-    void getReportWordModelAttrByModelId(InputObject inputObject, OutputObject outputObject) throws Exception;
+    void getReportWordModelListByState(InputObject inputObject, OutputObject outputObject) throws Exception;
 
     /**
      * 发布
