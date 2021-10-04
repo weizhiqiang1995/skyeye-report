@@ -58,6 +58,13 @@ Redis|3.2
 2.  将项目导入idea(或者Exlipse)中，运行com.SkyeyeReportApplication
 3.  访问http://localhost:8086，初始账号密码：root/123456
 
+#### 模型类型
+
+- 文字模型
+- Echarts模型
+- 自定义代码模型(待加入)
+- 图片类型(待加入)
+
 #### 数据源
 
 - sql数据源
