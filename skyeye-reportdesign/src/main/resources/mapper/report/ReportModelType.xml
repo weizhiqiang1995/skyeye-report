@@ -63,6 +63,14 @@
         WHERE rmt.id = #{id}
     </select>
 
+    <select id="getLeavelById" resultType="java.lang.Integer">
+        SELECT
+            rmt.leavel
+        FROM
+            report_model_type rmt
+        WHERE rmt.id = #{id}
+    </select>
+
     <select id="getReportModelTypeByParentId" parameterType="java.lang.String" resultType="java.util.Map">
         SELECT
             rmt.id,

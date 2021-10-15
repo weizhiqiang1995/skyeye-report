@@ -44,7 +44,13 @@ public class ReportModelTypeServiceImpl implements ReportModelTypeService {
     public void insertReportModelType(InputObject inputObject, OutputObject outputObject) throws Exception {
         Map<String, Object> inputParams = inputObject.getParams();
         inputParams.put("id", ToolUtil.getSurFaceId());
-        inputParams.put("leavel", 0);
+        // 根据父id查询父层级leavel
+        Integer leavel = reportModelTypeDao.getLeavelById(inputParams.get("parentId").toString());
+        if (leavel == null) {
+            outputObject.setreturnMessage("该父节点不存在");
+            return;
+        }
+        inputParams.put("leavel", ++leavel);
         inputParams.put("createTime", ToolUtil.getTimeAndToString());
         inputParams.put("userId", inputObject.getLogParams().get("id"));
         reportModelTypeDao.insertReportModelType(inputParams);

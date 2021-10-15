@@ -61,6 +61,14 @@ public interface ReportModelTypeDao {
     Map<String, Object> getReportModelTypeById(@Param("id") String id);
 
     /**
+     * 根据id查询层级leavel
+     *
+     * @param id 唯一标识
+     * @return
+     */
+    Integer getLeavelById(@Param("id") String id);
+
+    /**
      * 根据父id查询子级列表
      *
      * @param parentId 父id
