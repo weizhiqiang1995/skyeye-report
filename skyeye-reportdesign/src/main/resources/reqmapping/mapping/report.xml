@@ -289,6 +289,32 @@
     </url>
     <!-- 文字模型设置结束 -->
 
+    <!-- 模型分类开始 -->
+    <url id="reportmodeltype001" path="/post/ReportModelTypeController/getReportModelTypeList" val="获取所有模型分类" method="POST" allUse="1" groupName="模型分类">
+        <property id="limit" name="limit" ref="required,num" var="分页参数,每页多少条数据" />
+        <property id="page" name="page" ref="required,num" var="分页参数,第几页"/>
+        <property id="name" name="name" ref="" var="类别名称"/>
+    </url>
+    <url id="reportmodeltype002" path="/post/ReportModelTypeController/insertReportModelType" val="保存模型分类" method="POST" allUse="1" groupName="模型分类">
+        <property id="name" name="name" ref="required" var="类别名称"/>
+        <property id="parentId" name="parentId" ref="required" var="父ID"/>
+    </url>
+    <url id="reportmodeltype003" path="/post/ReportModelTypeController/delReportModelTypeById" val="根据Id删除模型分类" method="DELETE" allUse="1" groupName="模型分类">
+        <property id="id" name="id" ref="required" var="文字模型Id"/>
+    </url>
+    <url id="reportmodeltype004" path="/post/ReportModelTypeController/updateReportModelTypeById" val="根据Id更新模型分类" method="PUT" allUse="1" groupName="模型分类">
+        <property id="id" name="id" ref="required" var="Id"/>
+        <property id="name" name="name" ref="required" var="类别名称"/>
+        <property id="parentId" name="parentId" ref="required" var="父ID"/>
+    </url>
+    <url id="reportmodeltype005" path="/post/ReportModelTypeController/getReportModelTypeByIdToEdit" val="根据Id回显模型分类" method="GET" allUse="2" groupName="模型分类">
+        <property id="id" name="id" ref="required" var="Id"/>
+    </url>
+    <url id="reportmodeltype006" path="/post/ReportModelTypeController/getReportModelTypeByParentId" val="根据父id获取子级列表" method="GET" allUse="2" groupName="模型分类">
+        <property id="parentId" name="parentId" ref="required" var="父id"/>
+    </url>
+    <!-- 模型分类结束 -->
+
     <!-- XXX开始 -->
 
     <!-- XXX结束 -->

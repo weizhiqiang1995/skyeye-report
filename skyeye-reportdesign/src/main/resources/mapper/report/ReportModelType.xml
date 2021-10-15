@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.skyeye.dao.ReportModelTypeDao">
+
+    <select id="getReportModelTypeList" resultType="java.util.Map">
+        SELECT
+            rmt.id,
+            rmt.name,
+            rmt.leavel,
+            rmt.parent_id as parentId,
+            b.user_name createName,
+            CONVERT(rmt.create_time, char) createTime,
+            c.user_name lastUpdateName,
+            CONVERT(rmt.last_update_time, char) lastUpdateTime
+        FROM
+            report_model_type rmt
+        LEFT JOIN sys_eve_user_staff b ON rmt.create_id = b.user_id
+        LEFT JOIN sys_eve_user_staff c ON rmt.last_update_id = c.user_id
+        WHERE 1=1
+        <if test="name != null and name !=''">
+            AND rmt.name like '%${name}%'
+        </if>
+        ORDER BY rmt.create_time DESC
+    </select>
+
+    <insert id="insertReportModelType" parameterType="java.util.Map">
+        insert into report_model_type
+            (id, name, leavel, parent_id, create_id, create_time, last_update_id, last_update_time)
+        values
+            (#{id}, #{name}, #{leavel}, #{parentId}, #{userId}, #{createTime}, #{userId}, #{createTime})
+    </insert>
+
+    <delete id="delReportModelTypeById" parameterType="java.lang.String">
+        delete from report_model_type
+        where id = #{id}
+    </delete>
+
+    <update id="updateReportModelTypeById" parameterType="java.util.Map">
+        update
+            report_model_type
+        set
+            name = #{name},
+            parent_id = #{parentId},
+            last_update_id = #{userId},
+            last_update_time = #{lastUpdateTime}
+        where id = #{id}
+    </update>
+
+    <select id="getReportModelTypeById" resultType="java.util.Map">
+        SELECT
+            rmt.id,
+            rmt.name,
+            rmt.leavel,
+            rmt.parent_id as parentId,
+            b.user_name createName,
+            CONVERT(rmt.create_time, char) createTime,
+            c.user_name lastUpdateName,
+            CONVERT(rmt.last_update_time, char) lastUpdateTime
+        FROM
+            report_model_type rmt
+        LEFT JOIN sys_eve_user_staff b ON rmt.create_id = b.user_id
+        LEFT JOIN sys_eve_user_staff c ON rmt.last_update_id = c.user_id
+        WHERE rmt.id = #{id}
+    </select>
+
+    <select id="getReportModelTypeByParentId" parameterType="java.lang.String" resultType="java.util.Map">
+        SELECT
+            rmt.id,
+            rmt.name,
+            rmt.leavel,
+            rmt.parent_id as parentId,
+            b.user_name createName,
+            CONVERT(rmt.create_time, char) createTime,
+            c.user_name lastUpdateName,
+            CONVERT(rmt.last_update_time, char) lastUpdateTime
+        FROM
+            report_model_type rmt
+                LEFT JOIN sys_eve_user_staff b ON rmt.create_id = b.user_id
+                LEFT JOIN sys_eve_user_staff c ON rmt.last_update_id = c.user_id
+        WHERE 1=1 and rmt.parent_id = #{parentId}
+        ORDER BY rmt.create_time DESC
+    </select>
+</mapper>
