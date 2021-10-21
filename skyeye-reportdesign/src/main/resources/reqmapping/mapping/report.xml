@@ -315,6 +315,49 @@
     </url>
     <!-- 模型分类结束 -->
 
+    <!-- 图片模型类开始 -->
+    <url id="reportimgmodel001" path="/post/ReportImgModelController/getReportImgModelList" val="获取所有图片模型" method="POST" allUse="1" groupName="图片模型">
+        <property id="limit" name="limit" ref="required,num" var="分页参数,每页多少条数据" />
+        <property id="page" name="page" ref="required,num" var="分页参数,第几页"/>
+        <property id="title" name="title" ref="" var="标题"/>
+    </url>
+    <url id="reportimgmodel002" path="/post/ReportImgModelController/insertReportImgModel" val="保存图片模型" method="POST" allUse="1" groupName="图片模型">
+        <property id="imgPath" name="imgPath" ref="required" var="图片路径"/>
+        <property id="title" name="title" ref="required" var="标题"/>
+        <property id="typeId" name="typeId" ref="required" var="类型Id"/>
+        <property id="defaultWidth" name="defaultWidth" ref="required,num" var="默认宽度"/>
+        <property id="defaultHeight" name="defaultHeight" ref="required,num" var="默认高度"/>
+        <property id="state" name="state" ref="required,num" var="发布状态"/>
+    </url>
+    <url id="reportimgmodel003" path="/post/ReportImgModelController/delReportImgModelById" val="根据Id删除图片模型设置" method="DELETE" allUse="1" groupName="图片模型">
+        <property id="id" name="id" ref="required" var="图片模型Id"/>
+    </url>
+    <url id="reportimgmodel004" path="/post/ReportImgModelController/updateReportImgModelById" val="根据Id更新图片模型" method="PUT" allUse="1" groupName="图片模型">
+        <property id="id" name="id" ref="required" var="图片模型Id"/>
+        <property id="imgPath" name="imgPath" ref="required" var="图片路径"/>
+        <property id="title" name="title" ref="required" var="标题"/>
+        <property id="typeId" name="typeId" ref="required" var="类型id"/>
+        <property id="defaultWidth" name="defaultWidth" ref="required,num" var="默认宽度"/>
+        <property id="defaultHeight" name="defaultHeight" ref="required,num" var="默认高度"/>
+        <property id="state" name="state" ref="required,num" var="图片模型发布状态"/>
+    </url>
+    <url id="reportimgmodel005" path="/post/ReportImgModelController/getReportImgModelByIdToEdit" val="根据Id回显图片模型" method="GET" allUse="2" groupName="图片模型">
+        <property id="id" name="id" ref="required" var="图片模型Id"/>
+    </url>
+    <url id="reportimgmodel006" path="/post/ReportImgModelController/getReportImgModelById" val="根据id获取详情信息" method="GET" allUse="2" groupName="图片模型">
+        <property id="id" name="id" ref="required" var="图片模型Id"/>
+    </url>
+    <url id="reportimgmodel007" path="/post/ReportImgModelController/getReportImgModelListByState" val="根据状态获取图片模型列表" method="GET" allUse="2" groupName="图片模型">
+        <property id="state" name="state" ref="required,num" var="图片模型发布状态"/>
+    </url>
+    <url id="reportimgmodel008" path="/post/ReportImgModelController/publish" val="发布" method="PUT" allUse="1" groupName="图片模型">
+        <property id="id" name="id" ref="required" var="图片模型Id"/>
+    </url>
+    <url id="reportimgmodel009" path="/post/ReportImgModelController/unPublish" val="取消发布" method="PUT" allUse="1" groupName="图片模型">
+        <property id="id" name="id" ref="required" var="图片模型Id"/>
+    </url>
+    <!-- 图片模型类结束 -->
+
     <!-- XXX开始 -->
 
     <!-- XXX结束 -->
