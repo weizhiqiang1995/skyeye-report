@@ -80,8 +80,8 @@ public class ReportModelTypeServiceImpl implements ReportModelTypeService {
     @Override
     public void getReportModelTypeByParentId(InputObject inputObject, OutputObject outputObject) throws Exception {
         String parentId = inputObject.getParams().get("parentId").toString();
-        List<Map<String, Object>> reportModelTypeByParentId = reportModelTypeDao.getReportModelTypeByParentId(parentId);
-        outputObject.setBeans(reportModelTypeByParentId);
-        outputObject.settotal(reportModelTypeByParentId.size());
+        List<Map<String, Object>> reportModelTypeList = reportModelTypeDao.getReportModelTypeByParentId(parentId);
+        outputObject.setBeans(reportModelTypeList);
+        outputObject.settotal(reportModelTypeList.size());
     }
 }
