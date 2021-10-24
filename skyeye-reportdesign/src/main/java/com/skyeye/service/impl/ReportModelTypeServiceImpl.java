@@ -50,10 +50,22 @@ public class ReportModelTypeServiceImpl implements ReportModelTypeService {
             outputObject.setreturnMessage("该父节点不存在");
             return;
         }
+        // 根据父节点Id+name进行重名校验
+        if (checkDuplicateName(outputObject, inputParams)) return;
         inputParams.put("leavel", ++leavel);
         inputParams.put("createTime", ToolUtil.getTimeAndToString());
         inputParams.put("userId", inputObject.getLogParams().get("id"));
         reportModelTypeDao.insertReportModelType(inputParams);
+    }
+
+    // 根据父节点Id+name进行重名校验
+    private boolean checkDuplicateName(OutputObject outputObject, Map<String, Object> inputParams) {
+        Integer totalNumber = reportModelTypeDao.getTotalNumberOnConditions(inputParams);
+        if (totalNumber != 0) {
+            outputObject.setreturnMessage("此父节点下已存在该类别名称");
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -67,6 +79,8 @@ public class ReportModelTypeServiceImpl implements ReportModelTypeService {
         Map<String, Object> inputParams = inputObject.getParams();
         inputParams.put("userId", inputObject.getLogParams().get("id"));
         inputParams.put("lastUpdateTime", ToolUtil.getTimeAndToString());
+        // 根据父节点Id+name进行重名校验
+        if (checkDuplicateName(outputObject, inputParams)) return;
         reportModelTypeDao.updateReportModelTypeById(inputParams);
     }
 

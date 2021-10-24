@@ -69,6 +69,14 @@ public interface ReportModelTypeDao {
     Integer getLeavelById(@Param("id") String id);
 
     /**
+     * 根据parent_id + name校验是否存在重名数据
+     *
+     * @param map 查询参数
+     * @return
+     */
+    Integer getTotalNumberOnConditions(Map<String, Object> map);
+
+    /**
      * 根据父id查询子级列表
      *
      * @param parentId 父id

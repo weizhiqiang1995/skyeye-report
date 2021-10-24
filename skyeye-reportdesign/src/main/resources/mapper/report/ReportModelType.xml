@@ -71,6 +71,14 @@
         WHERE rmt.id = #{id}
     </select>
 
+    <select id="getTotalNumberOnConditions" resultType="java.lang.Integer">
+        SELECT
+            count(1)
+        FROM
+            report_model_type rmt
+        WHERE rmt.parent_id = #{parentId} and rmt.name = #{name}
+    </select>
+
     <select id="getReportModelTypeByParentId" parameterType="java.lang.String" resultType="java.util.Map">
         SELECT
             rmt.id,
