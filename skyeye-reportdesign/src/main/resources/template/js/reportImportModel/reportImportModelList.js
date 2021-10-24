@@ -49,15 +49,7 @@ layui.config({
         }
     });
 
-    form.render();
-    form.on('submit(formSearch)', function (data) {
-        if (winui.verifyForm(data.elem)) {
-            refreshloadTable();
-        }
-        return false;
-    });
-
-    //添加
+    // 添加
     $("body").on("click", "#addBean", function(){
         _openNewWindows({
             url: "../../tpl/reportImportModel/reportImportModelAdd.html",
@@ -107,6 +99,14 @@ layui.config({
             }
         });
     }
+
+    form.render();
+    form.on('submit(formSearch)', function (data) {
+        if (winui.verifyForm(data.elem)) {
+            refreshloadTable();
+        }
+        return false;
+    });
 
     // 刷新数据
     $("body").on("click", "#reloadTable", function(){
