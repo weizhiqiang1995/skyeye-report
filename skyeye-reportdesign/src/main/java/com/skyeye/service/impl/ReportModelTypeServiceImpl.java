@@ -60,8 +60,8 @@ public class ReportModelTypeServiceImpl implements ReportModelTypeService {
 
     // 根据父节点Id+name进行重名校验
     private boolean checkDuplicateName(OutputObject outputObject, Map<String, Object> inputParams) {
-        Integer totalNumber = reportModelTypeDao.getTotalNumberOnConditions(inputParams);
-        if (totalNumber != 0) {
+        String id = reportModelTypeDao.getIdOnConditions(inputParams);
+        if (id != null && !id.equals(inputParams.get("id"))) {
             outputObject.setreturnMessage("此父节点下已存在该类别名称");
             return true;
         }

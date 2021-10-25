@@ -71,9 +71,9 @@
         WHERE rmt.id = #{id}
     </select>
 
-    <select id="getTotalNumberOnConditions" resultType="java.lang.Integer">
+    <select id="getIdOnConditions" resultType="java.lang.String">
         SELECT
-            count(1)
+            rmt.id
         FROM
             report_model_type rmt
         WHERE rmt.parent_id = #{parentId} and rmt.name = #{name}
