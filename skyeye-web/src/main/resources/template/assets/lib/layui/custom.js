@@ -1,4 +1,17 @@
 
+var customerJS = {
+	"reportModelTypeUtil": "../../assets/lib/layui/customer/reportModelTypeUtil.js", // 模型分类工具类
+};
+
+// 编辑加载自定义的js文件
+layui.each(customerJS, function(key, jsPath){
+	if(jsPath.lastIndexOf(".js") >=0){
+		document.write('<script type="text/javascript" src="' + jsPath + '?v=' + skyeyeVersion + '"></script>');
+	}else{
+		document.write('<link rel="stylesheet" type="text/css" href="' + jsPath + '?v=' + skyeyeVersion + '"/>');
+	}
+});
+
 // 操作添加或者编辑时，判断表格是否需要刷新,为0则刷新，否则则不刷新
 var refreshCode = "";
 

@@ -49,9 +49,9 @@
 
     <insert id="insertReportImportModel" parameterType="java.util.Map">
         INSERT INTO report_import_model
-            (id, file_name, model_id, create_id, create_time, last_update_id, last_update_time)
+            (id, file_name, model_id, first_type_id, second_type_id, create_id, create_time, last_update_id, last_update_time)
         VALUES
-            (#{id}, #{fileName}, #{modelId}, #{userId}, #{createTime}, #{userId}, #{createTime})
+            (#{id}, #{fileName}, #{modelId}, #{firstTypeId}, #{secondTypeId}, #{userId}, #{createTime}, #{userId}, #{createTime})
     </insert>
 
     <update id="updateReportImportModelById" parameterType="java.util.Map">
